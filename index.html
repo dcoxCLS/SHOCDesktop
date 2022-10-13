@@ -3,7 +3,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no" />
     <title>Hamtramck Explorer App</title>
-    <link rel="stylesheet" href="https://js.arcgis.com/4.18/esri/themes/light/main.css" />
+    <link rel="stylesheet" href="https://js.arcgis.com/4.24/esri/themes/dark/main.css" />
     <link href="https://unpkg.com/tabulator-tables@4.9.3/dist/css/tabulator.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">    
     <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tabulator/4.9.3/css/tabulator_midnight.min.css" integrity="sha512-epdhm+q+Caq67Ujjcr7kPkNsBoFtmyaqHFuujUjygZnnRVRK70X6dOjX3Z4RDJF+bmG1KBwYHJ/OxMZgm1F2hQ==" crossorigin="anonymous" /> -->
@@ -18,13 +18,13 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV" crossorigin="anonymous"></script>
     <script type="text/javascript" src="https://unpkg.com/tabulator-tables@4.9.3/dist/js/tabulator.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/viewerjs/1.10.0/viewer.js" integrity="sha512-psAniLUS9J4A5KNQiSt9XMNeVSMx/Rz89vQJqeYlOIiTR5WK8zU/8EPwAKt+522eeV04QUzIwX5VrAW10FbdeQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-    <script src="https://js.arcgis.com/4.18/"></script>  
+    <script src="https://js.arcgis.com/4.24/"></script>  
   </head>
   <body>     
     <!-- Main navbar -->
     <nav class="navbar navbar-expand-md navbar-light bg-light">
-  <a class="navbar-brand" href="https://mapgeoasu.github.io/3dexplorer/" target="_blank" rel="noopener">
-    <img src="img/asulogo.png" width="50" height="50" class="d-inline-block align-top" alt="">
+  <a class="navbar-brand" href="https://mtugrf.github.io/hamtramckapp" target="_blank" rel="noopener">
+    <img src="https://portal1-geo.sabu.mtu.edu/images/hamtramck/logos.svg" width="80" height="80" class="d-inline-block align-top" alt="">
       &nbsp;Hamtramck Historic Spatial Archaeology Project
   </a>
   <div class="collapse navbar-collapse" id="navbarNav" style="">
@@ -51,6 +51,7 @@
   <div id="drawers-table"></div>
 </div>
     <div id="viewDiv">
+    <div id="sliderDiv"></div>	
      <!-- Search Bar -->
     <div class="container justify-content-center">
     <div class="row">
