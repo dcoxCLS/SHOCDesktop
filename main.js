@@ -14,7 +14,7 @@
     type: "simple",  // autocasts as new SimpleRenderer()
     symbol: {
       type: "simple-fill",  // autocasts as new SimpleFillSymbol()
-      color: [ 255, 128, 0, 0.5 ],
+      color: [ 255, 128, 0, 1],
       outline: {  // autocasts as new SimpleLineSymbol()
         width: 2,
         color: "gray"
@@ -25,11 +25,12 @@
   // add FIPS TileLayers to the map
   const atlas_1885 = new TileLayer({
      url: "https://portal1-geo.sabu.mtu.edu/server/rest/services/Hosted/Robinson_Atlas_1885/MapServer",
-     visible: true
+     visible: false
   });
 
   const fips_1897 = new TileLayer({
      url: "https://portal1-geo.sabu.mtu.edu/server/rest/services/Hosted/Sanborn_1897_5/MapServer",
+     visible: true
   });
 
   const fips_1915 = new TileLayer({
@@ -56,7 +57,7 @@
 
   const map = new Map({
     basemap: "satellite",
-    layers: [atals_1885, fips_1897, fips_1915, fips_1910, fips_49_51, sitesLayer]
+    layers: [atlas_1885, fips_1897, fips_1915, fips_1910, fips_49_51, sitesLayer]
   });
 
   const view = new MapView({
