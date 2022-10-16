@@ -9,10 +9,34 @@
 
   esriConfig.apiKey = "YOUR_API_KEY";
 
-  // add vector layers to the map
+  // Create a style for the chartsLayer
+  const renderer = {
+    type: "simple",  // autocasts as new SimpleRenderer()
+    symbol: {
+      type: "simple-fill",  // autocasts as new SimpleFillSymbol()
+      color: [ 255, 128, 0, 0.5 ],
+      outline: {  // autocasts as new SimpleLineSymbol()
+        width: 2,
+        color: "gray"
+      }
+    }
+  }; 
+
+  // add FIPS TileLayers to the map
+  const fips_1897 = new TileLayer({
+     url: "https://portal1-geo.sabu.mtu.edu/server/rest/services/Hosted/Sanborn_1897_5/MapServer"
+  });
+
+  // Add the excavation sites layer to the map   
+  const sitesLayer = new FeatureLayer({
+    url: "https://portal1-geo.sabu.mtu.edu/server/rest/services/Hosted/OHC_Excavation_Boundaries/FeatureServer/0",
+    outFields: ["*"], // Return all fields so it can be queried client-side
+    renderer: renderer
+  });
 
   const map = new Map({
-    basemap: "satellite"
+    basemap: "satellite",
+    layers: [fips_1897, sitesLayer]
   });
 
   const view = new MapView({
@@ -22,12 +46,9 @@
     zoom: 16
   });
 
-  // add FIPS TileLayers to the map
-  const fips_1897 = new TileLayer({
-     url: "https://portal1-geo.sabu.mtu.edu/server/rest/services/Hosted/Sanborn_1897_Test3/MapServer"
-  });
+  
 
-  map.add(fips_1897);
+  //map.add(fips_1897);
 
   // add esri widgets
   const slider = new Slider({
