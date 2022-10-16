@@ -23,10 +23,30 @@
   }; 
 
   // add FIPS TileLayers to the map
-  const fips_1897 = new TileLayer({
-     url: "https://portal1-geo.sabu.mtu.edu/server/rest/services/Hosted/Sanborn_1897_5/MapServer"
+  const atlas_1885 = new TileLayer({
+     url: "https://portal1-geo.sabu.mtu.edu/server/rest/services/Hosted/Robinson_Atlas_1885/MapServer",
+     visible: true
   });
 
+  const fips_1897 = new TileLayer({
+     url: "https://portal1-geo.sabu.mtu.edu/server/rest/services/Hosted/Sanborn_1897_5/MapServer",
+  });
+
+  const fips_1915 = new TileLayer({
+     url: "https://portal1-geo.sabu.mtu.edu/server/rest/services/Hosted/Sanborn_1915/MapServer",
+     visible: false
+  });
+
+ const fips_1910 = new TileLayer({
+     url: "https://portal1-geo.sabu.mtu.edu/server/rest/services/Hosted/Sanborn_1910/MapServer",
+     visible: false
+  });
+  
+ const fips_49_51 = new TileLayer({
+     url: "https://portal1-geo.sabu.mtu.edu/server/rest/services/Hosted/Sanborn_1949_1951/MapServer",
+     visible: false
+  });
+  
   // Add the excavation sites layer to the map   
   const sitesLayer = new FeatureLayer({
     url: "https://portal1-geo.sabu.mtu.edu/server/rest/services/Hosted/OHC_Excavation_Boundaries/FeatureServer/0",
@@ -36,7 +56,7 @@
 
   const map = new Map({
     basemap: "satellite",
-    layers: [fips_1897, sitesLayer]
+    layers: [atals_1885, fips_1897, fips_1915, fips_1910, fips_49_51, sitesLayer]
   });
 
   const view = new MapView({
@@ -44,9 +64,7 @@
     map: map,
     center: [-83.0496,42.3928],
     zoom: 16
-  });
-
-  
+  });  
 
   //map.add(fips_1897);
 
@@ -63,25 +81,5 @@
       rangeLabels: true
     }
   });
-/*//Trailheads feature layer (points)
-  const trailheadsLayer = new FeatureLayer({
-    url: "https://services3.arcgis.com/GVgbJbqm8hXASVYi/arcgis/rest/services/Trailheads/FeatureServer/0"
-  });
-
-  map.add(trailheadsLayer);
-
-//Trails feature layer (lines)
-  const trailsLayer = new FeatureLayer({
-    url: "https://services3.arcgis.com/GVgbJbqm8hXASVYi/arcgis/rest/services/Trails/FeatureServer/0"
-  });
-
-  map.add(trailsLayer, 0);
-
-// Parks and open spaces (polygons)
-  const parksLayer = new FeatureLayer({
-    url: "https://services3.arcgis.com/GVgbJbqm8hXASVYi/arcgis/rest/services/Parks_and_Open_Space/FeatureServer/0"
-  });
-
-  map.add(parksLayer, 0);*/
 
   });
