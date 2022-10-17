@@ -65,6 +65,11 @@ body, html {
 .esri-slider__thumb {
   
 }
+
+.esri-slider--vertical .esri-slider__max {
+  padding-bottom: 6px !important;
+}
+
 /*Search bar drop downmenu*/
 #searchtype {  
   z-index: 2;
@@ -373,6 +378,18 @@ h7 {
 
 #image {
   display: none;
+}
+
+#location {  
+  position: absolute;
+  top: 50px;
+  right: 15px;
+  width: 240px;
+  height: 35px;
+  border-radius: 0px;
+  background-color: #242424;
+  color: #adadad;
+  border: none;
 }
 
 #maxResults {
