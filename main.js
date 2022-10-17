@@ -50,7 +50,8 @@
   const sitesLayer = new FeatureLayer({
     url: "https://portal1-geo.sabu.mtu.edu/server/rest/services/Hosted/OHC_Excavation_Boundaries/FeatureServer/0",
     outFields: ["*"], // Return all fields so it can be queried client-side
-    renderer: renderer
+    renderer: renderer,
+    popupEnabled: true 
   });
 
   const map = new Map({
@@ -87,6 +88,13 @@
       rangeLabels: true
     }
   });
+
+  sitesLayer.popupTemplate = {
+    title: "title",
+    content: "items" 
+    ,           
+   // actions: [tableViewerAction] // adds the custom popup action
+ };
 
   // Listen for changes on the opacity slider
   slider.on(['thumb-change', 'thumb-drag'], function(event) {

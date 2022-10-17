@@ -1,6 +1,8 @@
 /*Font for the entire app*/
 body, html {
-  font-family: 'Montserrat', sans-serif !important;
+  font-family: 'Gentium Book Plus', serif;
+font-family: 'Lato', sans-serif;
+font-family: 'Lora', serif;
 }
 
 .pnlm-title-box {
