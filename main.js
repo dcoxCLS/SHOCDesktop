@@ -22,7 +22,12 @@
 
   // add FIPS TileLayers to the map
   const atlas_1885 = new TileLayer({
-     url: "https://portal1-geo.sabu.mtu.edu/server/rest/services/Hosted/Robinson_Atlas_1885/MapServer",
+     url: "https://portal1-geo.sabu.mtu.edu/server/rest/services/Hosted/Robinson_Atlas_1885_Detail/MapServer",
+     visible: false
+  });
+
+  const atlas_1893 = new TileLayer({
+     url: "https://portal1-geo.sabu.mtu.edu/server/rest/services/Hosted/Sauer_Atlas_1893/MapServer",
      visible: false
   });
 
@@ -56,7 +61,7 @@
 
   const map = new Map({
     basemap: "satellite",
-    layers: [atlas_1885, fips_1897, fips_1915, fips_1910, fips_49_51, sitesLayer]
+    layers: [atlas_1885, atlas_1893, fips_1897, fips_1915, fips_1910, fips_49_51, sitesLayer]
   });
 
   const view = new MapView({
@@ -66,8 +71,9 @@
     zoom: 20
   });
 
-  // set the default opacity of the sanborn layers
+  // set the default opacity of the sanborn layers  
   atlas_1885.opacity = 100;  
+  atlas_1893.opacity = 100;
   fips_1897.opacity = 100;
   fips_1910.opacity = 100;
   fips_1915.opacity = 100;
@@ -99,6 +105,7 @@
   // Listen for changes on the opacity slider
   slider.on(['thumb-change', 'thumb-drag'], function(event) {
   atlas_1885.opacity = event.value / 100;  
+  atlas_1893.opacity = event.value / 100;
   fips_1897.opacity = event.value / 100;
   fips_1910.opacity = event.value / 100;
   fips_1915.opacity = event.value / 100;
@@ -111,30 +118,42 @@
     var value = this.value;
     if (value == '1885') {
       atlas_1885.visible = true;
+      atlas_1893.visible = false;
+      fips_1897.visible = false;
+      fips_1915.visible = false;
+      fips_1910.visible = false;
+      fips_49_51.visible = false;  
+      } else if (value == '1893') {
+      atlas_1885.visible = false;
+      atlas_1893.visible = true;
       fips_1897.visible = false;
       fips_1915.visible = false;
       fips_1910.visible = false;
       fips_49_51.visible = false;              
     } else if (value == '1897') {
       atlas_1885.visible = false;
+      atlas_1893.visible = false;
       fips_1897.visible = true;
       fips_1915.visible = false;
       fips_1910.visible = false;
       fips_49_51.visible = false;       
     } else if (value == '1910') {
       atlas_1885.visible = false;
+      atlas_1893.visible = false;
       fips_1897.visible = false;
       fips_1915.visible = false;
       fips_1910.visible = true;
       fips_49_51.visible = false;  
     } else if (value == '1915') {            
       atlas_1885.visible = false;
+      atlas_1893.visible = false;
       fips_1897.visible = false;
       fips_1915.visible = true;
       fips_1910.visible = false;
       fips_49_51.visible = false;  
     } else if (value == '1949') {            
       atlas_1885.visible = false;
+      atlas_1893.visible = false;
       fips_1897.visible = false;
       fips_1915.visible = false;
       fips_1910.visible = false;
