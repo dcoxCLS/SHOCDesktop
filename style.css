@@ -268,7 +268,7 @@ h10 {
   border-radius: 0px;
   z-index: 999999999999999999999999999999999999999999999999999999999;
 }
-#drawers-table .tabulator-selected {
+#sites-table .tabulator-selected {
   background-color: #D23153 !important;
 }
 
@@ -394,14 +394,12 @@ h7 {
 
 #location {  
   position: absolute;
-  top: 50px;
-  right: 15px;
+  top: 15px;
+  left: 65px;
   width: 240px;
   height: 35px;
-  border-radius: 0px;
-  background-color: #242424;
-  color: #adadad;
-  border: none;
+  border-radius: 0px;  
+  border: solid 1px black;
 }
 
 #maxResults {
@@ -414,7 +412,7 @@ h7 {
   font-size: 16px;
 }
 
-#drawerTitle {
+#siteTitle {
   color: white;
   font-size: 16px;
   max-width:300px;

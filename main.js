@@ -7,6 +7,57 @@
     "esri/widgets/Slider"
   ], function(esriConfig, Map, MapView, FeatureLayer, TileLayer, Slider) {  
 
+
+  // Creates a new table to hold our map attributes  
+  const table = new Tabulator("#sites-table", {             
+      //height: "88%", 
+      virtualDomBuffer: 1600,
+      responsiveLayout:"collapse",   
+      layout:"fitDataFill",         
+      selectable: 1,
+      clipboard:true, //enable clipboard functionality                        
+      columns:[
+          {title:"Artifact", field:"attributes.artifact", width: 500},
+          {title:"Material", field:"attributes.material", width: 300},
+          //{title:"Publisher", field:"attributes.PUBLISHER", width: 300, visible: false},
+          //{title:"Date", field:"attributes.DATE", width: 150}         
+      ],    
+      initialSort:[
+        //{column:"attributes.MAP_ORDER", dir:"asc"}, //sort by this first        
+      ],        
+      // Detect when someone clicks on a row in the table
+      rowClick:function(e, row){ 
+        view.popup.close();   
+        // When the table row is clicked hide the table 
+        //$('#drawerModal').modal('hide');        
+        // when a row in the table is clicked call the getRowData function
+       // getRowData(row);   
+      },
+      groupHeader:function(value, count, data, group){        
+        if (value < 241) {
+          return "Drawer: " + value + "<span style='color:#8c1d40; margin-left:10px;'>(" + count + " items)</span>"; 
+        }          
+      },    
+  });        
+  
+    function openNav() {
+      //table.redraw(true);
+    document.getElementById("mySidebar").style.width = "20%";
+    document.getElementById("viewDiv").style.marginLeft = "20%";
+    document.getElementById("viewDiv").style.width = "80%";
+   // document.getElementsByClassName("container")[0].style.width = "80%";
+    //document.getElementsByClassName("container")[0].style.left = "28%";
+  }
+  
+  /* Set the width of the sidebar to 0 and the left margin of the page content to 0 */
+  function closeNav() {
+    document.getElementById("mySidebar").style.width = "0";
+    document.getElementById("viewDiv").style.marginLeft = "0";
+    document.getElementById("viewDiv").style.width = "100%";
+    //document.getElementsByClassName("container")[0].style.width = "60%";
+    //document.getElementsByClassName("container")[0].style.left = "3%";
+  }
+   
   // Create a style for the chartsLayer
   const renderer = {
     type: "simple",  // autocasts as new SimpleRenderer()
@@ -97,12 +148,35 @@
   });
 
   sitesLayer.popupTemplate = {
-    title: "title",
-    content: "items",
-    html: '<button type="button" class="btn btn-link">Link</button>' 
-    ,           
+    title:'{display_name} ({desctemp})',
+    content: "<b>Description: </b> Description of the this excavation unit goes here.<br><b>Location: </b>{location} ({locattion_abbrv})<br><b>Site: </b> {site} ({site_abbrv})"
+    ,              
    // actions: [tableViewerAction] // adds the custom popup action
- };
+  };
+
+  view.on("click", function(event){
+    view.hitTest(event, { include: sitesLayer})
+      .then(function(response){      
+         // get the attibutes from the resulting graphic
+         const graphic = response.results[0].graphic;
+         console.log(graphic.attributes); 
+         const siteId = graphic.attributes.master_unit; 
+          $.ajax({
+            dataType: 'json',
+            url: 'https://portal1-geo.sabu.mtu.edu/server/rest/services/Hosted/artifact_catalog/FeatureServer/0/query?where=master_unit+%3D+%27' + siteId + '%27&objectIds=&time=&geometry=&geometryType=esriGeometryEnvelope&inSR=&spatialRel=esriSpatialRelIntersects&distance=&units=esriSRUnit_Foot&relationParam=&outFields=*&returnGeometry=true&maxAllowableOffset=&geometryPrecision=&outSR=&havingClause=&gdbVersion=&historicMoment=&returnDistinctValues=false&returnIdsOnly=false&returnCountOnly=false&returnExtentOnly=false&orderByFields=&groupByFieldsForStatistics=&outStatistics=&returnZ=false&returnM=false&multipatchOption=xyFootprint&resultOffset=&resultRecordCount=&returnTrueCurves=false&returnCentroid=false&timeReferenceUnknownClient=false&sqlFormat=none&resultType=&datumTransformation=&lodType=geohash&lod=&lodSR=&f=pjson',
+            type: "GET",    
+            success: function(data) {
+              const features = data.features;
+              table.setData(features);
+              const numResults = data.features.length;
+              const siteTitle = graphic.attributes.desctemp;
+              $('#siteTitle').html("Site " + siteTitle);
+              $('#results').html(numResults + " artifacts");
+              openNav();  
+            }
+          });          
+      });
+  });
 
   // Listen for changes on the opacity slider
   slider.on(['thumb-change', 'thumb-drag'], function(event) {
