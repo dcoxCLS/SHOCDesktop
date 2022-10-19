@@ -51,13 +51,18 @@ font-family: 'Lora', serif;
    box-shadow: 0 0px 2px rgb(0 0 0 / 30%);
 }
 
+#searchBtn:hover {
+  background-color: #e43133;
+}
+
 /*slider*/
 #sliderDiv {
   position: absolute;
-  right: 10px;
+  left: 15px;
   top: 100px;
-  width: 40px;
+  width: 38px;
   height: 300px;
+  box-shadow: 0 1px 2px rgb(0 0 0 / 30%)
 }
 
 .esri-slider__track {
@@ -361,6 +366,11 @@ body:not(.esriIsPhoneSize) #viewDiv .esri-popup.esri-popup--is-docked .esri-popu
 
 .esri-popup__header-title {
   text-align: left;
+}
+
+.esri-widget--button{
+  height: 38px !important;
+  width: 38px !important;
 }
 
 h7 {

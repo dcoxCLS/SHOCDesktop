@@ -28,7 +28,8 @@
 
   const atlas_1893 = new TileLayer({
      url: "https://portal1-geo.sabu.mtu.edu/server/rest/services/Hosted/Sauer_Atlas_1893/MapServer",
-     visible: false
+     visible: false,
+     maxScale: 3000
   });
 
   const fips_1897 = new TileLayer({
@@ -53,7 +54,7 @@
   
   // Add the excavation sites layer to the map   
   const sitesLayer = new FeatureLayer({
-    url: "https://portal1-geo.sabu.mtu.edu/server/rest/services/Hosted/OHC_Excavation_Boundaries/FeatureServer/0",
+    url: "https://portal1-geo.sabu.mtu.edu/server/rest/services/Hosted/OHC_Excavation_Units/FeatureServer/0",
     outFields: ["*"], // Return all fields so it can be queried client-side
     renderer: renderer,
     popupEnabled: true 
@@ -97,7 +98,8 @@
 
   sitesLayer.popupTemplate = {
     title: "title",
-    content: "items" 
+    content: "items",
+    html: '<button type="button" class="btn btn-link">Link</button>' 
     ,           
    // actions: [tableViewerAction] // adds the custom popup action
  };
