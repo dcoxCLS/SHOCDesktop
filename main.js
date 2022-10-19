@@ -7,7 +7,6 @@
     "esri/widgets/Slider"
   ], function(esriConfig, Map, MapView, FeatureLayer, TileLayer, Slider) {  
 
-
   // Creates a new table to hold our map attributes  
   const table = new Tabulator("#sites-table", {             
       //height: "88%", 
@@ -15,10 +14,12 @@
       responsiveLayout:"collapse",   
       layout:"fitDataFill",         
       selectable: 1,
-      clipboard:true, //enable clipboard functionality                        
+      clipboard:true, //enable clipboard functionality,
+      groupBy: "attributes.unit",                        
       columns:[
           {title:"Artifact", field:"attributes.artifact", width: 500},
           {title:"Material", field:"attributes.material", width: 300},
+          {title:"Unit", field:"attributes.unit", width: 300, visible: false},
           //{title:"Publisher", field:"attributes.PUBLISHER", width: 300, visible: false},
           //{title:"Date", field:"attributes.DATE", width: 150}         
       ],    
@@ -35,7 +36,7 @@
       },
       groupHeader:function(value, count, data, group){        
         if (value < 241) {
-          return "Drawer: " + value + "<span style='color:#8c1d40; margin-left:10px;'>(" + count + " items)</span>"; 
+          return "Site: " + value + "<span style='color:#8c1d40; margin-left:10px;'>(" + count + " items)</span>"; 
         }          
       },    
   });        
@@ -57,6 +58,12 @@
     //document.getElementsByClassName("container")[0].style.width = "60%";
     //document.getElementsByClassName("container")[0].style.left = "3%";
   }
+
+   // close button of the sidebar 
+  // when someone clicks the advanced search submit button        
+  $(".closebtn").click(function(){
+    closeNav();
+  });
    
   // Create a style for the chartsLayer
   const renderer = {
