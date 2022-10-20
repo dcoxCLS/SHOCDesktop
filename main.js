@@ -4,8 +4,14 @@
     "esri/views/MapView",
     "esri/layers/FeatureLayer",
     "esri/layers/TileLayer",
-    "esri/widgets/Slider"
-  ], function(esriConfig, Map, MapView, FeatureLayer, TileLayer, Slider) {  
+    "esri/widgets/Slider",
+    "esri/rest/support/Query",
+    "esri/geometry/Extent",
+    "esri/geometry/projection"
+  ], function(esriConfig, Map, MapView, FeatureLayer, TileLayer, Slider, Query, Extent, projection) {  
+
+   let highlight = null; 
+   const tableURL = "https://portal1-geo.sabu.mtu.edu/server/rest/services/Hosted/artifact_catalog/FeatureServer/0/";
 
   // Creates a new table to hold our map attributes  
   const table = new Tabulator("#sites-table", {             
@@ -32,7 +38,7 @@
         // When the table row is clicked hide the table 
         //$('#drawerModal').modal('hide');        
         // when a row in the table is clicked call the getRowData function
-       // getRowData(row);   
+        getRowData(row);   
       },
       groupHeader:function(value, count, data, group){        
         if (value < 241) {
@@ -59,10 +65,170 @@
     //document.getElementsByClassName("container")[0].style.left = "3%";
   }
 
+  projection.load();
+
+   // when a row in the table is seleted or queried, get its attributes.
+  // populate a new popup with this information 
+  function getRowData(row) {                       
+    //view.popup.close();
+    const siteId = row._row.data.attributes.master_unit;  
+    const siteName = row._row.data.attributes.site;
+    const location = row._row.data.attributes.location;
+    const context = row._row.data.attributes.context;
+    const unit = row._row.data.attributes.unit;
+    const siteAbbrv =  row._row.data.attributes.site_abbrv;
+    const artifactNum =  row._row.data.attributes.artifact_num;
+    const artifactName =  row._row.data.attributes.artifact;
+    const artifactMat = row._row.data.attributes.material;
+    const artifactFun = row._row.data.attributes.function;
+    const mark = row._row.data.attributes.makers_mark;
+    const markDetails = row._row.data.attributes.makers_mark_details;
+    const notes = row._row.data.attributes.notes;
+    const scan = row._row.data.attributes.scan;
+    const photoFolder = row._row.data.attributes.photo_id;
+    const photo = row._row.data.attributes.photograph;
+    const modal = row._row.data.attributes.f3d_model;
+    const currentLoc = row._row.data.attributes.current__location;    
+
+    const query = sitesLayer.createQuery();
+    // Query the sites layer for the ID
+    query.where = "master_unit =" + "'" + siteId + "'";
+    query.returnGeometry = true;                 
+    query.outFields = "*";
+    sitesLayer.queryFeatures(query)
+      .then(function(response){
+         // returns a feature set with features containing an OBJECTID
+         const objectID = response.features[0].attributes.objectid;       
+         const locId = response.features[0].attributes.master_unit;   
+         console.log(response.features);          
+        
+         view.whenLayerView(sitesLayer).then(function(layerView) {
+            const queryExtent = new Query({
+              objectIds: [objectID]
+         });    
+
+            const extent = response.features[0].geometry.extent;        
+
+            view.goTo({ center: extent.expand(6) }, { duration: 800 });
+
+            sitesLayer.queryExtent(queryExtent).then(function(result) {  
+             /* // change the camera position to correspond to the matching cabinet of the record            
+               view.goTo({
+                center: new_ext.expand(4),
+               // zoom: 13,
+                //tilt: 75,
+                //heading: 358.54
+                }, {speedFactor: 0.5 });   */
+            });          
+
+            // reduce popup size
+            $(function() {            
+                $("body:not(.esriIsPhoneSize) #viewDiv .esri-popup.esri-popup--is-docked .esri-popup__main-container").css('padding-bottom', '0px');                
+            });
+            
+            // if any, remove the previous highlights
+            if (highlight) {
+              highlight.remove();
+            }
+            // highlight the feature with the returned objectId
+            highlight = layerView.highlight([objectID]);
+            }) 
+            console.log('we are here');
+            // check if the clicked record has an existing image
+            if (photo !== '' && photo !== null) {
+              /*// change the image URL and title to display in the viewer
+              document.getElementById('image').src=thumbUrl;
+              document.getElementById('image').alt=itemTitle;
+              viewer.update();      */          
+              
+              // open a popup at the drawer location of the selected map
+              view.popup.open({                  
+                // Set the popup's title to the coordinates of the clicked location
+                title: "<h6><b> title",  
+                content: "test"/*"<img src='" + thumbUrl + "' class='thumbdisplay'/><br><br><b>Title: </b>" + itemTitle +
+                "<br><br><b>Date: </b>" + items[2] + "<br><br><b>Author: </b>" + items[1] + "<br><br><b>Publisher: </b>" + 
+                items[4] + "<br><br><b>Scale: </b>" + items[0] + "<br><br><b>Call Number: </b>" + items[5] +
+                "<br><br><b>Location: </b>" + locName + locId + "<br><a href=" + "'" + itemLink + 
+                "' target='_blank' rel='noopener noreferrer' class='catlink'>View item in ASU Library catalog</a>" +              
+                "<a href=" + "'" + indexUrl + "' target='_blank' rel='noopener noreferrer' class='indexlink'>View item in spatial index</a>" +
+                "<a href=" + "'" + supUrl + "' target='_blank' rel='noopener noreferrer' class='suplink'>Learn more about this item</a>" +
+                "<a href='https://lib.asu.edu/geo/services' target='_blank' rel='noopener noreferrer' class='maroon'>Request access</a>"*/,
+                // "<br><br><h6></b><a href='#' id='prev' class='previous round'>&#8249; Previous</a><a href='#' id='next' class='next round'>Next &#8250;</a>",
+                location: response.features[0].geometry.centroid, // Set the location of the popup to the clicked location 
+                actions: []      
+              });                   
+            } else {
+              view.popup.open({
+                // Set the popup's title to the coordinates of the clicked location
+                title: "<h6><b>" + truncTitle,   
+                content: "<b>Title: </b>" + itemTitle +
+                "<br><br><b>Date: </b>" + items[2] + "<br><br><b>Author: </b>" + items[1] + "<br><br><b>Publisher: </b>" + 
+                items[4] + "<br><br><b>Scale: </b>" + items[0] + "<br><br><b>Call Number: </b>" + items[5] +
+                "<br><br><b>Location: </b>" + locName + locId + "<br><a href=" + "'" + itemLink + 
+                "' target='_blank' rel='noopener noreferrer' class='catlink'>View item in ASU Library catalog</a>" +              
+                "<a href=" + "'" + indexUrl + "' target='_blank' rel='noopener noreferrer' class='indexlink'>View item in spatial index</a>" +
+                "<a href=" + "'" + supUrl + "' target='_blank' rel='noopener noreferrer' class='suplink'>Learn more about this item</a>" +
+                "<a href='https://lib.asu.edu/geo/services' target='_blank' rel='noopener noreferrer' class='maroon'>Request access</a>",
+                //"<br><br><h6></b><a href='#' id='prev' class='previous round'>&#8249; Previous</a><a href='#' id='next' class='next round'>Next &#8250;</a>",
+                location: response.features[0].geometry.centroid, // Set the location of the popup to the clicked location 
+                actions: []      
+              });                 
+            }
+          /*  // if any popup links don't have valid URL values, remove them  
+            if (itemLink == "NOT FOUND") {
+              $(function() {             
+                $('.catlink').css({"display":"none"});
+              });
+            } else {
+                $('.catlink').css({"display":"block"});
+            }
+
+            if (indexUrl == null) {
+              $(function() {             
+                $('.indexlink').css({"display":"none"});
+              });
+            } else {
+                $('.indexlink').css({"display":"block"});
+            }
+
+            if (supUrl == null) {
+              $(function() {             
+                $('.suplink').css({"display":"none"});
+              });
+            } else {
+                $('.suplink').css({"display":"block"});
+            }*/
+       });    
+  }
+
    // close button of the sidebar 
   // when someone clicks the advanced search submit button        
   $(".closebtn").click(function(){
     closeNav();
+  });
+
+   // Code for the search bar functions
+  $( "#searchBtn" ).click(function() {
+    view.popup.close();
+    table.clearData();
+   // $(".esri-icon-table").show();
+    // get the value of the search box
+    const searchVal = $( "#search" ).val();
+
+    $.ajax({
+        dataType: 'json',
+        url: tableURL + 'query?where=site+LIKE+%27%25' + searchVal + '%25%27+OR+location+LIKE+%27%25' + searchVal + '%25%27+OR+artifact+LIKE+%27%25' + searchVal +'%25%27+OR+material+LIKE+%27%25' + searchVal + '%25%27+OR+function+LIKE+%27%25' + searchVal + '%25%27+OR+notes+LIKE+%27%25' + searchVal + '%25%27+OR+master_unit+LIKE+%27%25' + searchVal + '%25%27+OR+uniqueid+LIKE+%27%25' + searchVal + '%25%27&objectIds=&time=&resultType=none&outFields=*&returnHiddenFields=false&returnIdsOnly=false&returnUniqueIdsOnly=false&returnCountOnly=false&returnDistinctValues=false&cacheHint=false&orderByFields=&groupByFieldsForStatistics=&outStatistics=&having=&resultOffset=&resultRecordCount=&sqlFormat=none&f=pjson',
+        type: "GET",    
+        success: function(data) {
+          console.log(data);
+         if (data.features.length == 0) {          
+          alert('The search returned no results. Please try different terms.');
+         } else {           
+          table.setData(data.features);  
+          openNav();        
+         } 
+        }
+        });
   });
    
   // Create a style for the chartsLayer
@@ -163,7 +329,10 @@
 
   view.on("click", function(event){
     view.hitTest(event, { include: sitesLayer})
-      .then(function(response){      
+      .then(function(response){  
+          if (highlight) {
+              highlight.remove();
+            }    
          // get the attibutes from the resulting graphic
          const graphic = response.results[0].graphic;
          console.log(graphic.attributes); 
@@ -187,18 +356,18 @@
 
   // Listen for changes on the opacity slider
   slider.on(['thumb-change', 'thumb-drag'], function(event) {
-  atlas_1885.opacity = event.value / 100;  
-  atlas_1893.opacity = event.value / 100;
-  fips_1897.opacity = event.value / 100;
-  fips_1910.opacity = event.value / 100;
-  fips_1915.opacity = event.value / 100;
-  fips_49_51.opacity = event.value / 100;   
-});
+    atlas_1885.opacity = event.value / 100;  
+    atlas_1893.opacity = event.value / 100;
+    fips_1897.opacity = event.value / 100;
+    fips_1910.opacity = event.value / 100;
+    fips_1915.opacity = event.value / 100;
+    fips_49_51.opacity = event.value / 100;   
+  });
 
   // Code for the location dropdown menu
   $("#location").change(function () {
     // Get the value of the selected item
-    var value = this.value;
+    const value = this.value;
     if (value == '1885') {
       atlas_1885.visible = true;
       atlas_1893.visible = false;
