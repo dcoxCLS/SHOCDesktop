@@ -107,23 +107,157 @@
               objectIds: [objectID]
          });    
 
-            const extent = response.features[0].geometry.extent;        
+        const extent = response.features[0].geometry.extent;        
 
-            view.goTo({ center: extent.expand(6) }, { duration: 800 });
+        view.goTo({ center: extent.expand(6) }, { duration: 800 });
 
-            sitesLayer.queryExtent(queryExtent).then(function(result) {  
-             /* // change the camera position to correspond to the matching cabinet of the record            
-               view.goTo({
-                center: new_ext.expand(4),
-               // zoom: 13,
-                //tilt: 75,
-                //heading: 358.54
-                }, {speedFactor: 0.5 });   */
-            });          
+        sitesLayer.queryExtent(queryExtent).then(function(result) {               
+        });          
 
-            // reduce popup size
-            $(function() {            
-                $("body:not(.esriIsPhoneSize) #viewDiv .esri-popup.esri-popup--is-docked .esri-popup__main-container").css('padding-bottom', '0px');                
+        // reduce popup size
+        $(function() {            
+            $("body:not(.esriIsPhoneSize) #viewDiv .esri-popup.esri-popup--is-docked .esri-popup__main-container").css('padding-bottom', '0px');                
+        });
+        
+        // if any, remove the previous highlights
+        if (highlight) {
+          highlight.remove();
+        }
+        // highlight the feature with the returned objectId
+        highlight = layerView.highlight([objectID]);
+        }) 
+        console.log('we are here');
+        // check if the clicked record has an existing image
+        if (photo !== '' && photo !== null) {
+          /*// change the image URL and title to display in the viewer
+          document.getElementById('image').src=thumbUrl;
+          document.getElementById('image').alt=itemTitle;
+          viewer.update();      */          
+          
+          // open a popup at the drawer location of the selected map
+          view.popup.open({                  
+            // Set the popup's title to the coordinates of the clicked location
+            title: "<h6><b> title",  
+            content: "test"/*"<img src='" + thumbUrl + "' class='thumbdisplay'/><br><br><b>Title: </b>" + itemTitle +
+            "<br><br><b>Date: </b>" + items[2] + "<br><br><b>Author: </b>" + items[1] + "<br><br><b>Publisher: </b>" + 
+            items[4] + "<br><br><b>Scale: </b>" + items[0] + "<br><br><b>Call Number: </b>" + items[5] +
+            "<br><br><b>Location: </b>" + locName + locId + "<br><a href=" + "'" + itemLink + 
+            "' target='_blank' rel='noopener noreferrer' class='catlink'>View item in ASU Library catalog</a>" +              
+            "<a href=" + "'" + indexUrl + "' target='_blank' rel='noopener noreferrer' class='indexlink'>View item in spatial index</a>" +
+            "<a href=" + "'" + supUrl + "' target='_blank' rel='noopener noreferrer' class='suplink'>Learn more about this item</a>" +
+            "<a href='https://lib.asu.edu/geo/services' target='_blank' rel='noopener noreferrer' class='maroon'>Request access</a>"*/,
+            // "<br><br><h6></b><a href='#' id='prev' class='previous round'>&#8249; Previous</a><a href='#' id='next' class='next round'>Next &#8250;</a>",
+            location: response.features[0].geometry.centroid, // Set the location of the popup to the clicked location 
+            actions: []      
+          });                   
+        } else {
+          view.popup.open({
+            // Set the popup's title to the coordinates of the clicked location
+            title: "<h6><b>" + truncTitle,   
+            content: "<b>Title: </b>" + itemTitle +
+            "<br><br><b>Date: </b>" + items[2] + "<br><br><b>Author: </b>" + items[1] + "<br><br><b>Publisher: </b>" + 
+            items[4] + "<br><br><b>Scale: </b>" + items[0] + "<br><br><b>Call Number: </b>" + items[5] +
+            "<br><br><b>Location: </b>" + locName + locId + "<br><a href=" + "'" + itemLink + 
+            "' target='_blank' rel='noopener noreferrer' class='catlink'>View item in ASU Library catalog</a>" +              
+            "<a href=" + "'" + indexUrl + "' target='_blank' rel='noopener noreferrer' class='indexlink'>View item in spatial index</a>" +
+            "<a href=" + "'" + supUrl + "' target='_blank' rel='noopener noreferrer' class='suplink'>Learn more about this item</a>" +
+            "<a href='https://lib.asu.edu/geo/services' target='_blank' rel='noopener noreferrer' class='maroon'>Request access</a>",
+            //"<br><br><h6></b><a href='#' id='prev' class='previous round'>&#8249; Previous</a><a href='#' id='next' class='next round'>Next &#8250;</a>",
+            location: response.features[0].geometry.centroid, // Set the location of the popup to the clicked location 
+            actions: []      
+          });                 
+        }
+      /*  // if any popup links don't have valid URL values, remove them  
+        if (itemLink == "NOT FOUND") {
+          $(function() {             
+            $('.catlink').css({"display":"none"});
+          });
+        } else {
+            $('.catlink').css({"display":"block"});
+        }
+
+        if (indexUrl == null) {
+          $(function() {             
+            $('.indexlink').css({"display":"none"});
+          });
+        } else {
+            $('.indexlink').css({"display":"block"});
+        }
+
+        if (supUrl == null) {
+          $(function() {             
+            $('.suplink').css({"display":"none"});
+          });
+        } else {
+            $('.suplink').css({"display":"block"});
+        }*/
+   });    
+  }
+
+  function highLightSites (results) {
+    const objectIds = [];
+    results.forEach(function(result) {
+      // the result of the REST API Query
+      const sites = result.attributes.master_unit;    
+      const titles = result.attributes.site; 
+      objectIds.push(sites);
+    });
+
+    let occurrences = { };
+    for (let i = 0, j = objectIds.length; i < j; i++) {
+       occurrences[objectIds[i]] = (occurrences[objectIds[i]] || 0) + 1;
+    }
+
+    console.log(occurrences);   
+
+    const uniqueIds = [...new Set(objectIds)];
+    const recCount = results.length;
+    const siteCount = uniqueIds.length;
+    console.log(objectIds);
+    console.log(uniqueIds);
+    const siteQuery = uniqueIds.join(" OR master_unit = ");
+    console.log(siteQuery);      
+    const query = sitesLayer.createQuery();
+    // Query the cabinets layer for the LOC_ID
+    query.where = "master_unit = " + siteQuery;
+    query.returnGeometry = true;               
+    query.returnZ = true;
+    query.outFields = ["objectid", "master_unit"];
+    siteLayer.queryFeatures(query)
+      .then(function(response){
+          console.log(response);
+          const objIds = [];
+         // returns a feature set with features containing an OBJECTID
+         const objectID = response.features[0].attributes.OBJECTID;
+         const feature = response.features;
+         feature.forEach(function(feature) {
+          const ids = feature.attributes.OBJECTID;
+          objIds.push(ids);
+         });
+         console.log(objIds);           
+        
+         view.whenLayerView(sitesLayer).then(function(layerView) {
+            const queryExtent = new Query({
+              objectIds: [objIds]
+            });
+            // zoom to the extent of drawer that is clicked on the table  
+            var new_ext = new Extent({
+              xmin: response.features[0].geometry.extent.xmin, 
+              ymin: response.features[0].geometry.extent.ymin, 
+              zmin: zmin,
+              xmax: response.features[0].geometry.extent.xmax, 
+              ymax: response.features[0].geometry.extent.ymax,
+              zmax: zmax,                        
+              spatialReference: { wkid: 4326 }
+            });
+
+            sitesLayer.queryExtent(queryExtent).then(function(result) {                
+              view.goTo({
+              center: new_ext.expand(14),
+             // zoom: 13,
+              tilt: 67.85,
+              heading: 38.82
+              }, {speedFactor: 0.5 });                        
             });
             
             // if any, remove the previous highlights
@@ -131,76 +265,21 @@
               highlight.remove();
             }
             // highlight the feature with the returned objectId
-            highlight = layerView.highlight([objectID]);
-            }) 
-            console.log('we are here');
-            // check if the clicked record has an existing image
-            if (photo !== '' && photo !== null) {
-              /*// change the image URL and title to display in the viewer
-              document.getElementById('image').src=thumbUrl;
-              document.getElementById('image').alt=itemTitle;
-              viewer.update();      */          
-              
-              // open a popup at the drawer location of the selected map
-              view.popup.open({                  
-                // Set the popup's title to the coordinates of the clicked location
-                title: "<h6><b> title",  
-                content: "test"/*"<img src='" + thumbUrl + "' class='thumbdisplay'/><br><br><b>Title: </b>" + itemTitle +
-                "<br><br><b>Date: </b>" + items[2] + "<br><br><b>Author: </b>" + items[1] + "<br><br><b>Publisher: </b>" + 
-                items[4] + "<br><br><b>Scale: </b>" + items[0] + "<br><br><b>Call Number: </b>" + items[5] +
-                "<br><br><b>Location: </b>" + locName + locId + "<br><a href=" + "'" + itemLink + 
-                "' target='_blank' rel='noopener noreferrer' class='catlink'>View item in ASU Library catalog</a>" +              
-                "<a href=" + "'" + indexUrl + "' target='_blank' rel='noopener noreferrer' class='indexlink'>View item in spatial index</a>" +
-                "<a href=" + "'" + supUrl + "' target='_blank' rel='noopener noreferrer' class='suplink'>Learn more about this item</a>" +
-                "<a href='https://lib.asu.edu/geo/services' target='_blank' rel='noopener noreferrer' class='maroon'>Request access</a>"*/,
-                // "<br><br><h6></b><a href='#' id='prev' class='previous round'>&#8249; Previous</a><a href='#' id='next' class='next round'>Next &#8250;</a>",
-                location: response.features[0].geometry.centroid, // Set the location of the popup to the clicked location 
-                actions: []      
-              });                   
-            } else {
-              view.popup.open({
-                // Set the popup's title to the coordinates of the clicked location
-                title: "<h6><b>" + truncTitle,   
-                content: "<b>Title: </b>" + itemTitle +
-                "<br><br><b>Date: </b>" + items[2] + "<br><br><b>Author: </b>" + items[1] + "<br><br><b>Publisher: </b>" + 
-                items[4] + "<br><br><b>Scale: </b>" + items[0] + "<br><br><b>Call Number: </b>" + items[5] +
-                "<br><br><b>Location: </b>" + locName + locId + "<br><a href=" + "'" + itemLink + 
-                "' target='_blank' rel='noopener noreferrer' class='catlink'>View item in ASU Library catalog</a>" +              
-                "<a href=" + "'" + indexUrl + "' target='_blank' rel='noopener noreferrer' class='indexlink'>View item in spatial index</a>" +
-                "<a href=" + "'" + supUrl + "' target='_blank' rel='noopener noreferrer' class='suplink'>Learn more about this item</a>" +
-                "<a href='https://lib.asu.edu/geo/services' target='_blank' rel='noopener noreferrer' class='maroon'>Request access</a>",
-                //"<br><br><h6></b><a href='#' id='prev' class='previous round'>&#8249; Previous</a><a href='#' id='next' class='next round'>Next &#8250;</a>",
-                location: response.features[0].geometry.centroid, // Set the location of the popup to the clicked location 
-                actions: []      
-              });                 
-            }
-          /*  // if any popup links don't have valid URL values, remove them  
-            if (itemLink == "NOT FOUND") {
-              $(function() {             
-                $('.catlink').css({"display":"none"});
-              });
-            } else {
-                $('.catlink').css({"display":"block"});
-            }
-
-            if (indexUrl == null) {
-              $(function() {             
-                $('.indexlink').css({"display":"none"});
-              });
-            } else {
-                $('.indexlink').css({"display":"block"});
-            }
-
-            if (supUrl == null) {
-              $(function() {             
-                $('.suplink').css({"display":"none"});
-              });
-            } else {
-                $('.suplink').css({"display":"block"});
-            }*/
-       });    
+            highlight = layerView.highlight(objIds);
+            })
+            // open a popup at the drawer location of the selected map
+            view.popup.open({
+              // Set the popup's title to the coordinates of the clicked location                          
+              title: "<h6><b>test", 
+              content: "Results shown in the sidebar. Click any record for more information.",
+              location: response.features[0].geometry.centroid,// Set the location of the popup to the clicked location                      
+            });              
+            // reduce the popup size  
+            $(function() {            
+                $("body:not(.esriIsPhoneSize) #viewDiv .esri-popup.esri-popup--is-docked .esri-popup__main-container").css('padding-bottom', '0px');                
+            });
+       });
   }
-
    // close button of the sidebar 
   // when someone clicks the advanced search submit button        
   $(".closebtn").click(function(){
@@ -223,13 +302,25 @@
           console.log(data);
          if (data.features.length == 0) {          
           alert('The search returned no results. Please try different terms.');
-         } else {           
+         } else {      
+         // highLightSites(data.features);     
           table.setData(data.features);  
           openNav();        
          } 
         }
         });
   });
+
+   // if users hits enter perform the search   
+  $( "#search" ).keyup(function(event) {
+    // Number 13 is the "Enter" key on the keyboard
+    if (event.keyCode === 13) {
+      // Cancel the default action, if needed
+      event.preventDefault();
+      // Trigger the button element with a click
+      document.getElementById("searchBtn").click();
+    }        
+ }); 
    
   // Create a style for the chartsLayer
   const renderer = {
