@@ -21,16 +21,17 @@
       layout:"fitDataFill",         
       selectable: 1,
       clipboard:true, //enable clipboard functionality,
-      groupBy: "attributes.unit",                        
+      groupBy: "attributes.master_unit",                        
       columns:[
           {title:"Artifact", field:"attributes.artifact", width: 500},
           {title:"Material", field:"attributes.material", width: 300},
+          {title:"Master Unit", field:"attributes.master_unit", width: 300, visible: false},
           {title:"Unit", field:"attributes.unit", width: 300, visible: false},
           //{title:"Publisher", field:"attributes.PUBLISHER", width: 300, visible: false},
           //{title:"Date", field:"attributes.DATE", width: 150}         
       ],    
       initialSort:[
-        //{column:"attributes.MAP_ORDER", dir:"asc"}, //sort by this first        
+        {column:"attributes.unit", dir:"asc"}, //sort by this first        
       ],        
       // Detect when someone clicks on a row in the table
       rowClick:function(e, row){ 
@@ -41,9 +42,9 @@
         getRowData(row);   
       },
       groupHeader:function(value, count, data, group){        
-        if (value < 241) {
+      //  if (value < 241) {
           return "Site: " + value + "<span style='color:#8c1d40; margin-left:10px;'>(" + count + " items)</span>"; 
-        }          
+       // }          
       },    
   });        
   
@@ -215,23 +216,24 @@
     const siteCount = uniqueIds.length;
     console.log(objectIds);
     console.log(uniqueIds);
-    const siteQuery = uniqueIds.join(" OR master_unit = ");
+    const idsInQuotes = uniqueIds.map(id => `'${id}'`);
+    console.log(idsInQuotes);
+    const siteQuery = idsInQuotes.join(" OR master_unit = ");
     console.log(siteQuery);      
     const query = sitesLayer.createQuery();
     // Query the cabinets layer for the LOC_ID
     query.where = "master_unit = " + siteQuery;
-    query.returnGeometry = true;               
-    query.returnZ = true;
+    query.returnGeometry = true;    
     query.outFields = ["objectid", "master_unit"];
-    siteLayer.queryFeatures(query)
+    sitesLayer.queryFeatures(query)
       .then(function(response){
           console.log(response);
           const objIds = [];
          // returns a feature set with features containing an OBJECTID
-         const objectID = response.features[0].attributes.OBJECTID;
+         const objectID = response.features[0].attributes.objectid;
          const feature = response.features;
          feature.forEach(function(feature) {
-          const ids = feature.attributes.OBJECTID;
+          const ids = feature.attributes.objectid;
           objIds.push(ids);
          });
          console.log(objIds);           
@@ -240,24 +242,15 @@
             const queryExtent = new Query({
               objectIds: [objIds]
             });
-            // zoom to the extent of drawer that is clicked on the table  
-            var new_ext = new Extent({
-              xmin: response.features[0].geometry.extent.xmin, 
-              ymin: response.features[0].geometry.extent.ymin, 
-              zmin: zmin,
-              xmax: response.features[0].geometry.extent.xmax, 
-              ymax: response.features[0].geometry.extent.ymax,
-              zmax: zmax,                        
-              spatialReference: { wkid: 4326 }
-            });
-
+            
             sitesLayer.queryExtent(queryExtent).then(function(result) {                
-              view.goTo({
-              center: new_ext.expand(14),
-             // zoom: 13,
-              tilt: 67.85,
-              heading: 38.82
-              }, {speedFactor: 0.5 });                        
+              let extent = response.features[0].geometry.extent;
+              response.features.forEach(function(feature) {
+                extent = extent.union(feature.geometry.extent);
+              });
+
+            view.goTo({ center: extent.expand(1.3) }, { duration: 400 }); 
+                             
             });
             
             // if any, remove the previous highlights
@@ -303,7 +296,7 @@
          if (data.features.length == 0) {          
           alert('The search returned no results. Please try different terms.');
          } else {      
-         // highLightSites(data.features);     
+          highLightSites(data.features);     
           table.setData(data.features);  
           openNav();        
          } 
