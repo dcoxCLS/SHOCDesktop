@@ -89,7 +89,9 @@
     const photoFolder = row._row.data.attributes.photo_id;
     const photo = row._row.data.attributes.photograph;
     const modal = row._row.data.attributes.f3d_model;
-    const currentLoc = row._row.data.attributes.current__location;    
+    const currentLoc = row._row.data.attributes.current__location; 
+
+    $('#siteModal').modal('show'); 
 
     const query = sitesLayer.createQuery();
     // Query the sites layer for the ID
