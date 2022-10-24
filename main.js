@@ -88,7 +88,7 @@
     const scan = row._row.data.attributes.scan;
     const photoFolder = row._row.data.attributes.photo_id;
     const photo = row._row.data.attributes.photograph;
-    const modal = row._row.data.attributes.f3d_model;
+    const model = row._row.data.attributes.f3d_model;
     const currentLoc = row._row.data.attributes.current__location;     
 
     const query = sitesLayer.createQuery();
@@ -127,9 +127,17 @@
         // highlight the feature with the returned objectId
         highlight = layerView.highlight([objectID]);
         }) 
-        console.log('we are here');
+        console.log(photoFolder, photo, model);
+        $('#artName').html(artifactName);
+        $('#artModal').modal('show');
+        $('#artNum').html("<b>Artifact Number: </b>" + artifactNum);
+        $('#artdesc').html("<b>Description: </b>" + notes);
+        $('#artloc').html("<b>Location: </b>" + location);
+        $('#artunit').html("<b>Unit: </b>" + unit);
+
         // check if the clicked record has an existing image
         if (photo !== '' && photo !== null) {
+          document.getElementById("artPic").src="https://portal1-geo.sabu.mtu.edu/images/hamtramck/photos/artifacts/" + photoFolder + "/" + photo;
           /*// change the image URL and title to display in the viewer
           document.getElementById('image').src=thumbUrl;
           document.getElementById('image').alt=itemTitle;
