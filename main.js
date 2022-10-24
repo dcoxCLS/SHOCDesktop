@@ -89,9 +89,7 @@
     const photoFolder = row._row.data.attributes.photo_id;
     const photo = row._row.data.attributes.photograph;
     const modal = row._row.data.attributes.f3d_model;
-    const currentLoc = row._row.data.attributes.current__location; 
-
-    $('#siteModal').modal('show'); 
+    const currentLoc = row._row.data.attributes.current__location;     
 
     const query = sitesLayer.createQuery();
     // Query the sites layer for the ID
@@ -417,12 +415,24 @@
     view.hitTest(event, { include: sitesLayer})
       .then(function(response){  
           if (highlight) {
-              highlight.remove();
-            }    
+            highlight.remove();
+          }    
          // get the attibutes from the resulting graphic
          const graphic = response.results[0].graphic;
          console.log(graphic.attributes); 
          const siteId = graphic.attributes.master_unit; 
+         const displayName = graphic.attributes.display_name;
+         const site = graphic.attributes.site;
+         const location = graphic.attributes.location;
+         const notes = graphic.attributes.notes; 
+
+         $('#siteModal').modal('show');
+         $('#siteName').html(displayName);
+         $('#sitedesc').html('<b>Description: </b> The description of the excavation site will go here');
+         $('#siteloc').html('<b>Location: </b>' + location);
+         $('#site').html('<b>Site: </b>' + site);
+         $('#sitenote').html('<b>Notes: </b>' + notes);
+
           $.ajax({
             dataType: 'json',
             url: 'https://portal1-geo.sabu.mtu.edu/server/rest/services/Hosted/artifact_catalog/FeatureServer/0/query?where=master_unit+%3D+%27' + siteId + '%27&objectIds=&time=&geometry=&geometryType=esriGeometryEnvelope&inSR=&spatialRel=esriSpatialRelIntersects&distance=&units=esriSRUnit_Foot&relationParam=&outFields=*&returnGeometry=true&maxAllowableOffset=&geometryPrecision=&outSR=&havingClause=&gdbVersion=&historicMoment=&returnDistinctValues=false&returnIdsOnly=false&returnCountOnly=false&returnExtentOnly=false&orderByFields=&groupByFieldsForStatistics=&outStatistics=&returnZ=false&returnM=false&multipatchOption=xyFootprint&resultOffset=&resultRecordCount=&returnTrueCurves=false&returnCentroid=false&timeReferenceUnknownClient=false&sqlFormat=none&resultType=&datumTransformation=&lodType=geohash&lod=&lodSR=&f=pjson',
