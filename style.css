@@ -198,6 +198,10 @@ font-family: 'Lora', serif;
   font-family: 'Montserrat', sans-serif;
 }
 
+.esri-ui .esri-popup {
+  display:  none;
+}
+
 /*Infobox*/
 .infolink {
   color: #8c1d40;
@@ -268,6 +272,7 @@ h10 {
   border-radius: 0px;
   z-index: 999999999999999999999999999999999999999999999999999999999;
 }
+
 #sites-table .tabulator-selected {
   background-color: #D23153 !important;
 }
@@ -289,6 +294,30 @@ h10 {
   width:  100%;
   margin-top:  5px;
   height:  500px;
+}
+
+.modal {
+    pointer-events: none;
+}
+
+.modal-dialog {
+  position:  absolute;
+  top: 35px;
+  right:  15px;
+  animation:  popup-intro-animation-down 200ms ease-in-out;
+  box-sizing:  border-box;
+  box-shadow:  0 1px 4px rgb(0 0 0 / 80%);
+  border-radius: 0px !important;         
+}
+
+.modal-content {
+  border-radius:  0px;
+  border:  none;
+}
+
+.close {
+  font-size:  42;
+  font-weight:  100;
 }
 
 /* Custom scrollbar */
