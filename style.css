@@ -272,6 +272,25 @@ h10 {
   background-color: #D23153 !important;
 }
 
+.data-original {
+  border-radius:  .25rem!important;
+  box-shadow:  0 0 2px 0 rgba(0,0,0,.16),0 1px 1px 0 rgba(0,0,0,.1)!important;
+  width:  200px;
+  height:  auto;
+  padding:  10px;
+  margin:  5px;
+  box-sizing:  border-box;
+  vertical-align:  middle;
+  box-sizing: border-box;
+  cursor: zoom-in;
+}
+
+#modelframe {
+  width:  100%;
+  margin-top:  5px;
+  height:  500px;
+}
+
 /* Custom scrollbar */
 /* width */
 ::-webkit-scrollbar {

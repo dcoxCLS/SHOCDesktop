@@ -66,11 +66,37 @@
     //document.getElementsByClassName("container")[0].style.left = "3%";
   }
 
+  // setup a new viewer to display the map scans
+    const viewer = new Viewer(document.getElementById('galley'), {
+      navbar: false,
+      inline: false,
+      toolbar: {
+        zoomIn: 1,
+        zoomOut: 1,
+        oneToOne: 1,
+        reset: 1,
+        prev: 0,
+        play: {
+          show: 1,
+          size: 'large',
+        },
+        next: 0,
+        rotateLeft: 1,
+        rotateRight: 1,
+        flipHorizontal: 1,
+        flipVertical: 1,
+      },
+      viewed() {
+        //viewer.zoomTo(1);
+      },
+    });  
+
   projection.load();
 
    // when a row in the table is seleted or queried, get its attributes.
   // populate a new popup with this information 
-  function getRowData(row) {                       
+  function getRowData(row) {   
+    document.getElementById("galley").innerHTML = "";                    
     //view.popup.close();
     const siteId = row._row.data.attributes.master_unit;  
     const siteName = row._row.data.attributes.site;
@@ -128,16 +154,37 @@
         highlight = layerView.highlight([objectID]);
         }) 
         console.log(photoFolder, photo, model);
-        $('#artName').html(artifactName);
+        $('#artName').html("Artifact: " + artifactName);
         $('#artModal').modal('show');
         $('#artNum').html("<b>Artifact Number: </b>" + artifactNum);
         $('#artdesc').html("<b>Description: </b>" + notes);
         $('#artloc').html("<b>Location: </b>" + location);
         $('#artunit').html("<b>Unit: </b>" + unit);
+        $('#artcontext').html("<b>Context: </b>" + context);
 
         // check if the clicked record has an existing image
         if (photo !== '' && photo !== null) {
-          document.getElementById("artPic").src="https://portal1-geo.sabu.mtu.edu/images/hamtramck/photos/artifacts/" + photoFolder + "/" + photo;
+          const artPhotos = photo.split(",");          
+          document.getElementById("artPic").src="https://portal1-geo.sabu.mtu.edu/images/hamtramck/photos/artifacts/" + photoFolder + "/" + artPhotos[0];
+          const galley = document.getElementById('galley');
+          
+          artPhotos.forEach((photo, index) => {
+            console.log(photo);
+            const urlTrim = photo.replace(/ /g, "");
+            const item = document.createElement("img");
+            item.className = "data-original";
+            item.classList.add("data-original");
+            item.src = "https://portal1-geo.sabu.mtu.edu/images/hamtramck/photos/artifacts/" + photoFolder + "/" + urlTrim;
+            item.addEventListener("click", () => photoClickHandler(photo, index));
+            document.getElementById("galley").appendChild(item);
+          });
+
+          function photoClickHandler(photo, index) {
+            document.getElementById('galley').src="https://portal1-geo.sabu.mtu.edu/images/hamtramck/photos/artifacts/" + photoFolder + "/" + photo.replace(/ /g, "");            
+            viewer.update();
+          };
+
+          
           /*// change the image URL and title to display in the viewer
           document.getElementById('image').src=thumbUrl;
           document.getElementById('image').alt=itemTitle;

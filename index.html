@@ -6,6 +6,7 @@
     <link rel="stylesheet" href="https://js.arcgis.com/4.24/esri/themes/light/main.css" />
     <link href="https://unpkg.com/tabulator-tables@4.9.3/dist/css/tabulator.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/viewerjs/1.11.0/viewer.css" integrity="sha512-yQoyuXeQfYvH1Pj2YNO7mkXt1HB2jYOOr6Y5ghUKaWBAxKHZuaJLOM8krHiadUTxChYN9oA2MzIv0WXP2VN3yw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tabulator/4.9.3/css/tabulator_midnight.min.css" integrity="sha512-epdhm+q+Caq67Ujjcr7kPkNsBoFtmyaqHFuujUjygZnnRVRK70X6dOjX3Z4RDJF+bmG1KBwYHJ/OxMZgm1F2hQ==" crossorigin="anonymous" /> -->
     <!-- Load icon library -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
@@ -19,7 +20,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.min.js" integrity="sha512-3j3VU6WC5rPQB4Ld1jnLV7Kd5xr+cq9avvhwqzbH/taCRNURoeEpoPBK9pDyeukwSxwRPJ8fDgvYXd6SkaZ2TA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV" crossorigin="anonymous"></script>
     <script type="text/javascript" src="https://unpkg.com/tabulator-tables@4.9.3/dist/js/tabulator.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/viewerjs/1.10.0/viewer.js" integrity="sha512-psAniLUS9J4A5KNQiSt9XMNeVSMx/Rz89vQJqeYlOIiTR5WK8zU/8EPwAKt+522eeV04QUzIwX5VrAW10FbdeQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/viewerjs/1.11.0/viewer.js" integrity="sha512-e68PrxNPekCcWmoSXoT0a/y9Qp1t+9QIV4GenGVxbSpKN2/plzwEMIkqg2YvmO//4kIP+AA0AVHNskDM8JVtZQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script src="https://js.arcgis.com/4.24/"></script>  
   </head>
   <body>     
@@ -52,9 +53,7 @@
             <li class="nav-item">
                 <a class="nav-link" href="https://lib.asu.edu/geo/services" target="_blank" rel="noopener">Wayne</a>
             </li>
-        </ul>
-
-    
+        </ul>    
     </div>
 </nav>
 <div id="mySidebar" class="sidebar">
@@ -75,18 +74,6 @@
       <option selected value="1949">Sanborn Map 1949-1951</option>
     </select>
 
-     <!-- Search Bar -->
-    <!-- <div class="container justify-content-center">
-    <div class="row">
-        <div class="col-md-8">
-            <div class="input-group mb-3"> <input type="text" class="form-control input-text" placeholder="Search artifacts, photographs, documents, etc..." aria-label="Title Search" id="search" aria-describedby="basic-addon2" autocomplete="off">
-                
-                <div class="input-group-append"> <button class="btn btn-outline-warning btn-lg" type="button" id="submit" title="Search"><i class="fa fa-search"></i></button> </div>
-            </div>
-        </div>
-    </div>
-</div>
-    </div>  -->
 <div>
   <!-- Default Image for ViewerJS -->
   <img id="image" src="" alt="Picture">
@@ -101,32 +88,30 @@
         </button>
       </div>
       <div class="modal-body">
-        <ul class="nav nav-tabs" id="myTab" role="tablist">
+        <ul class="nav nav-tabs" id="siteTabs" role="tablist">
   <li class="nav-item">
-    <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">Details</a>
+    <a class="nav-link active" id="site-details-tab" data-toggle="tab" href="#sitedetails" role="tab" aria-controls="sitedetails" aria-selected="true">Details</a>
   </li>
   <li class="nav-item">
-    <a class="nav-link" id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="false">Documents</a>
+    <a class="nav-link" id="site-documents-tab" data-toggle="tab" href="#sitedocuments" role="tab" aria-controls=sitedocuments aria-selected="false">Documents</a>
   </li>
   <li class="nav-item">
-    <a class="nav-link" id="contact-tab" data-toggle="tab" href="#contact" role="tab" aria-controls="contact" aria-selected="false">Photos</a>
+    <a class="nav-link" id="site-photos-tab" data-toggle="tab" href="#sitephotos" role="tab" aria-controls="sitephotos" aria-selected="false">Photos</a>
   </li>
 </ul>
-<div class="tab-content" id="myTabContent">
-  <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
+<div class="tab-content" id="siteTabContent">
+  <div class="tab-pane fade show active" id="sitedetails" role="tabpanel" aria-labelledby="site-details-tab">
     <div id="sitedesc"></div>
     <div id="siteloc"></div>
     <div id="site"></div>
     <div id="sitenote"></div>
 </div>
-  <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">...</div>
-  <div class="tab-pane fade" id="contact" role="tabpanel" aria-labelledby="contact-tab">...</div>
-</div>
-        <p>Modal body text goes here.</p>
+  <div class="tab-pane fade" id="sitedocuments" role="tabpanel" aria-labelledby="site-documents-tab">...</div>
+  <div class="tab-pane fade" id="sitephotos" role="tabpanel" aria-labelledby="site-photos-tab">...</div>
+</div>        
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-primary">View Artifact Catalog</button>
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary">View Artifact Catalog</button>        
       </div>
     </div>
   </div>
@@ -141,19 +126,22 @@
         </button>
       </div>
       <div class="modal-body">
-        <ul class="nav nav-tabs" id="myTab" role="tablist">
+        <ul class="nav nav-tabs" id="artTab" role="tablist">
   <li class="nav-item">
-    <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">Details</a>
+    <a class="nav-link active" id="art-details-tab" data-toggle="tab" href="#artdetails" role="tab" aria-controls="artdetails" aria-selected="true">Details</a>
   </li>
   <li class="nav-item">
-    <a class="nav-link" id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="false">Photos</a>
+    <a class="nav-link" id="art-documents-tab" data-toggle="tab" href="#artdocuments" role="tab" aria-controls="artdocuments" aria-selected="false">Documents</a>
   </li>
   <li class="nav-item">
-    <a class="nav-link" id="contact-tab" data-toggle="tab" href="#contact" role="tab" aria-controls="contact" aria-selected="false">3D Model</a>
+    <a class="nav-link" id="art-photos-tab" data-toggle="tab" href="#artphotos" role="tab" aria-controls="artphotos" aria-selected="false">Photos</a>
   </li>
+  <li class="nav-item">
+    <a class="nav-link" id="art-models-tab" data-toggle="tab" href="#artmodels" role="tab" aria-controls="artmodels" aria-selected="false">3D Model</a>
+  </li>  
 </ul>
-<div class="tab-content" id="myTabContent">
-  <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
+<div class="tab-content" id="artTabContent">
+  <div class="tab-pane fade show active" id="artdetails" role="tabpanel" aria-labelledby="art-details-tab">
     <img src="img_girl.jpg" id="artPic" alt="artifact pictures" class="responsive">
     <div id="artdesc"></div>
     <div id="artsite"></div>
@@ -167,15 +155,15 @@
     <div id="markdesc"></div>
     <div id="artcurrentloc"></div>
 </div>
-  <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">...</div>
-  <div class="tab-pane fade" id="contact" role="tabpanel" aria-labelledby="contact-tab">...</div>
-</div>
-        <p>Modal body text goes here.</p>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-primary">View Artifact Catalog</button>
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-      </div>
+  <div class="tab-pane fade" id="artphotos" role="tabpanel" aria-labelledby="art-photos-tab">
+    <div id="galley">           
+            </div>
+  </div>
+  <div class="tab-pane fade" id="artmodels" role="tabpanel" aria-labelledby="art-models-tab">
+    <iframe src="https://sketchfab.com/models/5aaca7b5af854bc9a905f16ba1f9685a/embed" id="modelframe" title="description"></iframe></div>
+  <div class="tab-pane fade" id="artdocuments" role="tabpanel" aria-labelledby="art-documents-tab">...</div>
+</div>        
+      </div>      
     </div>
   </div>
 </div>  
