@@ -487,6 +487,7 @@
          const docFolder = graphic.attributes.master_unit;
 
          document.getElementById("sitegalley").innerHTML = "";
+         document.getElementById("doclist").innerHTML = "";
          $('#artModal').modal('hide');
 
          $('#siteModal').modal('show');
@@ -496,8 +497,30 @@
          $('#site').html('<b>Site: </b>' + site);
          $('#sitenote').html('<b>Notes: </b>' + notes);
 
+         // check if there are many doucments
+         if (reports !== '' && reports !== null) {
+          const siteDocs = reports.split(",");
+          siteDocs.forEach(function(report) {            
+            const li = document.createElement("li");
+            const link = document.createElement('a');
+            link.setAttribute('href', "https://portal1-geo.sabu.mtu.edu/images/hamtramck/photos/sites/" + docFolder + "/" + report);
+            link.setAttribute('target', "_blank");
+            link.innerText = report;                      
+            li.classList.add("list-group-item");      
+            li.innerHTML = '<i class="fa fa-file" aria-hidden="true"></i> ';     
+            li.appendChild(link);
+            document.getElementById("doclist").appendChild(li);
+          });
+         }
+
+         // check if the clicked record has any drawings
+         if (drawings !== '' && drawings !== null) {
+          const drawingPhotos = drawings.split(",");
+          document.getElementById("drawPic").src="https://portal1-geo.sabu.mtu.edu/images/hamtramck/photos/sites/" + docFolder + "/" + drawingPhotos[0]; 
+         }
+
          // check if the clicked record has an existing image
-        if (photos !== '' && photos !== null) {
+         if (photos !== '' && photos !== null) {
           const sitePhotos = photos.split(",");          
           document.getElementById("sitePic").src="https://portal1-geo.sabu.mtu.edu/images/hamtramck/photos/sites/" + docFolder + "/" + sitePhotos[0];          ;
           
