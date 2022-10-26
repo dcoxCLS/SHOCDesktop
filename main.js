@@ -48,7 +48,7 @@
       },    
   });        
   
-    function openNav() {
+  function openNav() {
       //table.redraw(true);
     document.getElementById("mySidebar").style.width = "20%";
     document.getElementById("viewDiv").style.marginLeft = "20%";
@@ -96,7 +96,8 @@
    // when a row in the table is seleted or queried, get its attributes.
   // populate a new popup with this information 
   function getRowData(row) {   
-    document.getElementById("galley").innerHTML = "";                    
+    document.getElementById("galley").innerHTML = ""; 
+    $('#siteModal').modal('hide');                   
     //view.popup.close();
     const siteId = row._row.data.attributes.master_unit;  
     const siteName = row._row.data.attributes.site;
@@ -480,13 +481,42 @@
          const site = graphic.attributes.site;
          const location = graphic.attributes.location;
          const notes = graphic.attributes.notes; 
+         const photos = graphic.attributes.photos;
+         const drawings = graphic.attributes.drawings;
+         const reports = graphic.attributes.reports;
+         const docFolder = graphic.attributes.master_unit;
+
+         document.getElementById("sitegalley").innerHTML = "";
+         $('#artModal').modal('hide');
 
          $('#siteModal').modal('show');
-         $('#siteName').html(displayName);
+         $('#siteName').html("<b>" + displayName + "</b>");
          $('#sitedesc').html('<b>Description: </b> The description of the excavation site will go here');
          $('#siteloc').html('<b>Location: </b>' + location);
          $('#site').html('<b>Site: </b>' + site);
          $('#sitenote').html('<b>Notes: </b>' + notes);
+
+         // check if the clicked record has an existing image
+        if (photos !== '' && photos !== null) {
+          const sitePhotos = photos.split(",");          
+          document.getElementById("sitePic").src="https://portal1-geo.sabu.mtu.edu/images/hamtramck/photos/sites/" + docFolder + "/" + sitePhotos[0];          ;
+          
+          sitePhotos.forEach((photo, index) => {            
+            const urlTrim = photo.replace(/ /g, "");
+            const item = document.createElement("img");
+            item.className = "data-original";
+            item.classList.add("data-original");
+            item.src = "https://portal1-geo.sabu.mtu.edu/images/hamtramck/photos/sites/" + docFolder + "/" + urlTrim;
+            item.addEventListener("click", () => siteClickHandler(photo, index));
+            document.getElementById("sitegalley").appendChild(item);
+          });
+        }
+
+          function siteClickHandler(photo, index) {
+            document.getElementById('sitegalley').src="https://portal1-geo.sabu.mtu.edu/images/hamtramck/photos/sites/" + docFolder + "/" + photo.replace(/ /g, "");            
+            viewer.update();
+            //viewer.show();
+          };          
 
           $.ajax({
             dataType: 'json',
@@ -499,7 +529,10 @@
               const siteTitle = graphic.attributes.desctemp;
               $('#siteTitle').html("Site " + siteTitle);
               $('#results').html(numResults + " artifacts");
-              openNav();  
+              $('#numartifacts').html("<b>Artifacts cataloged:</b> " + numResults);
+              $( "#viewCat" ).click(function() {
+                  openNav();       
+              });            
             }
           });          
       });
