@@ -6,7 +6,7 @@ font-family: 'Lora', serif;
 }
 
 .slider.slider-horizontal{
-  width:400px; /* sample value - set it as you like*/
+  width:90%; /* sample value - set it as you like*/
 }
 
 .pnlm-title-box {
@@ -274,6 +274,15 @@ h10 {
     background: #99CC00;
 }
 
+.slider-tick {
+  background-color:  white;
+  opacity:  1;
+  border-color:  none;
+}
+
+.round {
+  border: none !important;
+}
 /*ESRI Popup CSS*/
 body:not(.esriIsPhoneSize) #viewDiv .esri-popup.esri-popup--is-docked .esri-popup__main-container {
     width: 296px;
