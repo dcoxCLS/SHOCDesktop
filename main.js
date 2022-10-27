@@ -12,6 +12,7 @@
 
    let highlight = null; 
    const tableURL = "https://portal1-geo.sabu.mtu.edu/server/rest/services/Hosted/artifact_catalog/FeatureServer/0/";
+   $.fn.modal.Constructor.prototype._enforceFocus = function() {};
 
   // Creates a new table to hold our map attributes  
   const table = new Tabulator("#sites-table", {             
@@ -66,8 +67,33 @@
     //document.getElementsByClassName("container")[0].style.left = "3%";
   }
 
-  // setup a new viewer to display the map scans
+  // setup a new viewer to display the artifact images
     const viewer = new Viewer(document.getElementById('galley'), {
+      navbar: false,
+      inline: false,
+      toolbar: {
+        zoomIn: 1,
+        zoomOut: 1,
+        oneToOne: 1,
+        reset: 1,
+        prev: 0,
+        play: {
+          show: 1,
+          size: 'large',
+        },
+        next: 0,
+        rotateLeft: 1,
+        rotateRight: 1,
+        flipHorizontal: 1,
+        flipVertical: 1,
+      },
+      viewed() {
+        //viewer.zoomTo(1);
+      },
+    });  
+
+    // setup a new viewer to display the site images
+    const siteViewer = new Viewer(document.getElementById('sitegalley'), {
       navbar: false,
       inline: false,
       toolbar: {
@@ -155,7 +181,7 @@
         highlight = layerView.highlight([objectID]);
         }) 
         console.log(photoFolder, photo, model);
-        $('#artName').html("Artifact: " + artifactName);
+        $('#artName').html("<b>Artifact: " + artifactName + "</b>");
         $('#artModal').modal('show');
         $('#artNum').html("<b>Artifact Number: </b>" + artifactNum);
         $('#artdesc').html("<b>Description: </b>" + notes);
@@ -415,6 +441,11 @@
      url: "https://portal1-geo.sabu.mtu.edu/server/rest/services/Hosted/Sanborn_1949_1951/MapServer",
      visible: true
   });
+
+ const aerial_1951 = new TileLayer({
+     url: "https://portal1-geo.sabu.mtu.edu/server/rest/services/Hosted/Aerial_1951/MapServer",
+     visible: false
+  });
   
   // Add the excavation sites layer to the map   
   const sitesLayer = new FeatureLayer({
@@ -426,7 +457,7 @@
 
   const map = new Map({
     basemap: "satellite",
-    layers: [atlas_1885, atlas_1893, fips_1897, fips_1915, fips_1910, fips_49_51, sitesLayer]
+    layers: [atlas_1885, atlas_1893, fips_1897, fips_1915, fips_1910, fips_49_51, aerial_1951, sitesLayer]
   });
 
   const view = new MapView({
@@ -443,7 +474,7 @@
   fips_1910.opacity = 100;
   fips_1915.opacity = 100;
   fips_49_51.opacity = 100; 
-
+  aerial_1951.opacity = 100;
   //map.add(fips_1897);
 
   // add esri widgets
@@ -537,7 +568,7 @@
 
           function siteClickHandler(photo, index) {
             document.getElementById('sitegalley').src="https://portal1-geo.sabu.mtu.edu/images/hamtramck/photos/sites/" + docFolder + "/" + photo.replace(/ /g, "");            
-            viewer.update();
+            siteViewer.update();
             //viewer.show();
           };          
 
@@ -568,7 +599,8 @@
     fips_1897.opacity = event.value / 100;
     fips_1910.opacity = event.value / 100;
     fips_1915.opacity = event.value / 100;
-    fips_49_51.opacity = event.value / 100;   
+    fips_49_51.opacity = event.value / 100;
+    aerial_1951.opacity = event.value / 100;   
   });
 
   // Code for the location dropdown menu
@@ -581,28 +613,32 @@
       fips_1897.visible = false;
       fips_1915.visible = false;
       fips_1910.visible = false;
-      fips_49_51.visible = false;  
+      fips_49_51.visible = false;
+      aerial_1951.visible = false;  
       } else if (value == '1893') {
       atlas_1885.visible = false;
       atlas_1893.visible = true;
       fips_1897.visible = false;
       fips_1915.visible = false;
       fips_1910.visible = false;
-      fips_49_51.visible = false;              
+      fips_49_51.visible = false;  
+      aerial_1951.visible = false;            
     } else if (value == '1897') {
       atlas_1885.visible = false;
       atlas_1893.visible = false;
       fips_1897.visible = true;
       fips_1915.visible = false;
       fips_1910.visible = false;
-      fips_49_51.visible = false;       
+      fips_49_51.visible = false;
+      aerial_1951.visible = false;       
     } else if (value == '1910') {
       atlas_1885.visible = false;
       atlas_1893.visible = false;
       fips_1897.visible = false;
       fips_1915.visible = false;
       fips_1910.visible = true;
-      fips_49_51.visible = false;  
+      fips_49_51.visible = false; 
+      aerial_1951.visible = false; 
     } else if (value == '1915') {            
       atlas_1885.visible = false;
       atlas_1893.visible = false;
@@ -610,14 +646,36 @@
       fips_1915.visible = true;
       fips_1910.visible = false;
       fips_49_51.visible = false;  
+      aerial_1951.visible = false;
     } else if (value == '1949') {            
       atlas_1885.visible = false;
       atlas_1893.visible = false;
       fips_1897.visible = false;
       fips_1915.visible = false;
       fips_1910.visible = false;
-      fips_49_51.visible = true;  
+      fips_49_51.visible = true;
+      aerial_1951.visible = false;  
+    } else if (value == '1951') {            
+      atlas_1885.visible = false;
+      atlas_1893.visible = false;
+      fips_1897.visible = false;
+      fips_1915.visible = false;
+      fips_1910.visible = false;
+      fips_49_51.visible = false;
+      aerial_1951.visible = true;  
     }
   });
+
+  // With JQuery
+$("#timeslider").slider({
+  tooltip_position: 'bottom',
+  //value: [1897-1900, 1910-1920, 1915-1940, 1949-1951],
+  ticks: [1880, 1900, 1911, 1920, 1935, 1951],
+  ticks_labels: ['1890-1899', '1900-1910', '1911-1920', '1950-1959', '$400'],
+  lock_to_ticks: true,
+   rangeHighlights: [{ "start": 1880, "end": 1900, "class": "category1" },
+                      { "start": 1900, "end": 1910, "class": "category2" },
+                      ]
+});
 
   });
