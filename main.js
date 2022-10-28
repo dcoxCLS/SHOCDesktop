@@ -12,7 +12,7 @@
 
    let highlight = null; 
    const tableURL = "https://portal1-geo.sabu.mtu.edu/server/rest/services/Hosted/artifact_catalog/FeatureServer/0/";
-   $.fn.modal.Constructor.prototype._enforceFocus = function() {};
+   $.fn.modal.Constructor.prototype._enforceFocus = function() {}; // modal does not interfere with search text box input
 
   // Creates a new table to hold our map attributes  
   const table = new Tabulator("#sites-table", {             
@@ -397,8 +397,8 @@
     }        
  }); 
    
-  // Create a style for the chartsLayer
-  const renderer = {
+  // Create a style for the sitesLayer
+  const sitesRenderer = {
     type: "simple",  // autocasts as new SimpleRenderer()
     symbol: {
       type: "simple-fill",  // autocasts as new SimpleFillSymbol()
@@ -406,6 +406,19 @@
       outline: {  // autocasts as new SimpleLineSymbol()
         width: 2,
         color: "black"
+      }
+    }
+  }; 
+
+  // Create a style for the buildingsLayer
+  const buildingsRenderer = {
+    type: "simple",  // autocasts as new SimpleRenderer()
+    symbol: {
+      type: "simple-fill",  // autocasts as new SimpleFillSymbol()
+      color: [ 255, 0, 0, 0],
+      outline: {  // autocasts as new SimpleLineSymbol()
+        width: 2,
+        color: "red"
       }
     }
   }; 
@@ -451,13 +464,21 @@
   const sitesLayer = new FeatureLayer({
     url: "https://portal1-geo.sabu.mtu.edu/server/rest/services/Hosted/OHC_Excavation_Units/FeatureServer/0",
     outFields: ["*"], // Return all fields so it can be queried client-side
-    renderer: renderer,
+    renderer: sitesRenderer,
+    popupEnabled: true 
+  });
+
+  // Add the Sanborn buildings layer to the map   
+  const buildingsLayer = new FeatureLayer({
+    url: "https://portal1-geo.sabu.mtu.edu/server/rest/services/Hosted/Hamtramck_Buildings/FeatureServer/0",
+    outFields: ["*"], // Return all fields so it can be queried client-side
+    renderer: buildingsRenderer,
     popupEnabled: true 
   });
 
   const map = new Map({
     basemap: "satellite",
-    layers: [atlas_1885, atlas_1893, fips_1897, fips_1915, fips_1910, fips_49_51, aerial_1951, sitesLayer]
+    layers: [atlas_1885, atlas_1893, fips_1897, fips_1915, fips_1910, fips_49_51, aerial_1951, sitesLayer, buildingsLayer]
   });
 
   const view = new MapView({
@@ -490,6 +511,15 @@
       rangeLabels: true
     }
   });
+
+  // setup the filter for the sanborn layers
+
+  function setFeatureLayerFilter(expression) {
+    buildingsLayer.definitionExpression = expression;  
+  }
+
+  // Display the 49-51 Sanborn on map load
+  setFeatureLayerFilter("year = '1949_1951'" );
 
   sitesLayer.popupTemplate = {
     title:'{display_name} ({desctemp})',
@@ -607,7 +637,7 @@
   $("#location").change(function () {
     // Get the value of the selected item
     const value = this.value;
-    if (value == '1885') {
+    if (value == '1885') {      
       atlas_1885.visible = true;
       atlas_1893.visible = false;
       fips_1897.visible = false;
@@ -624,6 +654,7 @@
       fips_49_51.visible = false;  
       aerial_1951.visible = false;            
     } else if (value == '1897') {
+      setFeatureLayerFilter("year = '1897'" );
       atlas_1885.visible = false;
       atlas_1893.visible = false;
       fips_1897.visible = true;
