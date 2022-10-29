@@ -64,7 +64,7 @@ font-family: 'Lora', serif;
   position: absolute;
   left: 15px;
   top: 100px;
-  width: 38px;
+  width: 32px;
   height: 300px;
   box-shadow: 0 1px 2px rgb(0 0 0 / 30%)
 }
@@ -351,10 +351,6 @@ body:not(.esriIsPhoneSize) #viewDiv .esri-popup.esri-popup--is-docked .esri-popu
   text-align: left;
 }
 
-.esri-widget--button{
-  height: 38px !important;
-  width: 38px !important;
-}
 
 h7 {
   font-size: 12px;

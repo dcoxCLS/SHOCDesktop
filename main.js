@@ -488,6 +488,9 @@
     zoom: 20
   });
 
+  // bring the sites layer to the front
+  map.reorder(sitesLayer, 99999);
+
   // set the default opacity of the sanborn layers  
   atlas_1885.opacity = 100;  
   atlas_1893.opacity = 100;
@@ -529,11 +532,16 @@
   };
 
   view.on("click", function(event){
-    view.hitTest(event, { include: sitesLayer})
-      .then(function(response){  
+    view.hitTest(event, { include: [sitesLayer, buildingsLayer]})
+      .then(function(response){ 
+      console.log(response); 
           if (highlight) {
             highlight.remove();
           }    
+
+          if (response.results[0].layer.title == "Hamtramck Buildings - Hamtramck Blds Merge Oct27 2022") {
+            alert("you hit the buildings layer");
+          } else if (response.results[0].layer.title == "OHC Excavation Units - OHC Excavation Footprints v2") {
          // get the attibutes from the resulting graphic
          const graphic = response.results[0].graphic;
          console.log(graphic.attributes); 
@@ -618,7 +626,9 @@
                   openNav();       
               });            
             }
-          });          
+          }); 
+          }
+                  
       });
   });
 
@@ -663,6 +673,7 @@
       fips_49_51.visible = false;
       aerial_1951.visible = false;       
     } else if (value == '1910') {
+      setFeatureLayerFilter("year = '1910'" );
       atlas_1885.visible = false;
       atlas_1893.visible = false;
       fips_1897.visible = false;
@@ -670,7 +681,8 @@
       fips_1910.visible = true;
       fips_49_51.visible = false; 
       aerial_1951.visible = false; 
-    } else if (value == '1915') {            
+    } else if (value == '1915') { 
+      setFeatureLayerFilter("year = '1915'" );           
       atlas_1885.visible = false;
       atlas_1893.visible = false;
       fips_1897.visible = false;
