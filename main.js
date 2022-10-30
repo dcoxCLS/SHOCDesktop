@@ -540,7 +540,32 @@
           }    
 
           if (response.results[0].layer.title == "Hamtramck Buildings - Hamtramck Blds Merge Oct27 2022") {
-            alert("you hit the buildings layer");
+           // alert("you hit the buildings layer");
+            const graphic = response.results[0].graphic;
+            const bldgFunction = graphic.attributes.function;
+            const occupant = graphic.attributes.occupant;
+            const notes = graphic.attributes.notes;
+            const address = graphic.attributes.address;
+            const basement = graphic.attributes.basement;
+            const numStories = graphic.attributes.num_stories;
+            const placeName = graphic.attributes.place_nam;
+            const bldgId = graphic.attributes.uniqueid;
+            const year = graphic.attributes.year;
+
+            $('#buildingModal').modal('show');
+            $('#buildingName').html("<b>" + address + "</b>");
+            $('#buildingadd').html("<b> Address: </b>" + address);
+            $('#buildingplace').html("<b> Place Name: </b>" + placeName);
+            $('#buildingyear').html("<b> Year: </b>" + year);
+            $('#buildingstories').html("<b> Stories: </b>" + numStories);
+            $('#buildingfunction').html('<b>Function: </b>' + bldgFunction);
+            $('#buildingocc').html('<b>Occupant: </b>' + occupant);
+            $('#buildingnotes').html('<b>Notes: </b>' + notes);
+            $('buildingbasement').html('<b>Basement: </b>' + basement);
+
+            $('#siteModal').modal('hide');
+            $('#artModal').modal('hide');
+
           } else if (response.results[0].layer.title == "OHC Excavation Units - OHC Excavation Footprints v2") {
          // get the attibutes from the resulting graphic
          const graphic = response.results[0].graphic;
@@ -557,6 +582,7 @@
 
          document.getElementById("sitegalley").innerHTML = "";
          document.getElementById("doclist").innerHTML = "";
+         $('#buildingModal').modal('hide');
          $('#artModal').modal('hide');
 
          $('#siteModal').modal('show');
