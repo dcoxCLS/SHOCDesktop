@@ -66,6 +66,7 @@
   <center><div id="siteTitle" style="display: inline-block;"></div><br><div id="results" style="display: inline-block;"></div></h5>
   <br><div id="maxResults" style="display: inline-block;">*Searches limited to 1000 results</div></center></div>
   <div id="sites-table"></div>
+  <div id="buildings-table"></div>
 </div>
     <div id="viewDiv">
     <div id="sliderDiv"></div>	
@@ -77,8 +78,8 @@
       <option value="1915">Sanborn Map 1915</option>
       <option selected value="1949">Sanborn Map 1949-1951</option>
       <option value="1951">Aerial Imagery 1951</option>
+      <option value="Modern">Modern Day Aerial</option>
     </select>
-
 <div>
   <!-- Default Image for ViewerJS -->
   <img id="image" src="" alt="Picture">
@@ -144,45 +145,26 @@
         </button>
       </div>
       <div class="modal-body">
-        <ul class="nav nav-tabs" id="siteTabs" role="tablist">
+        <ul class="nav nav-tabs" id="bldgTabs" role="tablist">
   <li class="nav-item">
-    <a class="nav-link active" id="site-details-tab" data-toggle="tab" href="#sitedetails" role="tab" aria-controls="sitedetails" aria-selected="true">Details</a>
-  </li>
-  <li class="nav-item">
-    <a class="nav-link" id="site-documents-tab" data-toggle="tab" href="#sitedocuments" role="tab" aria-controls=sitedocuments aria-selected="false">Documents</a>
-  </li>
-  <li class="nav-item">
-    <a class="nav-link" id="site-drawings-tab" data-toggle="tab" href="#sitedrawings" role="tab" aria-controls="sitedrawings" aria-selected="false">Drawings</a>
-  </li>
-  <li class="nav-item">
-    <a class="nav-link" id="site-photos-tab" data-toggle="tab" href="#sitephotos" role="tab" aria-controls="sitephotos" aria-selected="false">Photos</a>
-  </li>
-  
+    <a class="nav-link active" id="bldg-details-tab" data-toggle="tab" href="#bldgdetails" role="tab" aria-controls="bldgdetails" aria-selected="true">Details</a>  
 </ul>
-<div class="tab-content" id="siteTabContent">
-  <div class="tab-pane fade show active" id="sitedetails" role="tabpanel" aria-labelledby="site-details-tab">
-    <div id="buildingadd"></div>  
+<div class="tab-content" id="bldgTabContent">
+  <div class="tab-pane fade show active" id="bldgdetails" role="tabpanel" aria-labelledby="bldg-details-tab">
+    <div id="buildingadd"></div> 
+    <div id="buildingtype"></div> 
     <div id="buildingstories"></div>
     <div id="buildingyear"></div>
-    <div id="buildingplace"></div>    
-    <div id="buildingfunction"><div>
+    <div id="buildingplace"></div> 
+    <div id="buildingmat"></div>   
+    <div id="buildingfunction"></div>
     <div id="buildingocc"></div>
     <div id="buildingnotes"></div>
     <div id="buildingbasement"></div>
-</div>
-  <div class="tab-pane fade" id="sitedocuments" role="tabpanel" aria-labelledby="site-documents-tab">
-    <ul class="list-group" id="doclist">  
-   </ul>
-  </div>
-  <div class="tab-pane fade" id="sitephotos" role="tabpanel" aria-labelledby="site-photos-tab">
-    <div id="sitegalley">           
-            </div>
-  </div>
-   <div class="tab-pane fade" id="sitedrawings" role="tabpanel" aria-labelledby="site-drawings-tab"><img src="img_girl.jpg" id="drawPic" alt="site pictures" class="responsive"></div>
-</div>        
+</div>     
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-primary" id="viewCat">View Object Catalog</button>        
+        <button type="button" class="btn btn-primary" id="viewHHMCat">View Object Catalog</button>        
       </div>
     </div>
   </div>

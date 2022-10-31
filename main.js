@@ -11,11 +11,12 @@
   ], function(esriConfig, Map, MapView, FeatureLayer, TileLayer, Slider, Query, Extent, projection) {  
 
    let highlight = null; 
-   const tableURL = "https://portal1-geo.sabu.mtu.edu/server/rest/services/Hosted/artifact_catalog/FeatureServer/0/";
+   const siteTableURL = "https://portal1-geo.sabu.mtu.edu/server/rest/services/Hosted/artifact_catalog/FeatureServer/0/";
+   const bldgTableURL = "https://portal1-geo.sabu.mtu.edu/server/rest/services/Hosted/hhm_catalog/FeatureServer/0/";
    $.fn.modal.Constructor.prototype._enforceFocus = function() {}; // modal does not interfere with search text box input
 
   // Creates a new table to hold our map attributes  
-  const table = new Tabulator("#sites-table", {             
+  const siteTable = new Tabulator("#sites-table", {             
       //height: "88%", 
       virtualDomBuffer: 1600,
       responsiveLayout:"collapse",   
@@ -47,7 +48,42 @@
           return "Site: " + value + "<span style='color:#8c1d40; margin-left:10px;'>(" + count + " items)</span>"; 
        // }          
       },    
-  });        
+  }); 
+
+  // Creates a new table to hold our map attributes  
+  const bldgTable = new Tabulator("#buildings-table", {             
+      //height: "88%", 
+      virtualDomBuffer: 1600,
+      responsiveLayout:"collapse",   
+      layout:"fitDataFill",         
+      selectable: 1,
+      clipboard:true, //enable clipboard functionality,
+      groupBy: "attributes.alt_place_id",                        
+      columns:[
+          {title:"Name", field:"attributes.item_name", width: 500},
+          {title:"Description", field:"attributes.brief_description", width: 300, visible:false},
+          {title:"ID", field:"attributes.alt_place_id", width: 300, visible: false},
+          {title:"Catalog Number", field:"attributes.catalog_number", width: 300, visible: true},
+          {title:"Year", field:"attributes.year_", width: 300, visible: false},
+          //{title:"Date", field:"attributes.DATE", width: 150}         
+      ],    
+      initialSort:[
+        {column:"attributes.alt_place_id", dir:"asc"}, //sort by this first        
+      ],        
+      // Detect when someone clicks on a row in the table
+      rowClick:function(e, row){ 
+        view.popup.close();   
+        // When the table row is clicked hide the table 
+        //$('#drawerModal').modal('hide');        
+        // when a row in the table is clicked call the getRowData function
+        getRowData(row);   
+      },
+      groupHeader:function(value, count, data, group){        
+      //  if (value < 241) {
+          return "Building: " + value + "<span style='color:#FF0000; margin-left:10px;'>(" + count + " items)</span>"; 
+       // }          
+      },    
+  });               
   
   function openNav() {
       //table.redraw(true);
@@ -364,14 +400,14 @@
    // Code for the search bar functions
   $( "#searchBtn" ).click(function() {
     view.popup.close();
-    table.clearData();
+    siteTable.clearData();
    // $(".esri-icon-table").show();
     // get the value of the search box
     const searchVal = $( "#search" ).val();
 
     $.ajax({
         dataType: 'json',
-        url: tableURL + 'query?where=site+LIKE+%27%25' + searchVal + '%25%27+OR+location+LIKE+%27%25' + searchVal + '%25%27+OR+artifact+LIKE+%27%25' + searchVal +'%25%27+OR+material+LIKE+%27%25' + searchVal + '%25%27+OR+function+LIKE+%27%25' + searchVal + '%25%27+OR+notes+LIKE+%27%25' + searchVal + '%25%27+OR+master_unit+LIKE+%27%25' + searchVal + '%25%27+OR+uniqueid+LIKE+%27%25' + searchVal + '%25%27&objectIds=&time=&resultType=none&outFields=*&returnHiddenFields=false&returnIdsOnly=false&returnUniqueIdsOnly=false&returnCountOnly=false&returnDistinctValues=false&cacheHint=false&orderByFields=&groupByFieldsForStatistics=&outStatistics=&having=&resultOffset=&resultRecordCount=&sqlFormat=none&f=pjson',
+        url: siteTableURL + 'query?where=site+LIKE+%27%25' + searchVal + '%25%27+OR+location+LIKE+%27%25' + searchVal + '%25%27+OR+artifact+LIKE+%27%25' + searchVal +'%25%27+OR+material+LIKE+%27%25' + searchVal + '%25%27+OR+function+LIKE+%27%25' + searchVal + '%25%27+OR+notes+LIKE+%27%25' + searchVal + '%25%27+OR+master_unit+LIKE+%27%25' + searchVal + '%25%27+OR+uniqueid+LIKE+%27%25' + searchVal + '%25%27&objectIds=&time=&resultType=none&outFields=*&returnHiddenFields=false&returnIdsOnly=false&returnUniqueIdsOnly=false&returnCountOnly=false&returnDistinctValues=false&cacheHint=false&orderByFields=&groupByFieldsForStatistics=&outStatistics=&having=&resultOffset=&resultRecordCount=&sqlFormat=none&f=pjson',
         type: "GET",    
         success: function(data) {
           console.log(data);
@@ -379,7 +415,7 @@
           alert('The search returned no results. Please try different terms.');
          } else {      
           highLightSites(data.features);     
-          table.setData(data.features);  
+          siteTable.setData(data.features);  
           openNav();        
          } 
         }
@@ -537,7 +573,7 @@
       console.log(response); 
           if (highlight) {
             highlight.remove();
-          }    
+          } 
 
           if (response.results[0].layer.title == "Hamtramck Buildings - Hamtramck Blds Merge Oct27 2022") {
            // alert("you hit the buildings layer");
@@ -548,23 +584,45 @@
             const address = graphic.attributes.address;
             const basement = graphic.attributes.basement;
             const numStories = graphic.attributes.num_stories;
+            const material = graphic.attributes.bldg_mat1;
             const placeName = graphic.attributes.place_nam;
             const bldgId = graphic.attributes.uniqueid;
             const year = graphic.attributes.year;
+            const type = graphic.attributes.bldg_type;            
 
             $('#buildingModal').modal('show');
             $('#buildingName').html("<b>" + address + "</b>");
+            $('#buildingtype').html("<b> Building Type: </b>" + type);
             $('#buildingadd').html("<b> Address: </b>" + address);
             $('#buildingplace').html("<b> Place Name: </b>" + placeName);
+            $('#buildingmat').html("<b> Building Material: </b>" + material);
             $('#buildingyear').html("<b> Year: </b>" + year);
             $('#buildingstories').html("<b> Stories: </b>" + numStories);
-            $('#buildingfunction').html('<b>Function: </b>' + bldgFunction);
-            $('#buildingocc').html('<b>Occupant: </b>' + occupant);
-            $('#buildingnotes').html('<b>Notes: </b>' + notes);
-            $('buildingbasement').html('<b>Basement: </b>' + basement);
+            $('#buildingfunction').html("<b>Function: </b>" + bldgFunction);
+            $('#buildingocc').html("<b>Occupant: </b>" + occupant);
+            $('#buildingnotes').html("<b>Notes: </b>" + notes);
+            $('buildingbasement').html("<b>Basement: </b>" + basement);
 
             $('#siteModal').modal('hide');
             $('#artModal').modal('hide');
+
+            $.ajax({
+            dataType: 'json',
+            url: bldgTableURL + 'query?where= alt_place_id+%3D+%27' + bldgId + '%27&objectIds=&time=&geometry=&geometryType=esriGeometryEnvelope&inSR=&spatialRel=esriSpatialRelIntersects&distance=&units=esriSRUnit_Foot&relationParam=&outFields=*&returnGeometry=true&maxAllowableOffset=&geometryPrecision=&outSR=&havingClause=&gdbVersion=&historicMoment=&returnDistinctValues=false&returnIdsOnly=false&returnCountOnly=false&returnExtentOnly=false&orderByFields=&groupByFieldsForStatistics=&outStatistics=&returnZ=false&returnM=false&multipatchOption=xyFootprint&resultOffset=&resultRecordCount=&returnTrueCurves=false&returnCentroid=false&timeReferenceUnknownClient=false&sqlFormat=none&resultType=&datumTransformation=&lodType=geohash&lod=&lodSR=&f=pjson',
+            type: "GET",    
+            success: function(data) {
+              const features = data.features;
+              bldgTable.setData(features);
+              const numResults = data.features.length;
+              //const bldgName = graphic.attributes.desctemp;
+              $('#bldgTitle').html(bldgId);
+              $('#results').html(numResults + " objects");
+              $('#numartifacts').html("<b>Artifacts cataloged:</b> " + numResults);
+              $( "#viewHHMCat" ).click(function() {
+                  openNav();       
+              });            
+            }
+          }); 
 
           } else if (response.results[0].layer.title == "OHC Excavation Units - OHC Excavation Footprints v2") {
          // get the attibutes from the resulting graphic
@@ -642,19 +700,18 @@
             type: "GET",    
             success: function(data) {
               const features = data.features;
-              table.setData(features);
+              siteTable.setData(features);
               const numResults = data.features.length;
               const siteTitle = graphic.attributes.desctemp;
               $('#siteTitle').html("Site " + siteTitle);
               $('#results').html(numResults + " artifacts");
               $('#numartifacts').html("<b>Artifacts cataloged:</b> " + numResults);
               $( "#viewCat" ).click(function() {
-                  openNav();       
+                openNav();       
               });            
             }
           }); 
-          }
-                  
+          }                  
       });
   });
 
@@ -716,7 +773,8 @@
       fips_1910.visible = false;
       fips_49_51.visible = false;  
       aerial_1951.visible = false;
-    } else if (value == '1949') {            
+    } else if (value == '1949') { 
+      setFeatureLayerFilter("year = '1949_1951'" );           
       atlas_1885.visible = false;
       atlas_1893.visible = false;
       fips_1897.visible = false;
@@ -732,6 +790,16 @@
       fips_1910.visible = false;
       fips_49_51.visible = false;
       aerial_1951.visible = true;  
+    } else if (value == 'Modern') {
+      setFeatureLayerFilter("year = 'Modern'" ); 
+      atlas_1885.visible = false;
+      atlas_1893.visible = false;
+      fips_1897.visible = false;
+      fips_1915.visible = false;
+      fips_1910.visible = false;
+      fips_49_51.visible = false;
+      aerial_1951.visible = false;
+
     }
   });
 

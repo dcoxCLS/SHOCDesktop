@@ -186,6 +186,10 @@ h10 {
   background-color: #D01B1C !important;
 }
 
+#buildings-table .tabulator-selected {
+  background-color: #D01B1C !important;
+}
+
 .data-original {
   border-radius:  .25rem!important;
   box-shadow:  0 0 2px 0 rgba(0,0,0,.16),0 1px 1px 0 rgba(0,0,0,.1)!important;
