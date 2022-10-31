@@ -35,18 +35,21 @@
   <div class="collapse navbar-collapse" id="navbarNav" style="">
         <ul class="navbar-nav mr-auto">           
         </ul>
-        <div class="row" style="width: 40%">
-
-           <!--  <input id="timeslider" type="text" /> -->
-        <div class="input-group col-lg-12">
-            <input class="form-control py-2 border-right-0 border" type="search" placeholder="Search artifact catalog..." id="search">
-            <span class="input-group-append">
-                <button class="btn btn-outline-secondary border-left-0 border" type="button" id="searchBtn">
-                    <i class="fa fa-search"></i>
-                </button>
-              </span>
+                   <!--  <input id="timeslider" type="text" /> -->
+        <!-- Search Bar -->
+    <div class="container justify-content-center">
+    <div class="row" style="width: 50%">
+        <div class="col-md-12">
+            <div class="input-group mb-6"> <input type="text" class="form-control input-text" placeholder="Search items..." aria-label="Title Search" id="search" aria-describedby="basic-addon2" autocomplete="off">
+                <select class="form-control" id="searchtype">
+                  <option>Artifacts</option>
+                  <option>HHM Objects</option>                                     
+                </select>
+                <div class="input-group-append"> <button class="btn btn-outline-warning btn-lg" type="button" id="submit" title="Search"><i class="fa fa-search"></i></button> </div>
+            </div>
         </div>
     </div>
+</div>    
         <ul class="navbar-nav">
             <li class="nav-item">
                 <a class="nav-link" href="http://hamtramckhistory.com/index.php" target="_blank" rel="noopener">Hamtramck Historical Museum</a>
@@ -136,7 +139,7 @@
   </div>
 </div>
 <div class="modal" id="buildingModal" tabindex="-1" role="dialog" data-backdrop="false">
-  <div class="modal-dialog" role="document">
+  <div class="modal-dialog modal-dialog-scrollable" role="document">
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title" id="buildingName"></h5>
@@ -169,8 +172,9 @@
     </div>
   </div>
 </div>
+</div>
 <div class="modal" id="artModal" tabindex="-1" role="dialog" data-backdrop="false">
-  <div class="modal-dialog" role="document">
+  <div class="modal-dialog modal-dialog-scrollable" role="document">
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title" id="artName"></h5>
@@ -220,6 +224,36 @@
     </div>
   </div>
 </div>  
+<div class="modal" id="objModal" tabindex="-1" role="dialog" data-backdrop="false">
+  <div class="modal-dialog modal-dialog-scrollable" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="objName"></h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <ul class="nav nav-tabs" id="objTab" role="tablist">
+  <li class="nav-item">
+    <a class="nav-link active" id="obj-details-tab" data-toggle="tab" href="#objdetails" role="tab" aria-controls="objdetails" aria-selected="true">Details</a>
+  </li>
+</ul>
+<div class="tab-content" id="objTabContent">
+  <div class="tab-pane fade show active" id="objdetails" role="tabpanel" aria-labelledby="obj-details-tab">
+    <img src="img_girl.jpg" id="objPic" alt="artifact pictures" class="responsive">
+    <div id="objdesc"></div>
+    <div id="objname"></div>
+    <div id="catnum"></div>
+    <div id="objdate"></div>
+    <div id="objyear"></div>
+    <div id="objnotes"></div>    
+</div>       
+      </div>      
+    </div>
+  </div>
+</div>
+</div>
 <script src="main.js"></script>
   </body>
 </html>
