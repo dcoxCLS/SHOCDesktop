@@ -52,8 +52,6 @@ font-family: 'Lora', serif;
 #search {
   width: 35%;
   border-radius: 5px 0px 0px 5px;
- 
-
 }
 
 #searchBtn:hover {
@@ -117,14 +115,13 @@ font-family: 'Lora', serif;
 .btn-outline-warning {
   color: #fff;
   border-color: #fff;
-  background-color: #0e3658 ;
- 
+  background-color: #0e3658; 
 }
 
 .btn-outline-warning:hover {
   color: #fff;
-  border-color:  #e43133;
-  background-color:  #e43133;
+  border-color:  #e43133 !important;
+  background-color:  #e43133 !important;
 }
 
 #close {
@@ -140,7 +137,6 @@ font-family: 'Lora', serif;
 .navbar-light .navbar-brand:hover {
   color: white;   
 }
-
 
 #tablebtn {
   width: 50%;
@@ -171,8 +167,12 @@ h10 {
   font-size: 18px;
 }
 
-#drawers-table {
+#buildings-table {
   height: calc(93% - 56px);
+}
+
+#sites-table {
+   height: calc(93% - 56px);
 }
 
 
@@ -197,6 +197,16 @@ h10 {
   cursor: zoom-in;
 }
 
+.slidecontainer {
+      position: absolute;
+      bottom: 30px;
+      left: 10px;
+      width: 37%;
+      background-color: #f3f3f3;
+      border: 2px solid black;
+      padding: 5px;
+
+    }
 #modelframe {
   width:  100%;
   margin-top:  5px;

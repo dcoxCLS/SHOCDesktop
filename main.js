@@ -181,6 +181,7 @@
       const photo = row._row.data.attributes.photograph;
       const model = row._row.data.attributes.f3d_model;
       const currentLoc = row._row.data.attributes.current__location;     
+      console.log(model);
 
       const query = sitesLayer.createQuery();
       // Query the sites layer for the ID
@@ -229,8 +230,16 @@
           $('#artcontext').html("<b>Context: </b>" + context);
           console.log('we are here');
 
+          // check if the record has a 3D model
+          if (model == "In progress" || model == "No") {            
+            document.getElementById("modelframe").src = "";
+          } else {
+            document.getElementById("modelframe").src= model;
+           
+          }
+
           // check if the clicked record has an existing image
-          if (photo !== '' && photo !== null) {
+          if (photo !== '' || photo !== null) {
             const artPhotos = photo.split(",");          
             document.getElementById("artPic").src="https://portal1-geo.sabu.mtu.edu/images/hamtramck/photos/artifacts/" + photoFolder + "/" + artPhotos[0];
             const galley = document.getElementById('galley');
@@ -324,7 +333,7 @@
           highlight = layerView.highlight([objectID]);
           }) 
 
-          $('#objname').html("<b>Name: " + itemName + "</b>");
+          $('#objName').html("<b>" + itemName + "</b>");
           $('#objModal').modal('show');
           $('#artModal').modal('hide'); 
           $('#objdesc').html("<b>Description: </b>" + desc);
@@ -353,16 +362,8 @@
           } else {
             view.popup.open({
               // Set the popup's title to the coordinates of the clicked location
-              title: "<h6><b>" + truncTitle,   
-              content: "<b>Title: </b>" + itemTitle +
-              "<br><br><b>Date: </b>" + items[2] + "<br><br><b>Author: </b>" + items[1] + "<br><br><b>Publisher: </b>" + 
-              items[4] + "<br><br><b>Scale: </b>" + items[0] + "<br><br><b>Call Number: </b>" + items[5] +
-              "<br><br><b>Location: </b>" + locName + locId + "<br><a href=" + "'" + itemLink + 
-              "' target='_blank' rel='noopener noreferrer' class='catlink'>View item in ASU Library catalog</a>" +              
-              "<a href=" + "'" + indexUrl + "' target='_blank' rel='noopener noreferrer' class='indexlink'>View item in spatial index</a>" +
-              "<a href=" + "'" + supUrl + "' target='_blank' rel='noopener noreferrer' class='suplink'>Learn more about this item</a>" +
-              "<a href='https://lib.asu.edu/geo/services' target='_blank' rel='noopener noreferrer' class='maroon'>Request access</a>",
-              //"<br><br><h6></b><a href='#' id='prev' class='previous round'>&#8249; Previous</a><a href='#' id='next' class='next round'>Next &#8250;</a>",
+              title: "<h6><b> title",    
+              content: "content",
               location: response.features[0].geometry.centroid, // Set the location of the popup to the clicked location 
               actions: []      
             });                 
@@ -371,83 +372,156 @@
    }  
   }
  
-  function highLightSites (results) {
-    const objectIds = [];
-    results.forEach(function(result) {
-      // the result of the REST API Query
-      const sites = result.attributes.master_unit;    
-      const titles = result.attributes.site; 
-      objectIds.push(sites);
-    });
+  function highLightSites (results, type) {
+    if (type == "artifact") {
+      const objectIds = [];
+      results.forEach(function(result) {
+        // the result of the REST API Query
+        const sites = result.attributes.master_unit;    
+        const titles = result.attributes.site; 
+        objectIds.push(sites);
+      });
 
-    let occurrences = { };
-    for (let i = 0, j = objectIds.length; i < j; i++) {
-       occurrences[objectIds[i]] = (occurrences[objectIds[i]] || 0) + 1;
-    }
+      let occurrences = { };
+      for (let i = 0, j = objectIds.length; i < j; i++) {
+         occurrences[objectIds[i]] = (occurrences[objectIds[i]] || 0) + 1;
+      }
 
-    console.log(occurrences);   
+      console.log(occurrences);   
 
-    const uniqueIds = [...new Set(objectIds)];
-    const recCount = results.length;
-    const siteCount = uniqueIds.length;
-    console.log(objectIds);
-    console.log(uniqueIds);
-    const idsInQuotes = uniqueIds.map(id => `'${id}'`);
-    console.log(idsInQuotes);
-    const siteQuery = idsInQuotes.join(" OR master_unit = ");
-    console.log(siteQuery);      
-    const query = sitesLayer.createQuery();
-    // Query the cabinets layer for the LOC_ID
-    query.where = "master_unit = " + siteQuery;
-    query.returnGeometry = true;    
-    query.outFields = ["objectid", "master_unit"];
-    sitesLayer.queryFeatures(query)
-      .then(function(response){
-          console.log(response);
-          const objIds = [];
-         // returns a feature set with features containing an OBJECTID
-         const objectID = response.features[0].attributes.objectid;
-         const feature = response.features;
-         feature.forEach(function(feature) {
-          const ids = feature.attributes.objectid;
-          objIds.push(ids);
-         });
-         console.log(objIds);           
-        
-         view.whenLayerView(sitesLayer).then(function(layerView) {
-            const queryExtent = new Query({
-              objectIds: [objIds]
-            });
-            
-            sitesLayer.queryExtent(queryExtent).then(function(result) {                
-              let extent = response.features[0].geometry.extent;
-              response.features.forEach(function(feature) {
-                extent = extent.union(feature.geometry.extent);
+      const uniqueIds = [...new Set(objectIds)];
+      const recCount = results.length;
+      const siteCount = uniqueIds.length;
+      console.log(objectIds);
+      console.log(uniqueIds);
+      const idsInQuotes = uniqueIds.map(id => `'${id}'`);
+      console.log(idsInQuotes);
+      const siteQuery = idsInQuotes.join(" OR master_unit = ");
+      console.log(siteQuery);      
+      const query = sitesLayer.createQuery();
+      // Query the cabinets layer for the LOC_ID
+      query.where = "master_unit = " + siteQuery;
+      query.returnGeometry = true;    
+      query.outFields = ["objectid", "master_unit"];
+      sitesLayer.queryFeatures(query)
+        .then(function(response){
+            console.log(response);
+            const objIds = [];
+           // returns a feature set with features containing an OBJECTID
+           const objectID = response.features[0].attributes.objectid;
+           const feature = response.features;
+           feature.forEach(function(feature) {
+            const ids = feature.attributes.objectid;
+            objIds.push(ids);
+           });
+           console.log(objIds);           
+          
+           view.whenLayerView(sitesLayer).then(function(layerView) {
+              const queryExtent = new Query({
+                objectIds: [objIds]
               });
+              
+              sitesLayer.queryExtent(queryExtent).then(function(result) {                
+                let extent = response.features[0].geometry.extent;
+                response.features.forEach(function(feature) {
+                  extent = extent.union(feature.geometry.extent);
+                });
 
-            view.goTo({ center: extent.expand(1.3) }, { duration: 400 }); 
-                             
-            });
+              view.goTo({ center: extent.expand(1.3) }, { duration: 400 }); 
+                               
+              });
+              
+              // if any, remove the previous highlights
+              if (highlight) {
+                highlight.remove();
+              }
+              // highlight the feature with the returned objectId
+              highlight = layerView.highlight(objIds);
+              })
+              // open a popup at the drawer location of the selected map
+              view.popup.open({
+                // Set the popup's title to the coordinates of the clicked location                          
+                title: "<h6><b>test", 
+                content: "Results shown in the sidebar. Click any record for more information.",
+                location: response.features[0].geometry.centroid,// Set the location of the popup to the clicked location                      
+              });            
+         });
+      } else if (type == 'object') {
+        const objectIds = [];
+        results.forEach(function(result) {
+          // the result of the REST API Query
+          const buildings = result.attributes.alt_place_id;    
+          const names = result.attributes.item_name; 
+          objectIds.push(buildings);
+        });
+
+        let occurrences = { };
+        for (let i = 0, j = objectIds.length; i < j; i++) {
+           occurrences[objectIds[i]] = (occurrences[objectIds[i]] || 0) + 1;
+        }
+
+        console.log(occurrences);   
+
+        const uniqueIds = [...new Set(objectIds)];
+        const recCount = results.length;
+        const siteCount = uniqueIds.length;
+        console.log(objectIds);
+        console.log(uniqueIds);
+        const idsInQuotes = uniqueIds.map(id => `'${id}'`);
+        console.log(idsInQuotes);
+        const siteQuery = idsInQuotes.join(" OR alt_place_id = ");
+        console.log(siteQuery);      
+        const query = buildingsLayer.createQuery();
+        // Query the cabinets layer for the LOC_ID
+        query.where = "uniqueid =" + siteQuery;
+        query.returnGeometry = true;    
+        query.outFields = ["objectid", "uniqueid"];
+        buildingsLayer.queryFeatures(query)
+          .then(function(response){
+              console.log(response);
+              const objIds = [];
+             // returns a feature set with features containing an OBJECTID
+             const objectID = response.features[0].attributes.objectid;
+             const feature = response.features;
+             feature.forEach(function(feature) {
+              const ids = feature.attributes.objectid;
+              objIds.push(ids);
+             });
+             console.log(objIds);           
             
-            // if any, remove the previous highlights
-            if (highlight) {
-              highlight.remove();
-            }
-            // highlight the feature with the returned objectId
-            highlight = layerView.highlight(objIds);
-            })
-            // open a popup at the drawer location of the selected map
-            view.popup.open({
-              // Set the popup's title to the coordinates of the clicked location                          
-              title: "<h6><b>test", 
-              content: "Results shown in the sidebar. Click any record for more information.",
-              location: response.features[0].geometry.centroid,// Set the location of the popup to the clicked location                      
-            });              
-            // reduce the popup size  
-            $(function() {            
-                $("body:not(.esriIsPhoneSize) #viewDiv .esri-popup.esri-popup--is-docked .esri-popup__main-container").css('padding-bottom', '0px');                
-            });
-       });
+             view.whenLayerView(buildingsLayer).then(function(layerView) {
+                const queryExtent = new Query({
+                  objectIds: [objIds]
+                });
+                
+                buildingsLayer.queryExtent(queryExtent).then(function(result) {                
+                  let extent = response.features[0].geometry.extent;
+                  response.features.forEach(function(feature) {
+                    extent = extent.union(feature.geometry.extent);
+                  });
+
+                view.goTo({ center: extent.expand(1.3) }, { duration: 400 }); 
+                                 
+                });
+                
+                // if any, remove the previous highlights
+                if (highlight) {
+                  highlight.remove();
+                }
+                // highlight the feature with the returned objectId
+                highlight = layerView.highlight(objIds);
+                })
+
+                setFeatureLayerFilter("year = 'Modern'" );
+                // open a popup at the drawer location of the selected map
+                view.popup.open({
+                  // Set the popup's title to the coordinates of the clicked location                          
+                  title: "<h6><b>test", 
+                  content: "Results shown in the sidebar. Click any record for more information.",
+                  location: response.features[0].geometry.centroid,// Set the location of the popup to the clicked location                      
+                });            
+           });
+      }
   }
    // close button of the sidebar 
   // when someone clicks the advanced search submit button        
@@ -474,8 +548,17 @@
            if (data.features.length == 0) {          
             alert('The search returned no results. Please try different terms.');
            } else {      
-            highLightSites(data.features);     
-            siteTable.setData(data.features);  
+            highLightSites(data.features, "artifact");     
+            siteTable.setData(data.features); 
+            $("#sites-table").show();
+            $("#buildings-table").hide();
+            const numResults = data.features.length; 
+            if (searchVal.length > 25) {
+              const shortSearchVal = (searchVal.substring(0, 25) + "...");
+             $('#results').html(numResults + " items found for " + '"' + shortSearchVal + '"'); 
+             } else {
+              $('#results').html(numResults + " items found for " + '"' + searchVal + '"'); 
+             }
             openNav();        
            } 
           }
@@ -490,8 +573,17 @@
            if (data.features.length == 0) {          
             alert('The search returned no results. Please try different terms.');
            } else {      
-            highLightSites(data.features);     
+            highLightSites(data.features, "object");     
             bldgTable.setData(data.features);  
+            $("#sites-table").hide();
+            $("#buildings-table").show();
+            const numResults = data.features.length; 
+            if (searchVal.length > 25) {
+              const shortSearchVal = (searchVal.substring(0, 25) + "...");
+             $('#results').html(numResults + " items found for " + '"' + shortSearchVal + '"'); 
+             } else {
+              $('#results').html(numResults + " items found for " + '"' + searchVal + '"'); 
+             }
             openNav();        
            } 
           }
@@ -689,11 +781,34 @@
               $('#viewHHMCat').show();
             } else {
               $('#viewHHMCat').hide();
-
             }
 
             $('#siteModal').modal('hide');
             $('#artModal').modal('hide');
+
+            if (bldgFunction == '' || bldgFunction == null) {
+              $('#buildingfunction').hide();
+            } else {
+              $('#buildingfunction').show();
+            }
+
+            if (notes == '' || notes == null) {
+              $('#buildingnotes').hide();
+            } else {
+              $('#buildingnotes').show();
+            }
+
+            if (placeName == '' || placeName == null) {
+              $('#buildingplace').hide();
+            } else {
+              $('#buildingplace').show();
+            }
+
+            if (occupant == '' || occupant == null) {
+              $('#buildingocc').hide();
+            } else {
+              $('#buildingocc').show();
+            }
 
             $.ajax({
             dataType: 'json',
@@ -708,6 +823,8 @@
               $('#results').html(numResults + " objects");
               $('#numartifacts').html("<b>Artifacts cataloged:</b> " + numResults);
               $( "#viewHHMCat" ).click(function() {
+                  $("#sites-table").hide();
+                  $("#buildings-table").show();
                   openNav();       
               });            
             }
@@ -788,15 +905,18 @@
                 url: 'https://portal1-geo.sabu.mtu.edu/server/rest/services/Hosted/artifact_catalog/FeatureServer/0/query?where=master_unit+%3D+%27' + siteId + '%27&objectIds=&time=&geometry=&geometryType=esriGeometryEnvelope&inSR=&spatialRel=esriSpatialRelIntersects&distance=&units=esriSRUnit_Foot&relationParam=&outFields=*&returnGeometry=true&maxAllowableOffset=&geometryPrecision=&outSR=&havingClause=&gdbVersion=&historicMoment=&returnDistinctValues=false&returnIdsOnly=false&returnCountOnly=false&returnExtentOnly=false&orderByFields=&groupByFieldsForStatistics=&outStatistics=&returnZ=false&returnM=false&multipatchOption=xyFootprint&resultOffset=&resultRecordCount=&returnTrueCurves=false&returnCentroid=false&timeReferenceUnknownClient=false&sqlFormat=none&resultType=&datumTransformation=&lodType=geohash&lod=&lodSR=&f=pjson',
                 type: "GET",    
                 success: function(data) {
-                  const features = data.features;
-                  siteTable.setData(features);
+                  const features = data.features;            
+                  
                   const numResults = data.features.length;
                   const siteTitle = graphic.attributes.desctemp;
                   $('#siteTitle').html("Site " + siteTitle);
                   $('#results').html(numResults + " artifacts");
                   $('#numartifacts').html("<b>Artifacts cataloged:</b> " + numResults);
                   $( "#viewCat" ).click(function() {
-                    openNav();       
+                    $("#sites-table").show();
+                    $("#buildings-table").hide();
+                    siteTable.setData(features);
+                    openNav(); 
                   });            
                 }
               }); 
@@ -888,7 +1008,6 @@
       fips_1910.visible = false;
       fips_49_51.visible = false;
       aerial_1951.visible = false;
-
     }
   });
 
@@ -901,7 +1020,7 @@ $("#timeslider").slider({
   tooltip_position: 'bottom',
   //value: [1897-1900, 1910-1920, 1915-1940, 1949-1951],
   ticks: [1897, 1910, 1915, 1949, 1951],
-  //ticks_labels: ['1890-1899', '1900-1910', '1911-1920', '1950-1959', '$400'],
+  ticks_labels: ['1890-1899', '1900-1910', '1911-1920', '1950-1959', '$400'],
   lock_to_ticks: true,
   labelledby: "test",
   //formatter: formatter,
