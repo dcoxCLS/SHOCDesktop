@@ -1020,7 +1020,7 @@ $("#timeslider").slider({
   tooltip_position: 'bottom',
   //value: [1897-1900, 1910-1920, 1915-1940, 1949-1951],
   ticks: [1897, 1910, 1915, 1949, 1951],
-  ticks_labels: ['1890-1899', '1900-1910', '1911-1920', '1950-1959', '$400'],
+ // ticks_labels: ['1890-1899', '1900-1910', '1911-1920', '1950-1959', '$400'],
   lock_to_ticks: true,
   labelledby: "test",
   //formatter: formatter,

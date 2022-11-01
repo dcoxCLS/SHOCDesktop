@@ -7,6 +7,13 @@ font-family: 'Lora', serif;
 
 .slider.slider-horizontal{
   width:90%; /* sample value - set it as you like*/
+  margin-left:  20px;
+}
+
+
+
+#timeslider {
+  margin-left:  30px !important;
 }
 
 .pnlm-title-box {
