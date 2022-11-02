@@ -874,13 +874,17 @@
 
              // check if the clicked record has any drawings
              if (drawings !== '' && drawings !== null) {
+              $("#drawPic").show();
               const drawingPhotos = drawings.split(",");
               document.getElementById("drawPic").src="https://portal1-geo.sabu.mtu.edu/images/hamtramck/photos/sites/" + docFolder + "/" + drawingPhotos[0]; 
+             } else if (drawings == "" || drawings == null) {
+              $("#drawPic").hide();
              }
 
              // check if the clicked record has an existing image
              if (photos !== '' && photos !== null) {
-              const sitePhotos = photos.split(",");          
+              const sitePhotos = photos.split(","); 
+              $("#sitePic").show();         
               document.getElementById("sitePic").src="https://portal1-geo.sabu.mtu.edu/images/hamtramck/photos/sites/" + docFolder + "/" + sitePhotos[0];          ;
               
               sitePhotos.forEach((photo, index) => {            
@@ -892,6 +896,8 @@
                 item.addEventListener("click", () => siteClickHandler(photo, index));
                 document.getElementById("sitegalley").appendChild(item);
               });
+            } else if (photos == '' || photos == null) {
+              $("#sitePic").hide();
             }
 
               function siteClickHandler(photo, index) {
@@ -905,8 +911,7 @@
                 url: 'https://portal1-geo.sabu.mtu.edu/server/rest/services/Hosted/artifact_catalog/FeatureServer/0/query?where=master_unit+%3D+%27' + siteId + '%27&objectIds=&time=&geometry=&geometryType=esriGeometryEnvelope&inSR=&spatialRel=esriSpatialRelIntersects&distance=&units=esriSRUnit_Foot&relationParam=&outFields=*&returnGeometry=true&maxAllowableOffset=&geometryPrecision=&outSR=&havingClause=&gdbVersion=&historicMoment=&returnDistinctValues=false&returnIdsOnly=false&returnCountOnly=false&returnExtentOnly=false&orderByFields=&groupByFieldsForStatistics=&outStatistics=&returnZ=false&returnM=false&multipatchOption=xyFootprint&resultOffset=&resultRecordCount=&returnTrueCurves=false&returnCentroid=false&timeReferenceUnknownClient=false&sqlFormat=none&resultType=&datumTransformation=&lodType=geohash&lod=&lodSR=&f=pjson',
                 type: "GET",    
                 success: function(data) {
-                  const features = data.features;            
-                  
+                  const features = data.features;                  
                   const numResults = data.features.length;
                   const siteTitle = graphic.attributes.desctemp;
                   $('#siteTitle').html("Site " + siteTitle);
