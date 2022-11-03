@@ -1,264 +1,266 @@
 <html>
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no" />
-    <title>Hamtramck Explorer App</title>
-    <link rel="stylesheet" href="https://js.arcgis.com/4.24/esri/themes/light/main.css" />
-    <link href="https://unpkg.com/tabulator-tables@4.9.3/dist/css/tabulator.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">    
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/viewerjs/1.11.0/viewer.css" integrity="sha512-yQoyuXeQfYvH1Pj2YNO7mkXt1HB2jYOOr6Y5ghUKaWBAxKHZuaJLOM8krHiadUTxChYN9oA2MzIv0WXP2VN3yw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-    <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tabulator/4.9.3/css/tabulator_midnight.min.css" integrity="sha512-epdhm+q+Caq67Ujjcr7kPkNsBoFtmyaqHFuujUjygZnnRVRK70X6dOjX3Z4RDJF+bmG1KBwYHJ/OxMZgm1F2hQ==" crossorigin="anonymous" /> -->
-    <!-- Load icon library -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-    <link rel="preconnect" href="https://fonts.gstatic.com">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Gentium+Book+Plus&family=Lato:wght@300;400&family=Lora&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-slider/11.0.2/css/bootstrap-slider.min.css" integrity="sha512-3q8fi8M0VS+X/3n64Ndpp6Bit7oXSiyCnzmlx6IDBLGlY5euFySyJ46RUlqIVs0DPCGOypqP8IRk/EyPvU28mQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-    <link rel="stylesheet" href="style.css">
-    <script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.min.js" integrity="sha512-3j3VU6WC5rPQB4Ld1jnLV7Kd5xr+cq9avvhwqzbH/taCRNURoeEpoPBK9pDyeukwSxwRPJ8fDgvYXd6SkaZ2TA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV" crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-slider/11.0.2/bootstrap-slider.min.js" integrity="sha512-f0VlzJbcEB6KiW8ZVtL+5HWPDyW1+nJEjguZ5IVnSQkvZbwBt2RfCBY0CBO1PsMAqxxrG4Di6TfsCPP3ZRwKpA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-    <script type="text/javascript" src="https://unpkg.com/tabulator-tables@4.9.3/dist/js/tabulator.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/viewerjs/1.11.0/viewer.js" integrity="sha512-e68PrxNPekCcWmoSXoT0a/y9Qp1t+9QIV4GenGVxbSpKN2/plzwEMIkqg2YvmO//4kIP+AA0AVHNskDM8JVtZQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-    <script src="https://js.arcgis.com/4.24/"></script>  
-  </head>
-  <body>     
-    <!-- Main navbar -->
-    <nav class="navbar navbar-expand-md navbar-light bg-light">
-  <a class="navbar-brand" href="https://mtugrf.github.io/hamtramckapp" target="_blank" rel="noopener">
-    <img src="logos.svg" width="80" height="80" class="d-inline-block align-top" alt="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no" />
+  <title>Hamtramck Explorer App</title>
+  <link rel="stylesheet" href="https://js.arcgis.com/4.24/esri/themes/light/main.css" />
+  <link href="https://unpkg.com/tabulator-tables@4.9.3/dist/css/tabulator.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">    
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/viewerjs/1.11.0/viewer.css" integrity="sha512-yQoyuXeQfYvH1Pj2YNO7mkXt1HB2jYOOr6Y5ghUKaWBAxKHZuaJLOM8krHiadUTxChYN9oA2MzIv0WXP2VN3yw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tabulator/4.9.3/css/tabulator_midnight.min.css" integrity="sha512-epdhm+q+Caq67Ujjcr7kPkNsBoFtmyaqHFuujUjygZnnRVRK70X6dOjX3Z4RDJF+bmG1KBwYHJ/OxMZgm1F2hQ==" crossorigin="anonymous" /> -->
+  <!-- Load icon library -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <link rel="preconnect" href="https://fonts.gstatic.com">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Gentium+Book+Plus&family=Lato:wght@300;400&family=Lora&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-slider/11.0.2/css/bootstrap-slider.min.css" integrity="sha512-3q8fi8M0VS+X/3n64Ndpp6Bit7oXSiyCnzmlx6IDBLGlY5euFySyJ46RUlqIVs0DPCGOypqP8IRk/EyPvU28mQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <link rel="stylesheet" href="style.css">
+  <script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.min.js" integrity="sha512-3j3VU6WC5rPQB4Ld1jnLV7Kd5xr+cq9avvhwqzbH/taCRNURoeEpoPBK9pDyeukwSxwRPJ8fDgvYXd6SkaZ2TA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-slider/11.0.2/bootstrap-slider.min.js" integrity="sha512-f0VlzJbcEB6KiW8ZVtL+5HWPDyW1+nJEjguZ5IVnSQkvZbwBt2RfCBY0CBO1PsMAqxxrG4Di6TfsCPP3ZRwKpA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <script type="text/javascript" src="https://unpkg.com/tabulator-tables@4.9.3/dist/js/tabulator.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/viewerjs/1.11.0/viewer.js" integrity="sha512-e68PrxNPekCcWmoSXoT0a/y9Qp1t+9QIV4GenGVxbSpKN2/plzwEMIkqg2YvmO//4kIP+AA0AVHNskDM8JVtZQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <script src="https://js.arcgis.com/4.24/"></script>  
+</head>
+<body>     
+  <!-- Main navbar -->
+  <nav class="navbar navbar-expand-md navbar-light bg-light">
+    <a class="navbar-brand" href="https://mtugrf.github.io/hamtramckapp" target="_blank" rel="noopener">
+      <img src="logos.svg" width="80" height="80" class="d-inline-block align-top" alt="">
       &nbsp;Hamtramck Historic Spatial Archaeology Project
-  </a>
-  <div class="collapse navbar-collapse" id="navbarNav" style="">
-        <ul class="navbar-nav mr-auto">           
-        </ul>
-                   <!--  <input id="timeslider" type="text" /> -->
-        <!-- Search Bar -->
-    <div class="container justify-content-center">
-    <div class="row" style="width: 50%">
-        <div class="col-md-12">
+    </a>
+    <div class="collapse navbar-collapse" id="navbarNav" style="">
+      <ul class="navbar-nav mr-auto">           
+      </ul>
+      <!--  <input id="timeslider" type="text" /> -->
+      <!-- Search Bar -->
+      <div class="container justify-content-center">
+        <div class="row" style="width: 50%">
+          <div class="col-md-12">
             <div class="input-group mb-6"> <input type="text" class="form-control input-text" placeholder="Search items..." aria-label="Title Search" id="search" aria-describedby="basic-addon2" autocomplete="off">
-                <select class="form-control" id="searchtype">
-                  <option>Artifacts</option>
-                  <option>HHM Objects</option>                                     
-                </select>
-                <div class="input-group-append"> <button class="btn btn-outline-warning btn-lg" type="button" id="submit" title="Search"><i class="fa fa-search"></i></button> </div>
+              <select class="form-control" id="searchtype">
+                <option>Artifacts</option>
+                <option>HHM Objects</option>                                     
+              </select>
+              <div class="input-group-append"> <button class="btn btn-outline-warning btn-lg" type="button" id="submit" title="Search"><i class="fa fa-search"></i></button> </div>
             </div>
+          </div>
         </div>
+      </div>    
+      <ul class="navbar-nav">
+        <li class="nav-item">
+          <a class="nav-link" href="http://hamtramckhistory.com/index.php" target="_blank" rel="noopener">Hamtramck Historical Museum</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="https://wayne.edu/" target="_blank" rel="noopener">Wayne</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="https://www.mtu.edu/greatlakes/shared-facilities/geospatial/" target="_blank" rel="noopener">MTU GRF</a>
+        </li>            
+      </ul>    
     </div>
-</div>    
-        <ul class="navbar-nav">
-            <li class="nav-item">
-                <a class="nav-link" href="http://hamtramckhistory.com/index.php" target="_blank" rel="noopener">Hamtramck Historical Museum</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="https://wayne.edu/" target="_blank" rel="noopener">Wayne</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="https://www.mtu.edu/greatlakes/shared-facilities/geospatial/" target="_blank" rel="noopener">MTU GRF</a>
-            </li>            
-        </ul>    
-    </div>
-</nav>
-<div id="mySidebar" class="sidebar">
-  <div id="title">
-  <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
-  <center><div id="siteTitle" style="display: inline-block;"></div><br><div id="results" style="display: inline-block;"></div></h5>
-  <br><div id="maxResults" style="display: inline-block;">*Searches limited to 1000 results</div></center></div>
-  <div id="sites-table"></div>
-  <div id="buildings-table"></div>
-</div>
-    <div id="viewDiv">
-    <div id="sliderDiv"></div>
-    <div class="slidecontainer">
-      <div id="output"></div>
-      <h2>1888</h2>
- <input id="timeslider" type="text" /><h2>Present</h2>
-</div>    	
-    <select id="location" class="form-control">
-      <option selected value="1885">Robinson Atlas 1885</option> 
-      <option selected value="1893">Sauer Atlas 1893</option>
-      <option value="1897">Sanborn Map 1897</option>
-      <option value="1910">Sanborn Map 1910</option>
-      <option value="1915">Sanborn Map 1915</option>
-      <option selected value="1949">Sanborn Map 1949-1951</option>
-      <option value="1951">Aerial Imagery 1951</option>
-      <option value="Modern">Modern Day Aerial</option>
-    </select>
-<div>
-  <!-- Default Image for ViewerJS -->
-  <img id="image" src="" alt="Picture">
-</div>     
-<div class="modal" id="siteModal" tabindex="-1" role="dialog" data-backdrop="false">
-  <div class="modal-dialog modal-dialog-scrollable" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="siteName"></h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
+  </nav>
+  <div id="mySidebar" class="sidebar">
+    <div id="title">
+      <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+      <center><div id="siteTitle" style="display: inline-block;"></div><br><div id="results" style="display: inline-block;"></div></h5>
+        <br><div id="maxResults" style="display: inline-block;">*Searches limited to 1000 results</div></center></div>
+        <div id="sites-table"></div>
+        <div id="buildings-table"></div>
       </div>
-      <div class="modal-body">
-        <ul class="nav nav-tabs" id="siteTabs" role="tablist">
-  <li class="nav-item">
-    <a class="nav-link active" id="site-details-tab" data-toggle="tab" href="#sitedetails" role="tab" aria-controls="sitedetails" aria-selected="true">Details</a>
-  </li>
-  <li class="nav-item">
-    <a class="nav-link" id="site-documents-tab" data-toggle="tab" href="#sitedocuments" role="tab" aria-controls=sitedocuments aria-selected="false">Documents</a>
-  </li>
-  <li class="nav-item">
-    <a class="nav-link" id="site-drawings-tab" data-toggle="tab" href="#sitedrawings" role="tab" aria-controls="sitedrawings" aria-selected="false">Drawings</a>
-  </li>
-  <li class="nav-item">
-    <a class="nav-link" id="site-photos-tab" data-toggle="tab" href="#sitephotos" role="tab" aria-controls="sitephotos" aria-selected="false">Photos</a>
-  </li>
-  
-</ul>
-<div class="tab-content" id="siteTabContent">
-  <div class="tab-pane fade show active" id="sitedetails" role="tabpanel" aria-labelledby="site-details-tab">
-    <img src="img_girl.jpg" id="sitePic" alt="site pictures" class="responsive">
-    <div id="sitedesc"></div>
-    <div id="siteloc"></div>
-    <div id="site"></div>
-    <div id="sitenote"></div>
-    <div id="numartifacts"></div>
-</div>
-  <div class="tab-pane fade" id="sitedocuments" role="tabpanel" aria-labelledby="site-documents-tab">
-    <ul class="list-group" id="doclist">  
-   </ul>
-  </div>
-  <div class="tab-pane fade" id="sitephotos" role="tabpanel" aria-labelledby="site-photos-tab">
-    <div id="sitegalley">           
+      <div id="viewDiv">
+        <div id="sliderDiv"></div>
+        <div class="slidecontainer">
+          <div id="output"></div>
+          <h2>1888</h2>
+          <input id="timeslider" type="text" /><h2>Present</h2>
+        </div>    	
+        <select id="location" class="form-control">
+          <option selected value="1885">Robinson Atlas 1885</option> 
+          <option selected value="1893">Sauer Atlas 1893</option>
+          <option value="1897">Sanborn Map 1897</option>
+          <option value="1910">Sanborn Map 1910</option>
+          <option value="1915">Sanborn Map 1915</option>
+          <option selected value="1949">Sanborn Map 1949-1951</option>
+          <option value="1951">Aerial Imagery 1951</option>
+          <option value="Modern">Modern Day Aerial</option>
+        </select>
+        <div>
+          <!-- Default Image for ViewerJS -->
+          <img id="image" src="" alt="Picture">
+        </div>     
+        <div class="modal" id="siteModal" tabindex="-1" role="dialog" data-backdrop="false">
+          <div class="modal-dialog modal-dialog-scrollable" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="siteName"></h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div class="modal-body">
+                <ul class="nav nav-tabs" id="siteTabs" role="tablist">
+                  <li class="nav-item">
+                    <a class="nav-link active" id="site-details-tab" data-toggle="tab" href="#sitedetails" role="tab" aria-controls="sitedetails" aria-selected="true">Details</a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link" id="site-documents-tab" data-toggle="tab" href="#sitedocuments" role="tab" aria-controls=sitedocuments aria-selected="false">Documents</a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link" id="site-drawings-tab" data-toggle="tab" href="#sitedrawings" role="tab" aria-controls="sitedrawings" aria-selected="false">Drawings</a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link" id="site-photos-tab" data-toggle="tab" href="#sitephotos" role="tab" aria-controls="sitephotos" aria-selected="false">Photos</a>
+                  </li>
+
+                </ul>
+                <div class="tab-content" id="siteTabContent">
+                  <div class="tab-pane fade show active" id="sitedetails" role="tabpanel" aria-labelledby="site-details-tab">
+                    <img src="img_girl.jpg" id="sitePic" alt="site pictures" class="responsive">
+                    <div id="sitedesc"></div>
+                    <div id="siteloc"></div>
+                    <div id="site"></div>
+                    <div id="sitenote"></div>
+                    <div id="numartifacts"></div>
+                  </div>
+                  <div class="tab-pane fade" id="sitedocuments" role="tabpanel" aria-labelledby="site-documents-tab">
+                    <ul class="list-group" id="doclist">  
+                    </ul>
+                  </div>
+                  <div class="tab-pane fade" id="sitephotos" role="tabpanel" aria-labelledby="site-photos-tab">
+                    <div id="sitegalley">           
+                    </div>
+                  </div>
+                  <div class="tab-pane fade" id="sitedrawings" role="tabpanel" aria-labelledby="site-drawings-tab"><img src="img_girl.jpg" id="drawPic" alt="site pictures" class="responsive"></div>
+                </div>        
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-primary" id="viewCat">View Artifact Catalog</button>        
+              </div>
             </div>
-  </div>
-   <div class="tab-pane fade" id="sitedrawings" role="tabpanel" aria-labelledby="site-drawings-tab"><img src="img_girl.jpg" id="drawPic" alt="site pictures" class="responsive"></div>
-</div>        
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-primary" id="viewCat">View Artifact Catalog</button>        
-      </div>
-    </div>
-  </div>
-</div>
-<div class="modal" id="buildingModal" tabindex="-1" role="dialog" data-backdrop="false">
-  <div class="modal-dialog modal-dialog-scrollable" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="buildingName"></h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body">
-        <ul class="nav nav-tabs" id="bldgTabs" role="tablist">
-  <li class="nav-item">
-    <a class="nav-link active" id="bldg-details-tab" data-toggle="tab" href="#bldgdetails" role="tab" aria-controls="bldgdetails" aria-selected="true">Details</a>  
-</ul>
-<div class="tab-content" id="bldgTabContent">
-  <div class="tab-pane fade show active" id="bldgdetails" role="tabpanel" aria-labelledby="bldg-details-tab">
-    <div id="buildingadd"></div> 
-    <div id="buildingtype"></div> 
-    <div id="buildingstories"></div>
-    <div id="buildingyear"></div>
-    <div id="buildingplace"></div> 
-    <div id="buildingmat"></div>   
-    <div id="buildingfunction"></div>
-    <div id="buildingocc"></div>
-    <div id="buildingnotes"></div>
-    <div id="buildingbasement"></div>
-</div>     
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-primary" id="viewHHMCat">View Object Catalog</button>        
-      </div>
-    </div>
-  </div>
-</div>
-</div>
-<div class="modal" id="artModal" tabindex="-1" role="dialog" data-backdrop="false">
-  <div class="modal-dialog modal-dialog-scrollable" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="artName"></h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body">
-        <ul class="nav nav-tabs" id="artTab" role="tablist">
-  <li class="nav-item">
-    <a class="nav-link active" id="art-details-tab" data-toggle="tab" href="#artdetails" role="tab" aria-controls="artdetails" aria-selected="true">Details</a>
-  </li>
-  <li class="nav-item">
-    <a class="nav-link" id="art-documents-tab" data-toggle="tab" href="#artdocuments" role="tab" aria-controls="artdocuments" aria-selected="false">Documents</a>
-  </li>
-  <li class="nav-item">
-    <a class="nav-link" id="art-photos-tab" data-toggle="tab" href="#artphotos" role="tab" aria-controls="artphotos" aria-selected="false">Photos</a>
-  </li>
-  <li class="nav-item">
-    <a class="nav-link" id="art-models-tab" data-toggle="tab" href="#artmodels" role="tab" aria-controls="artmodels" aria-selected="false">3D Model</a>
-  </li>  
-</ul>
-<div class="tab-content" id="artTabContent">
-  <div class="tab-pane fade show active" id="artdetails" role="tabpanel" aria-labelledby="art-details-tab">
-    <img src="img_girl.jpg" id="artPic" alt="artifact pictures" class="responsive">
-    <div id="artdesc"></div>
-    <div id="artsite"></div>
-    <div id="artloc"></div>
-    <div id="artunit"></div>
-    <div id="artcontext"></div>
-    <div id="artnum"></div>
-    <div id="material"></div>
-    <div id="function"></div>
-    <div id="makersmark"></div>
-    <div id="markdesc"></div>
-    <div id="artcurrentloc"></div>
-</div>
-  <div class="tab-pane fade" id="artphotos" role="tabpanel" aria-labelledby="art-photos-tab">
-    <div id="galley">           
+          </div>
+        </div>
+        <div class="modal" id="buildingModal" tabindex="-1" role="dialog" data-backdrop="false">
+          <div class="modal-dialog modal-dialog-scrollable" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="buildingName"></h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div class="modal-body">
+                <ul class="nav nav-tabs" id="bldgTabs" role="tablist">
+                  <li class="nav-item">
+                    <a class="nav-link active" id="bldg-details-tab" data-toggle="tab" href="#bldgdetails" role="tab" aria-controls="bldgdetails" aria-selected="true">Details</a>  
+                  </ul>
+                  <div class="tab-content" id="bldgTabContent">
+                    <div class="tab-pane fade show active" id="bldgdetails" role="tabpanel" aria-labelledby="bldg-details-tab">
+                      <div id="buildingadd"></div> 
+                      <div id="buildingtype"></div> 
+                      <div id="buildingstories"></div>
+                      <div id="buildingyear"></div>
+                      <div id="buildingplace"></div> 
+                      <div id="buildingmat"></div>   
+                      <div id="buildingfunction"></div>
+                      <div id="buildingocc"></div>
+                      <div id="buildingnotes"></div>
+                      <div id="buildingbasement"></div>
+                      <div id="buildingartifacts"></div>
+                    </div>     
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" id="viewHHMCat">View Object Catalog</button> 
+                    <button type="button" class="btn btn-primary" id="viewBldgCat">View Artifact Catalog</button>       
+                  </div>
+                </div>
+              </div>
             </div>
-  </div>
-  <div class="tab-pane fade" id="artmodels" role="tabpanel" aria-labelledby="art-models-tab">
-    <iframe src="https://sketchfab.com/models/5aaca7b5af854bc9a905f16ba1f9685a/embed" id="modelframe" title="description"></iframe></div>
-  <div class="tab-pane fade" id="artdocuments" role="tabpanel" aria-labelledby="art-documents-tab">...</div>
-</div>        
-      </div>      
-    </div>
-  </div>
-</div>  
-<div class="modal" id="objModal" tabindex="-1" role="dialog" data-backdrop="false">
-  <div class="modal-dialog modal-dialog-scrollable" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="objName"></h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body">
-        <ul class="nav nav-tabs" id="objTab" role="tablist">
-  <li class="nav-item">
-    <a class="nav-link active" id="obj-details-tab" data-toggle="tab" href="#objdetails" role="tab" aria-controls="objdetails" aria-selected="true">Details</a>
-  </li>
-</ul>
-<div class="tab-content" id="objTabContent">
-  <div class="tab-pane fade show active" id="objdetails" role="tabpanel" aria-labelledby="obj-details-tab">
-    <!-- <img src="img_girl.jpg" id="objPic" alt="artifact pictures" class="responsive"> -->
-    <div id="objdesc"></div>
-    <div id="objname"></div>
-    <div id="catnum"></div>
-    <div id="objdate"></div>
-    <div id="objyear"></div>
-    <div id="objnotes"></div>    
-</div>       
-      </div>      
-    </div>
-  </div>
-</div>
-</div>
-<script src="main.js"></script>
-  </body>
-</html>
+          </div>
+          <div class="modal" id="artModal" tabindex="-1" role="dialog" data-backdrop="false">
+            <div class="modal-dialog modal-dialog-scrollable" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="artName"></h5>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+                <div class="modal-body">
+                  <ul class="nav nav-tabs" id="artTab" role="tablist">
+                    <li class="nav-item">
+                      <a class="nav-link active" id="art-details-tab" data-toggle="tab" href="#artdetails" role="tab" aria-controls="artdetails" aria-selected="true">Details</a>
+                    </li>
+                    <li class="nav-item">
+                      <a class="nav-link" id="art-documents-tab" data-toggle="tab" href="#artdocuments" role="tab" aria-controls="artdocuments" aria-selected="false">Documents</a>
+                    </li>
+                    <li class="nav-item">
+                      <a class="nav-link" id="art-photos-tab" data-toggle="tab" href="#artphotos" role="tab" aria-controls="artphotos" aria-selected="false">Photos</a>
+                    </li>
+                    <li class="nav-item">
+                      <a class="nav-link" id="art-models-tab" data-toggle="tab" href="#artmodels" role="tab" aria-controls="artmodels" aria-selected="false">3D Model</a>
+                    </li>  
+                  </ul>
+                  <div class="tab-content" id="artTabContent">
+                    <div class="tab-pane fade show active" id="artdetails" role="tabpanel" aria-labelledby="art-details-tab">
+                      <img src="img_girl.jpg" id="artPic" alt="artifact pictures" class="responsive">
+                      <div id="artdesc"></div>
+                      <div id="artsite"></div>
+                      <div id="artloc"></div>
+                      <div id="artunit"></div>
+                      <div id="artcontext"></div>
+                      <div id="artnum"></div>
+                      <div id="material"></div>
+                      <div id="function"></div>
+                      <div id="makersmark"></div>
+                      <div id="markdesc"></div>
+                      <div id="artcurrentloc"></div>
+                    </div>
+                    <div class="tab-pane fade" id="artphotos" role="tabpanel" aria-labelledby="art-photos-tab">
+                      <div id="galley">           
+                      </div>
+                    </div>
+                    <div class="tab-pane fade" id="artmodels" role="tabpanel" aria-labelledby="art-models-tab">
+                      <iframe src="https://sketchfab.com/models/5aaca7b5af854bc9a905f16ba1f9685a/embed" id="modelframe" title="description"></iframe></div>
+                      <div class="tab-pane fade" id="artdocuments" role="tabpanel" aria-labelledby="art-documents-tab">...</div>
+                    </div>        
+                  </div>      
+                </div>
+              </div>
+            </div>  
+            <div class="modal" id="objModal" tabindex="-1" role="dialog" data-backdrop="false">
+              <div class="modal-dialog modal-dialog-scrollable" role="document">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title" id="objName"></h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                    </button>
+                  </div>
+                  <div class="modal-body">
+                    <ul class="nav nav-tabs" id="objTab" role="tablist">
+                      <li class="nav-item">
+                        <a class="nav-link active" id="obj-details-tab" data-toggle="tab" href="#objdetails" role="tab" aria-controls="objdetails" aria-selected="true">Details</a>
+                      </li>
+                    </ul>
+                    <div class="tab-content" id="objTabContent">
+                      <div class="tab-pane fade show active" id="objdetails" role="tabpanel" aria-labelledby="obj-details-tab">
+                        <!-- <img src="img_girl.jpg" id="objPic" alt="artifact pictures" class="responsive"> -->
+                        <div id="objdesc"></div>
+                        <div id="objname"></div>
+                        <div id="catnum"></div>
+                        <div id="objdate"></div>
+                        <div id="objyear"></div>
+                        <div id="objnotes"></div>    
+                      </div>       
+                    </div>      
+                  </div>
+                </div>
+              </div>
+            </div>
+            <script src="main.js"></script>
+          </body>
+          </html>
