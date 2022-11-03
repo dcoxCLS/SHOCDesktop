@@ -45,7 +45,7 @@
       },
       groupHeader:function(value, count, data, group){        
       //  if (value < 241) {
-        return "Site: " + value + "<span style='color:#8c1d40; margin-left:10px;'>(" + count + " items)</span>"; 
+        return "Site: " + value + "<span style='color:#FF0000; margin-left:10px;'>(" + count + " items)</span>"; 
        // }          
      },    
    }); 
@@ -286,90 +286,90 @@
             });                 
           }     
         }); 
-} else if (table == "buildings") {
-  const bldgId = row._row.data.attributes.alt_place_id;  
-  const itemName = row._row.data.attributes.item_name;
-  const itemDate = row._row.data.attributes.date_;
-  const catNum = row._row.data.attributes.catalog_number;
-  const desc = row._row.data.attributes.brief_description;
-  const scanned =  row._row.data.attributes.scanned;
-  const photos =  row._row.data.attributes.photo_num;     
-  const model = row._row.data.attributes.f3d_model;  
+    } else if (table == "buildings") {
+      const bldgId = row._row.data.attributes.alt_place_id;  
+      const itemName = row._row.data.attributes.item_name;
+      const itemDate = row._row.data.attributes.date_;
+      const catNum = row._row.data.attributes.catalog_number;
+      const desc = row._row.data.attributes.brief_description;
+      const scanned =  row._row.data.attributes.scanned;
+      const photos =  row._row.data.attributes.photo_num;     
+      const model = row._row.data.attributes.f3d_model;  
 
-  const query = sitesLayer.createQuery();
-      // Query the sites layer for the ID
-      query.where = "uniqueid =" + "'" + bldgId + "'";
-      query.returnGeometry = true;                 
-      query.outFields = "*";
-      buildingsLayer.queryFeatures(query)
-      .then(function(response){
-           // returns a feature set with features containing an OBJECTID
-           const objectID = response.features[0].attributes.objectid;       
-           const locId = response.features[0].attributes.uniqueid;   
-           console.log(response.features);          
+      const query = sitesLayer.createQuery();
+          // Query the sites layer for the ID
+          query.where = "uniqueid =" + "'" + bldgId + "'";
+          query.returnGeometry = true;                 
+          query.outFields = "*";
+          buildingsLayer.queryFeatures(query)
+          .then(function(response){
+               // returns a feature set with features containing an OBJECTID
+               const objectID = response.features[0].attributes.objectid;       
+               const locId = response.features[0].attributes.uniqueid;   
+               console.log(response.features);          
 
-          view.whenLayerView(buildingsLayer).then(function(layerView) {
-            const queryExtent = new Query({
-              objectIds: [objectID]
-            });    
+              view.whenLayerView(buildingsLayer).then(function(layerView) {
+                const queryExtent = new Query({
+                  objectIds: [objectID]
+                });    
 
-            const extent = response.features[0].geometry.extent;        
+                const extent = response.features[0].geometry.extent;        
 
-            view.goTo({ center: extent.expand(6) }, { duration: 800 });
+                view.goTo({ center: extent.expand(6) }, { duration: 800 });
 
-            buildingsLayer.queryExtent(queryExtent).then(function(result) {               
-            });          
+                buildingsLayer.queryExtent(queryExtent).then(function(result) {               
+                });          
 
-          // reduce popup size
-          $(function() {            
-            $("body:not(.esriIsPhoneSize) #viewDiv .esri-popup.esri-popup--is-docked .esri-popup__main-container").css('padding-bottom', '0px');                
-          });
-          
-          // if any, remove the previous highlights
-          if (highlight) {
-            highlight.remove();
-          }
-          // highlight the feature with the returned objectId
-          highlight = layerView.highlight([objectID]);
-        }) 
+              // reduce popup size
+              $(function() {            
+                $("body:not(.esriIsPhoneSize) #viewDiv .esri-popup.esri-popup--is-docked .esri-popup__main-container").css('padding-bottom', '0px');                
+              });
+              
+              // if any, remove the previous highlights
+              if (highlight) {
+                highlight.remove();
+              }
+              // highlight the feature with the returned objectId
+              highlight = layerView.highlight([objectID]);
+            }) 
 
-           $('#objName').html("<b>" + itemName + "</b>");
-           $('#objModal').modal('show');
-           $('#artModal').modal('hide'); 
-           $('#objdesc').html("<b>Description: </b>" + desc);
-           $('#objdate').html("<b>Date: </b>" + itemDate);
-           $('#catnum').html("<b>Catalog Number: </b>" + catNum);          
+               $('#objName').html("<b>" + itemName + "</b>");
+               $('#objModal').modal('show');
+               $('#artModal').modal('hide'); 
+               $('#objdesc').html("<b>Description: </b>" + desc);
+               $('#objdate').html("<b>Date: </b>" + itemDate);
+               $('#catnum').html("<b>Catalog Number: </b>" + catNum);          
 
-          // check if the clicked record has an existing image
-          if (photos !== '' && photos !== null) {           
+              // check if the clicked record has an existing image
+              if (photos !== '' && photos !== null) {           
 
-            // open a popup at the drawer location of the selected map
-            view.popup.open({                  
-              // Set the popup's title to the coordinates of the clicked location
-              title: "<h6><b> title",  
-              content: "test"/*"<img src='" + thumbUrl + "' class='thumbdisplay'/><br><br><b>Title: </b>" + itemTitle +
-              "<br><br><b>Date: </b>" + items[2] + "<br><br><b>Author: </b>" + items[1] + "<br><br><b>Publisher: </b>" + 
-              items[4] + "<br><br><b>Scale: </b>" + items[0] + "<br><br><b>Call Number: </b>" + items[5] +
-              "<br><br><b>Location: </b>" + locName + locId + "<br><a href=" + "'" + itemLink + 
-              "' target='_blank' rel='noopener noreferrer' class='catlink'>View item in ASU Library catalog</a>" +              
-              "<a href=" + "'" + indexUrl + "' target='_blank' rel='noopener noreferrer' class='indexlink'>View item in spatial index</a>" +
-              "<a href=" + "'" + supUrl + "' target='_blank' rel='noopener noreferrer' class='suplink'>Learn more about this item</a>" +
-              "<a href='https://lib.asu.edu/geo/services' target='_blank' rel='noopener noreferrer' class='maroon'>Request access</a>"*/,
-              // "<br><br><h6></b><a href='#' id='prev' class='previous round'>&#8249; Previous</a><a href='#' id='next' class='next round'>Next &#8250;</a>",
-              location: response.features[0].geometry.centroid, // Set the location of the popup to the clicked location 
-              actions: []      
-            });                   
-          } else {
-            view.popup.open({
-              // Set the popup's title to the coordinates of the clicked location
-              title: "<h6><b> title",    
-              content: "content",
-              location: response.features[0].geometry.centroid, // Set the location of the popup to the clicked location 
-              actions: []      
-            });                 
-          }     
-        });
-    }  
+                // open a popup at the drawer location of the selected map
+                view.popup.open({                  
+                  // Set the popup's title to the coordinates of the clicked location
+                  title: "<h6><b> title",  
+                  content: "test"/*"<img src='" + thumbUrl + "' class='thumbdisplay'/><br><br><b>Title: </b>" + itemTitle +
+                  "<br><br><b>Date: </b>" + items[2] + "<br><br><b>Author: </b>" + items[1] + "<br><br><b>Publisher: </b>" + 
+                  items[4] + "<br><br><b>Scale: </b>" + items[0] + "<br><br><b>Call Number: </b>" + items[5] +
+                  "<br><br><b>Location: </b>" + locName + locId + "<br><a href=" + "'" + itemLink + 
+                  "' target='_blank' rel='noopener noreferrer' class='catlink'>View item in ASU Library catalog</a>" +              
+                  "<a href=" + "'" + indexUrl + "' target='_blank' rel='noopener noreferrer' class='indexlink'>View item in spatial index</a>" +
+                  "<a href=" + "'" + supUrl + "' target='_blank' rel='noopener noreferrer' class='suplink'>Learn more about this item</a>" +
+                  "<a href='https://lib.asu.edu/geo/services' target='_blank' rel='noopener noreferrer' class='maroon'>Request access</a>"*/,
+                  // "<br><br><h6></b><a href='#' id='prev' class='previous round'>&#8249; Previous</a><a href='#' id='next' class='next round'>Next &#8250;</a>",
+                  location: response.features[0].geometry.centroid, // Set the location of the popup to the clicked location 
+                  actions: []      
+                });                   
+              } else {
+                view.popup.open({
+                  // Set the popup's title to the coordinates of the clicked location
+                  title: "<h6><b> title",    
+                  content: "content",
+                  location: response.features[0].geometry.centroid, // Set the location of the popup to the clicked location 
+                  actions: []      
+                });                 
+              }     
+            });
+        }  
   }
 
   function highLightSites (results, type) {
@@ -386,7 +386,7 @@
       for (let i = 0, j = objectIds.length; i < j; i++) {
        occurrences[objectIds[i]] = (occurrences[objectIds[i]] || 0) + 1;
      }
-     
+
      console.log(occurrences);   
 
      const uniqueIds = [...new Set(objectIds)];
@@ -552,12 +552,12 @@
             siteTable.setData(data.features); 
             $("#sites-table").show();
             $("#buildings-table").hide();
-            const numResults = data.features.length; 
+            const numResults = data.features.length;             
             if (searchVal.length > 25) {
-              const shortSearchVal = (searchVal.substring(0, 25) + "...");
-              $('#results').html(numResults + " items found for " + '"' + shortSearchVal + '"'); 
+              const shortSearchVal = (searchVal.substring(0, 25) + "...");              
+              $('#results').html(numResults + " artifacts found for " + '"' + shortSearchVal + '"'); 
             } else {
-              $('#results').html(numResults + " items found for " + '"' + searchVal + '"'); 
+              $('#results').html(numResults + " artifacts found for " + '"' + searchVal + '"'); 
             }
             openNav();        
           } 
@@ -569,7 +569,7 @@
         url: bldgTableURL + 'query?where=item_name+LIKE+%27%25' + searchVal + '%25%27+OR+brief_description+LIKE+%27%25' + searchVal + '%25%27+OR+working_notes+LIKE+%27%25' + searchVal +'%25%27+OR+year_+LIKE+%27%25' + searchVal + '%25%27+OR+current_location+LIKE+%27%25' + searchVal + '%25%27+OR+date_+LIKE+%27%25' + searchVal + '%25%27&objectIds=&time=&resultType=none&outFields=*&returnHiddenFields=false&returnIdsOnly=false&returnUniqueIdsOnly=false&returnCountOnly=false&returnDistinctValues=false&cacheHint=false&orderByFields=&groupByFieldsForStatistics=&outStatistics=&having=&resultOffset=&resultRecordCount=&sqlFormat=none&f=pjson',
         type: "GET",    
         success: function(data) {
-          console.log(data);
+          $("#siteTitle").html("Search Results:");
           if (data.features.length == 0) {          
             alert('The search returned no results. Please try different terms.');
           } else {      
@@ -580,9 +580,9 @@
             const numResults = data.features.length; 
             if (searchVal.length > 25) {
               const shortSearchVal = (searchVal.substring(0, 25) + "...");
-              $('#results').html(numResults + " items found for " + '"' + shortSearchVal + '"'); 
+              $('#results').html(numResults + " objects found for " + '"' + shortSearchVal + '"'); 
             } else {
-              $('#results').html(numResults + " items found for " + '"' + searchVal + '"'); 
+              $('#results').html(numResults + " objects found for " + '"' + searchVal + '"'); 
             }
             openNav();        
           } 
@@ -847,6 +847,7 @@
           });
           } else {
             $('#viewBldgCat').hide();
+            $('#buildingartifacts').html("<b>Artifacts associated with this building:</b> 0 ");
           }
           console.log("Feature count: " + results.features.length)
         }).catch((error) => {
@@ -862,7 +863,7 @@
             bldgTable.setData(features);
             const numResults = data.features.length;
               //const bldgName = graphic.attributes.desctemp;
-              $('#siteTitle').html(occupant);
+              $('#siteTitle').html(address);
               $('#results').html(numResults + " objects");
               $('#numartifacts').html("<b>Artifacts cataloged:</b> " + numResults);
               $( "#viewHHMCat" ).click(function() {

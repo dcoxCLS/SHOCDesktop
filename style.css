@@ -10,8 +10,6 @@ font-family: 'Lora', serif;
   margin-left:  30px;
 }
 
-
-
 #timeslider {
   margin-left:  20px !important;
 }
@@ -63,6 +61,16 @@ font-family: 'Lora', serif;
 
 #searchBtn:hover {
   background-color: #e43133;
+}
+
+.btn-primary {
+  background-color: #0e3658;
+  border-color:  #0e3658;
+}
+
+.btn-primary:hover {
+  background-color: #e43133;
+  border-color:  #e43133;
 }
 
 /*slider*/
