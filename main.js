@@ -678,7 +678,7 @@
   
   // Add the excavation sites layer to the map   
   const sitesLayer = new FeatureLayer({
-    url: "https://portal1-geo.sabu.mtu.edu/server/rest/services/Hosted/OHC_Excavation_Units/FeatureServer/0",
+    url: "https://portal1-geo.sabu.mtu.edu/server/rest/services/Hosted/OHC_Excavation_Units_NEW/FeatureServer/1",
     outFields: ["*"], // Return all fields so it can be queried client-side
     renderer: sitesRenderer,
     popupEnabled: true 
@@ -686,7 +686,7 @@
 
   // Add the Sanborn buildings layer to the map   
   const buildingsLayer = new FeatureLayer({
-    url: "https://portal1-geo.sabu.mtu.edu/server/rest/services/Hosted/Hamtramck_Buildings/FeatureServer/0",
+    url: "https://portal1-geo.sabu.mtu.edu/server/rest/services/Hosted/Hamtramck_Buildings_NEW/FeatureServer/0",
     outFields: ["*"], // Return all fields so it can be queried client-side
     renderer: buildingsRenderer,
     popupEnabled: true 
@@ -760,7 +760,7 @@
       if (highlight) {
         highlight.remove();
       } 
-      if (graphic.layer.title == "Hamtramck Buildings - Hamtramck Blds Merge Oct27 2022") {
+      if (graphic.layer.title == "Hamtramck Buildings NEW - Hamtramck Bldgs Merge Nov4 2022") {
         console.log(graphic);
         const bldgFunction = graphic.attributes.function;
         const occupant = graphic.attributes.occupant;
@@ -892,7 +892,7 @@
               });            
             }
           });       
-      } else if (graphic.layer.title == "OHC Excavation Units - OHC Excavation Footprints v2" ) {
+      } else if (graphic.layer.title == "OHC Excavation Units NEW - OHC Excavation Footprints v3" ) {
        $('.nav-tabs a[href="#sitedetails"]').tab('show'); 
        const siteId = graphic.attributes.master_unit; 
        const displayName = graphic.attributes.display_name;
