@@ -296,6 +296,13 @@
       const photos =  row._row.data.attributes.photo_num;     
       const model = row._row.data.attributes.f3d_model;  
 
+      if (bldgId == '121|Modern') {
+        $("#location").val('Modern').trigger('change');
+
+      } else if (bldgId == '100|1915') {
+        $("#location").val('1915').trigger('change');
+      }
+
       const query = sitesLayer.createQuery();
           // Query the sites layer for the ID
           query.where = "uniqueid =" + "'" + bldgId + "'";
@@ -998,7 +1005,8 @@
   $("#location").change(function () {
     // Get the value of the selected item
     const value = this.value;
-    if (value == '1885') {      
+    if (value == '1885') {  
+      setFeatureLayerFilter("year != '1897' OR year != '1910' OR year != '1915' OR year != '1949_1951'" );    
       atlas_1885.visible = true;
       atlas_1893.visible = false;
       fips_1897.visible = false;
@@ -1007,6 +1015,7 @@
       fips_49_51.visible = false;
       aerial_1951.visible = false;  
     } else if (value == '1893') {
+      setFeatureLayerFilter("year != '1897' OR year != '1910' OR year != '1915' OR year != '1949_1951'" ); 
       atlas_1885.visible = false;
       atlas_1893.visible = true;
       fips_1897.visible = false;
@@ -1050,7 +1059,8 @@
       fips_1910.visible = false;
       fips_49_51.visible = true;
       aerial_1951.visible = false;  
-    } else if (value == '1951') {            
+    } else if (value == '1951') {  
+      setFeatureLayerFilter("year != '1897' OR year != '1910' OR year != '1915' OR year != '1949_1951'" );           
       atlas_1885.visible = false;
       atlas_1893.visible = false;
       fips_1897.visible = false;
