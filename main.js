@@ -476,7 +476,7 @@
      console.log(uniqueIds);
      const idsInQuotes = uniqueIds.map(id => `'${id}'`);
      console.log(idsInQuotes);
-     const siteQuery = idsInQuotes.join(" OR alt_place_id = ");
+     const siteQuery = idsInQuotes.join(" OR uniqueid = ");
      console.log(siteQuery);      
      const query = buildingsLayer.createQuery();
         // Query the cabinets layer for the LOC_ID
@@ -775,6 +775,8 @@
         const type = graphic.attributes.bldg_type;            
 
         $('#buildingModal').modal('show');
+        $('#objModal').modal('hide');
+        $('#artModal').modal('hide');  
         $('#buildingName').html("<b>" + address + "</b>");
         $('#buildingtype').html("<b> Building Type: </b>" + type);
         $('#buildingadd').html("<b> Address: </b>" + address);
@@ -906,6 +908,7 @@
        document.getElementById("doclist").innerHTML = "";
        $('#buildingModal').modal('hide');
        $('#artModal').modal('hide');
+       $('#objModal').modal('hide'); 
 
        $('#siteModal').modal('show');
        $('#siteName').html("<b>" + displayName + "</b>");
