@@ -45,7 +45,7 @@
       },
       groupHeader:function(value, count, data, group){        
       //  if (value < 241) {
-        return "Site: " + value + "<span style='color:#FF0000; margin-left:10px;'>(" + count + " items)</span>"; 
+        return "Site: " + value + "<span style='color:#FF0000; margin-left:10px;'>(" + count + " artifacts)</span>"; 
        // }          
      },    
    }); 
@@ -80,7 +80,7 @@
       },
       groupHeader:function(value, count, data, group){        
       //  if (value < 241) {
-        return "Building: " + value + "<span style='color:#FF0000; margin-left:10px;'>(" + count + " items)</span>"; 
+        return "Building: " + value + "<span style='color:#FF0000; margin-left:10px;'>(" + count + " objects)</span>"; 
        // }          
      },    
    });               
@@ -548,7 +548,9 @@
           if (data.features.length == 0) {          
             alert('The search returned no results. Please try different terms.');
           } else {      
-            highLightSites(data.features, "artifact");     
+            highLightSites(data.features, "artifact");   
+            siteTable.clearData();
+            bldgTable.clearData();  
             siteTable.setData(data.features); 
             $("#sites-table").show();
             $("#buildings-table").hide();
@@ -573,7 +575,9 @@
           if (data.features.length == 0) {          
             alert('The search returned no results. Please try different terms.');
           } else {      
-            highLightSites(data.features, "object");     
+            highLightSites(data.features, "object");
+            siteTable.clearData();
+            bldgTable.clearData();     
             bldgTable.setData(data.features);  
             $("#sites-table").hide();
             $("#buildings-table").show();
@@ -623,7 +627,7 @@
       color: [ 255, 0, 0, 0],
       outline: {  // autocasts as new SimpleLineSymbol()
         width: 2,
-        color: "red"
+        color: [157, 0, 255],
       }
     }
   }; 
@@ -834,11 +838,14 @@
           type: "GET",    
           success: function(data) {
             const features = data.features;
-            siteTable.setData(features);
+            siteTable.clearData();
+            //bldgTable.clearData();
             const numResults = data.features.length;                
               $('#results').html(numResults + " artifacts");
               $('#buildingartifacts').html("<b>Artifacts associated with this building:</b> " + numResults);
               $( "#viewBldgCat" ).click(function() {
+                $('#results').html(numResults + " artifacts");
+                siteTable.setData(features);
                 $("#buildings-table").hide();
                 $("#sites-table").show();                
                 openNav();       
@@ -846,7 +853,7 @@
             }
           });
           } else {
-            $('#viewBldgCat').hide();
+            //$('#viewBldgCat').hide();
             $('#buildingartifacts').html("<b>Artifacts associated with this building:</b> 0 ");
           }
           console.log("Feature count: " + results.features.length)
@@ -860,6 +867,8 @@
           type: "GET",    
           success: function(data) {
             const features = data.features;
+            //bldgTable.clearData();
+            siteTable.clearData();
             bldgTable.setData(features);
             const numResults = data.features.length;
               //const bldgName = graphic.attributes.desctemp;
@@ -867,6 +876,7 @@
               $('#results').html(numResults + " objects");
               $('#numartifacts').html("<b>Artifacts cataloged:</b> " + numResults);
               $( "#viewHHMCat" ).click(function() {
+                $('#results').html(numResults + " objects");
                 $("#sites-table").hide();
                 $("#buildings-table").show();
                 openNav();       
@@ -958,6 +968,8 @@
             $('#siteTitle').html("Site " + siteTitle);
             $('#results').html(numResults + " artifacts");
             $('#numartifacts').html("<b>Artifacts cataloged:</b> " + numResults);
+            bldgTable.clearData();
+            siteTable.clearData();
             $( "#viewCat" ).click(function() {
               $("#sites-table").show();
               $("#buildings-table").hide();
