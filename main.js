@@ -864,6 +864,7 @@
           });
           } else {
              $( "#viewBldgCat" ).click(function() {
+              $('#results').html("0 artifacts");
               siteTable.clearData();
              });
             //siteTable.clearData();
