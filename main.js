@@ -16,7 +16,8 @@
    $.fn.modal.Constructor.prototype._enforceFocus = function() {}; // modal does not interfere with search text box input
 
   // Creates a new table to hold our map attributes  
-  const siteTable = new Tabulator("#sites-table", {             
+  const siteTable = new Tabulator("#sites-table", {    
+      // placeholder:"No Data Available",         
       //height: "88%", 
       virtualDomBuffer: 1600,
       responsiveLayout:"collapse",   
@@ -862,6 +863,10 @@
             }
           });
           } else {
+             $( "#viewBldgCat" ).click(function() {
+              siteTable.clearData();
+             });
+            //siteTable.clearData();
             //$('#viewBldgCat').hide();
             $('#buildingartifacts').html("<b>Artifacts associated with this building:</b> 0 ");
           }
