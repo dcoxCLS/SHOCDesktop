@@ -1069,7 +1069,7 @@
       fips_49_51.visible = true;
       aerial_1951.visible = false;  
     } else if (value == '1951') {  
-      setFeatureLayerFilter("year != '1897' OR year != '1910' OR year != '1915' OR year != '1949_1951' AND year = 'Modern'" );           
+      setFeatureLayerFilter("year = 'Modern'" );           
       atlas_1885.visible = false;
       atlas_1893.visible = false;
       fips_1897.visible = false;
