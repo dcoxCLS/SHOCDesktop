@@ -739,7 +739,7 @@
   }
 
   // Display the 49-51 Sanborn on map load
-  setFeatureLayerFilter("year = '1949_1951'" );
+  setFeatureLayerFilter("year = '1949_1951' OR year = 'Modern'" );
 
   sitesLayer.popupTemplate = {
     title:'{display_name} ({desctemp})',
@@ -1015,7 +1015,7 @@
     // Get the value of the selected item
     const value = this.value;
     if (value == '1885') {  
-      setFeatureLayerFilter("year != '1897' OR year != '1910' OR year != '1915' OR year != '1949_1951'" );    
+      setFeatureLayerFilter("year = 'Modern'" );    
       atlas_1885.visible = true;
       atlas_1893.visible = false;
       fips_1897.visible = false;
@@ -1024,7 +1024,7 @@
       fips_49_51.visible = false;
       aerial_1951.visible = false;  
     } else if (value == '1893') {
-      setFeatureLayerFilter("year != '1897' OR year != '1910' OR year != '1915' OR year != '1949_1951'" ); 
+      setFeatureLayerFilter("year = 'Modern'" ); 
       atlas_1885.visible = false;
       atlas_1893.visible = true;
       fips_1897.visible = false;
@@ -1033,7 +1033,7 @@
       fips_49_51.visible = false;  
       aerial_1951.visible = false;            
     } else if (value == '1897') {
-      setFeatureLayerFilter("year = '1897'" );
+      setFeatureLayerFilter("year = '1897' OR year = 'Modern'" );
       atlas_1885.visible = false;
       atlas_1893.visible = false;
       fips_1897.visible = true;
@@ -1042,7 +1042,7 @@
       fips_49_51.visible = false;
       aerial_1951.visible = false;       
     } else if (value == '1910') {
-      setFeatureLayerFilter("year = '1910'" );
+      setFeatureLayerFilter("year = '1910' OR year = 'Modern'" );
       atlas_1885.visible = false;
       atlas_1893.visible = false;
       fips_1897.visible = false;
@@ -1051,7 +1051,7 @@
       fips_49_51.visible = false; 
       aerial_1951.visible = false; 
     } else if (value == '1915') { 
-      setFeatureLayerFilter("year = '1915'" );           
+      setFeatureLayerFilter("year = '1915' OR year = 'Modern'" );           
       atlas_1885.visible = false;
       atlas_1893.visible = false;
       fips_1897.visible = false;
@@ -1060,7 +1060,7 @@
       fips_49_51.visible = false;  
       aerial_1951.visible = false;
     } else if (value == '1949') { 
-      setFeatureLayerFilter("year = '1949_1951'" );           
+      setFeatureLayerFilter("year = '1949_1951' OR year = 'Modern'" );           
       atlas_1885.visible = false;
       atlas_1893.visible = false;
       fips_1897.visible = false;
@@ -1069,7 +1069,7 @@
       fips_49_51.visible = true;
       aerial_1951.visible = false;  
     } else if (value == '1951') {  
-      setFeatureLayerFilter("year != '1897' OR year != '1910' OR year != '1915' OR year != '1949_1951'" );           
+      setFeatureLayerFilter("year != '1897' OR year != '1910' OR year != '1915' OR year != '1949_1951' AND year = 'Modern'" );           
       atlas_1885.visible = false;
       atlas_1893.visible = false;
       fips_1897.visible = false;
