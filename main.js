@@ -322,13 +322,20 @@
       const scanned =  row._row.data.attributes.scanned;
       const photos =  row._row.data.attributes.app_photos;     
       const model = row._row.data.attributes.f3d_model;  
-
+      const objYear = row._row.data.attributes.year_;
+      console.log(objYear);
+      if (objYear != "NO MAP") {
+        $("#location").val(objYear).trigger('change');
+      } else {
+        $("#location").val('Modern').trigger('change');
+      }
+/*
       if (bldgId == '121|Modern') {
         $("#location").val('Modern').trigger('change');
 
       } else if (bldgId == '100|1915') {
         $("#location").val('1915').trigger('change');
-      }
+      }*/
 
       const query = sitesLayer.createQuery();
           // Query the sites layer for the ID
@@ -367,16 +374,16 @@
               highlight = layerView.highlight([objectID]);
             }) 
 
-               $('#objName').html("<b>" + itemName + "</b>");
-               $('#objModal').modal('show');
-               $('#artModal').modal('hide'); 
-               $('#objdesc').html("<b>Description: </b>" + desc);
-               $('#objdate').html("<b>Date: </b>" + itemDate);
-               $('#catnum').html("<b>Catalog Number: </b>" + catNum);          
+           $('#objName').html("<b>" + itemName + "</b>");
+           $('#objModal').modal('show');
+           $('#artModal').modal('hide'); 
+           $('#objdesc').html("<b>Description: </b>" + desc);
+           $('#objdate').html("<b>Date: </b>" + itemDate);
+           $('#catnum').html("<b>Catalog Number: </b>" + catNum);          
 
-              // check if the clicked record has an existing image
-              if (photos !== '' && photos !== null) {
-
+          // check if the clicked record has an existing image
+          if (photos !== '' && photos !== null) {
+            $('#objPic').show();
             const objPhotos = photos.split(",");          
             document.getElementById("objPic").src="https://portal1-geo.sabu.mtu.edu/images/hamtramck/photos/objects/" + catNum + "/" + objPhotos[0];
             const objgalley = document.getElementById('objgalley');
@@ -414,6 +421,7 @@
                   actions: []      
                 });                   
               } else {
+                $('#objPic').hide();
                 view.popup.open({
                   // Set the popup's title to the coordinates of the clicked location
                   title: "<h6><b> title",    
@@ -836,7 +844,7 @@
         $('#buildingnotes').html("<b>Notes: </b>" + notes);
         $('buildingbasement').html("<b>Basement: </b>" + basement);
 
-        if (bldgId == '121|Modern' || bldgId == '100|1915') {
+        if (bldgId == '121|Modern' || bldgId == '100|1915' || bldgId == '122|Modern' || bldgId == '123|Modern') {
           $('#viewHHMCat').show();
         } else {
           $('#viewHHMCat').hide();
@@ -1105,7 +1113,7 @@
       fips_1910.visible = false;
       fips_49_51.visible = false;  
       aerial_1951.visible = false;
-    } else if (value == '1949') { 
+    } else if (value == '1949_1951') { 
       setFeatureLayerFilter("year = '1949_1951' OR year = 'Modern'" );           
       atlas_1885.visible = false;
       atlas_1893.visible = false;
