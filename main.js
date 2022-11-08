@@ -11,8 +11,8 @@
   ], function(esriConfig, Map, MapView, FeatureLayer, TileLayer, Slider, Query, Extent, projection) {  
 
    let highlight = null; 
-   const siteTableURL = "https://portal1-geo.sabu.mtu.edu/server/rest/services/Hosted/artifact_catalog/FeatureServer/0/";
-   const bldgTableURL = "https://portal1-geo.sabu.mtu.edu/server/rest/services/Hosted/hhm_catalog/FeatureServer/0/";
+   const siteTableURL = "https://portal1-geo.sabu.mtu.edu/server/rest/services/Hosted/Archaeology_Artifacts_v4/FeatureServer/0/";
+   const bldgTableURL = "https://portal1-geo.sabu.mtu.edu/server/rest/services/Hosted/HHM_Objects_Catalog_v2/FeatureServer/0/";
    $.fn.modal.Constructor.prototype._enforceFocus = function() {}; // modal does not interfere with search text box input
 
   // Creates a new table to hold our map attributes  
@@ -152,6 +152,31 @@
       viewed() {
         //viewer.zoomTo(1);
       },
+    }); 
+
+    // setup a new viewer to display the site images
+    const objViewer = new Viewer(document.getElementById('objgalley'), {
+      navbar: false,
+      inline: false,
+      toolbar: {
+        zoomIn: 1,
+        zoomOut: 1,
+        oneToOne: 1,
+        reset: 1,
+        prev: 1,
+        play: {
+          show: 1,
+          size: 'large',
+        },
+        next: 1,
+        rotateLeft: 1,
+        rotateRight: 1,
+        flipHorizontal: 1,
+        flipVertical: 1,
+      },
+      viewed() {
+        //viewer.zoomTo(1);
+      },
     });  
 
     projection.load();
@@ -159,7 +184,8 @@
   // when a row in the table is seleted or queried, get its attributes.
   // populate a new popup with this information 
   function getRowData(row, table) {   
-    document.getElementById("galley").innerHTML = ""; 
+    document.getElementById("galley").innerHTML = "";     
+    document.getElementById("objgalley").innerHTML = ""; 
     $('#siteModal').modal('hide');
     $('#buildingModal').modal('hide');      
     $('.nav-tabs a[href="#artdetails"]').tab('show');             
@@ -294,7 +320,7 @@
       const catNum = row._row.data.attributes.catalog_number;
       const desc = row._row.data.attributes.brief_description;
       const scanned =  row._row.data.attributes.scanned;
-      const photos =  row._row.data.attributes.photo_num;     
+      const photos =  row._row.data.attributes.app_photos;     
       const model = row._row.data.attributes.f3d_model;  
 
       if (bldgId == '121|Modern') {
@@ -349,7 +375,27 @@
                $('#catnum').html("<b>Catalog Number: </b>" + catNum);          
 
               // check if the clicked record has an existing image
-              if (photos !== '' && photos !== null) {           
+              if (photos !== '' && photos !== null) {
+
+            const objPhotos = photos.split(",");          
+            document.getElementById("objPic").src="https://portal1-geo.sabu.mtu.edu/images/hamtramck/photos/objects/" + catNum + "/" + objPhotos[0];
+            const objgalley = document.getElementById('objgalley');
+            
+            objPhotos.forEach((photo, index) => {
+              console.log(photo);
+              const urlTrim = photo.replace(/ /g, "");
+              const item = document.createElement("img");
+              item.className = "data-original";
+              item.classList.add("data-original");
+              item.src = "https://portal1-geo.sabu.mtu.edu/images/hamtramck/photos/objects/" + catNum + "/" + urlTrim;
+              item.addEventListener("click", () => objPhotoClickHandler(photo, index));
+              document.getElementById("objgalley").appendChild(item);
+            });
+
+            function objPhotoClickHandler(photo, index) {
+              document.getElementById('objgalley').src="https://portal1-geo.sabu.mtu.edu/images/hamtramck/photos/objects/" + catNum + "/" + photo.replace(/ /g, "");            
+              objViewer.update();
+            };                    
 
                 // open a popup at the drawer location of the selected map
                 view.popup.open({                  
@@ -549,7 +595,7 @@
     if (typeVal == 'Artifacts') {
       $.ajax({
         dataType: 'json',
-        url: siteTableURL + 'query?where=site+LIKE+%27%25' + searchVal + '%25%27+OR+location+LIKE+%27%25' + searchVal + '%25%27+OR+artifact+LIKE+%27%25' + searchVal +'%25%27+OR+material+LIKE+%27%25' + searchVal + '%25%27+OR+function+LIKE+%27%25' + searchVal + '%25%27+OR+notes+LIKE+%27%25' + searchVal + '%25%27+OR+master_unit+LIKE+%27%25' + searchVal + '%25%27+OR+uniqueid+LIKE+%27%25' + searchVal + '%25%27&objectIds=&time=&resultType=none&outFields=*&returnHiddenFields=false&returnIdsOnly=false&returnUniqueIdsOnly=false&returnCountOnly=false&returnDistinctValues=false&cacheHint=false&orderByFields=&groupByFieldsForStatistics=&outStatistics=&having=&resultOffset=&resultRecordCount=&sqlFormat=none&f=pjson',
+        url: siteTableURL + 'query?where=Upper(site)+LIKE+%27%25' + searchVal.toUpperCase() + '%25%27+OR+Upper(location)+LIKE+%27%25' + searchVal.toUpperCase() + '%25%27+OR+Upper(artifact)+LIKE+%27%25' + searchVal.toUpperCase() +'%25%27+OR+Upper(material)+LIKE+%27%25' + searchVal.toUpperCase() + '%25%27+OR+Upper(function)+LIKE+%27%25' + searchVal.toUpperCase() + '%25%27+OR+Upper(notes)+LIKE+%27%25' + searchVal.toUpperCase() + '%25%27+OR+Upper(master_unit)+LIKE+%27%25' + searchVal.toUpperCase() + '%25%27+OR+Upper(uniqueid)+LIKE+%27%25' + searchVal.toUpperCase() + '%25%27&objectIds=&time=&resultType=none&outFields=*&returnHiddenFields=false&returnIdsOnly=false&returnUniqueIdsOnly=false&returnCountOnly=false&returnDistinctValues=false&cacheHint=false&orderByFields=&groupByFieldsForStatistics=&outStatistics=&having=&resultOffset=&resultRecordCount=&sqlFormat=none&f=pjson',
         type: "GET",    
         success: function(data) {
           console.log(data);
@@ -576,7 +622,7 @@
     } else if (typeVal == "HHM Objects") {
       $.ajax({
         dataType: 'json',
-        url: bldgTableURL + 'query?where=item_name+LIKE+%27%25' + searchVal + '%25%27+OR+brief_description+LIKE+%27%25' + searchVal + '%25%27+OR+working_notes+LIKE+%27%25' + searchVal +'%25%27+OR+year_+LIKE+%27%25' + searchVal + '%25%27+OR+current_location+LIKE+%27%25' + searchVal + '%25%27+OR+date_+LIKE+%27%25' + searchVal + '%25%27&objectIds=&time=&resultType=none&outFields=*&returnHiddenFields=false&returnIdsOnly=false&returnUniqueIdsOnly=false&returnCountOnly=false&returnDistinctValues=false&cacheHint=false&orderByFields=&groupByFieldsForStatistics=&outStatistics=&having=&resultOffset=&resultRecordCount=&sqlFormat=none&f=pjson',
+        url: bldgTableURL + 'query?where=Upper(item_name)+LIKE+%27%25' + searchVal.toUpperCase() + '%25%27+OR+Upper(brief_description)+LIKE+%27%25' + searchVal.toUpperCase() + '%25%27+OR+Upper(working_notes)+LIKE+%27%25' + searchVal.toUpperCase() +'%25%27+OR+year_+LIKE+%27%25' + searchVal + '%25%27+OR+Upper(current_location)+LIKE+%27%25' + searchVal.toUpperCase() + '%25%27+OR+date_+LIKE+%27%25' + searchVal + '%25%27&objectIds=&time=&resultType=none&outFields=*&returnHiddenFields=false&returnIdsOnly=false&returnUniqueIdsOnly=false&returnCountOnly=false&returnDistinctValues=false&cacheHint=false&orderByFields=&groupByFieldsForStatistics=&outStatistics=&having=&resultOffset=&resultRecordCount=&sqlFormat=none&f=pjson',
         type: "GET",    
         success: function(data) {
           $("#siteTitle").html("Search Results:");
