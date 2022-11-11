@@ -204,6 +204,7 @@
       const mark = row._row.data.attributes.makers_mark;
       const markDetails = row._row.data.attributes.makers_mark_details;
       const notes = row._row.data.attributes.notes;
+      const longDesc = row._row.data.attributes.long_desc;
       const scan = row._row.data.attributes.scan;
       const photoFolder = row._row.data.attributes.photo_id;
       const photo = row._row.data.attributes.photograph;
@@ -252,7 +253,7 @@
            $('#artModal').modal('show');
            $('#objModal').modal('hide'); 
            $('#artNum').html("<b>Artifact Number: </b>" + artifactNum);
-           $('#artdesc').html("<b>Description: </b>" + notes);
+           $('#artdesc').html("<b>Description: </b>" + longDesc);
            $('#artloc').html("<b>Location: </b>" + location);
            $('#artunit').html("<b>Unit: </b>" + unit);
            $('#artcontext').html("<b>Context: </b>" + context);
@@ -1029,7 +1030,7 @@
 
         $.ajax({
           dataType: 'json',
-          url: 'https://portal1-geo.sabu.mtu.edu/server/rest/services/Hosted/artifact_catalog/FeatureServer/0/query?where=master_unit+%3D+%27' + siteId + '%27&objectIds=&time=&geometry=&geometryType=esriGeometryEnvelope&inSR=&spatialRel=esriSpatialRelIntersects&distance=&units=esriSRUnit_Foot&relationParam=&outFields=*&returnGeometry=true&maxAllowableOffset=&geometryPrecision=&outSR=&havingClause=&gdbVersion=&historicMoment=&returnDistinctValues=false&returnIdsOnly=false&returnCountOnly=false&returnExtentOnly=false&orderByFields=&groupByFieldsForStatistics=&outStatistics=&returnZ=false&returnM=false&multipatchOption=xyFootprint&resultOffset=&resultRecordCount=&returnTrueCurves=false&returnCentroid=false&timeReferenceUnknownClient=false&sqlFormat=none&resultType=&datumTransformation=&lodType=geohash&lod=&lodSR=&f=pjson',
+          url: siteTableURL + 'query?where=master_unit+%3D+%27' + siteId + '%27&objectIds=&time=&geometry=&geometryType=esriGeometryEnvelope&inSR=&spatialRel=esriSpatialRelIntersects&distance=&units=esriSRUnit_Foot&relationParam=&outFields=*&returnGeometry=true&maxAllowableOffset=&geometryPrecision=&outSR=&havingClause=&gdbVersion=&historicMoment=&returnDistinctValues=false&returnIdsOnly=false&returnCountOnly=false&returnExtentOnly=false&orderByFields=&groupByFieldsForStatistics=&outStatistics=&returnZ=false&returnM=false&multipatchOption=xyFootprint&resultOffset=&resultRecordCount=&returnTrueCurves=false&returnCentroid=false&timeReferenceUnknownClient=false&sqlFormat=none&resultType=&datumTransformation=&lodType=geohash&lod=&lodSR=&f=pjson',
           type: "GET",    
           success: function(data) {
             const features = data.features;                  
