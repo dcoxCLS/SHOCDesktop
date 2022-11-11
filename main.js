@@ -209,7 +209,14 @@
       const photoFolder = row._row.data.attributes.photo_id;
       const photo = row._row.data.attributes.photograph;
       const model = row._row.data.attributes.f3d_model;
-      const currentLoc = row._row.data.attributes.current__location;     
+      const currentLoc = row._row.data.attributes.current__location; 
+      const ref1 = row._row.data.attributes.ref_1;     
+      const ref2 = row._row.data.attributes.ref_2; 
+      const ref3 = row._row.data.attributes.ref_3; 
+      const ref4 = row._row.data.attributes.ref_4; 
+      const ref5 = row._row.data.attributes.ref_5; 
+      const ref6 = row._row.data.attributes.ref_6; 
+      
       console.log(model);
 
       const query = sitesLayer.createQuery();
@@ -257,6 +264,8 @@
            $('#artloc').html("<b>Location: </b>" + location);
            $('#artunit').html("<b>Unit: </b>" + unit);
            $('#artcontext').html("<b>Context: </b>" + context);
+           $('#artreferences').html("<b>References: </b>" + ref1);
+
            console.log('we are here');
 
           // check if the record has a 3D model
@@ -964,7 +973,7 @@
        const drawings = graphic.attributes.drawings;
        const reports = graphic.attributes.reports;
        const docFolder = graphic.attributes.master_unit;
-
+       const summary = graphic.attributes.desctemp;
        document.getElementById("sitegalley").innerHTML = "";
        document.getElementById("doclist").innerHTML = "";
        $('#buildingModal').modal('hide');
@@ -973,7 +982,7 @@
 
        $('#siteModal').modal('show');
        $('#siteName').html("<b>" + displayName + "</b>");
-       $('#sitedesc').html('<b>Description: </b> The description of the excavation site will go here');
+       $('#sitedesc').html('<b>Excavation Unit Summary: </b>' + summary);
        $('#siteloc').html('<b>Location: </b>' + location);
        $('#site').html('<b>Site: </b>' + site);
        $('#sitenote').html('<b>Notes: </b>' + notes);
