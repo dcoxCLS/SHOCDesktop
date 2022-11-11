@@ -179,13 +179,15 @@
       },
     });  
 
-    projection.load();
+   projection.load();
 
   // when a row in the table is seleted or queried, get its attributes.
   // populate a new popup with this information 
   function getRowData(row, table) {   
     document.getElementById("galley").innerHTML = "";     
     document.getElementById("objgalley").innerHTML = ""; 
+    document.getElementById("artreferences").innerHTML = "";
+
     $('#siteModal').modal('hide');
     $('#buildingModal').modal('hide');      
     $('.nav-tabs a[href="#artdetails"]').tab('show');             
@@ -265,6 +267,19 @@
            $('#artunit').html("<b>Unit: </b>" + unit);
            $('#artcontext').html("<b>Context: </b>" + context);
            $('#artreferences').html("<b>References: </b>" + ref1);
+
+           const refDiv = document.getElementById("artreferences");
+
+           const refArray = [ref1, ref2, ref3, ref4, ref5, ref6];
+           const refList = [];
+
+           refArray.forEach(function(reference) {
+              if (reference != "" && reference != null) {
+                refList.push("<li>" + reference + "</li>");  
+              }
+           });
+
+           refDiv.innerHTML = refList.join('');
 
            console.log('we are here');
 
@@ -1044,7 +1059,7 @@
           success: function(data) {
             const features = data.features;                  
             const numResults = data.features.length;
-            const siteTitle = graphic.attributes.desctemp;
+            const siteTitle = graphic.attributes.master_unit;
             $('#siteTitle').html("Site " + siteTitle);
             $('#results').html(numResults + " artifacts");
             $('#numartifacts').html("<b>Artifacts cataloged:</b> " + numResults);
