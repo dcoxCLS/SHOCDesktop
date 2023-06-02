@@ -732,22 +732,22 @@
  });
 
   const fips_1897 = new TileLayer({
-   url: "https://portal1-geo.sabu.mtu.edu/server/rest/services/Hosted/Sanborn_1897_5/MapServer",
+   url: "https://portal1-geo.sabu.mtu.edu/server/rest/services/Hosted/Hamtramck_Sanborns_1897/MapServer",
    visible: false
  });
 
   const fips_1915 = new TileLayer({
-   url: "https://portal1-geo.sabu.mtu.edu/server/rest/services/Hosted/Sanborn_1915/MapServer",
+   url: "https://portal1-geo.sabu.mtu.edu/server/rest/services/Hosted/Hamtramck_Sanborns_1915/MapServer",
    visible: false
  });
 
   const fips_1910 = new TileLayer({
-   url: "https://portal1-geo.sabu.mtu.edu/server/rest/services/Hosted/Sanborn_1910/MapServer",
+   url: "https://portal1-geo.sabu.mtu.edu/server/rest/services/Hosted/Hamtramck_Sanborns_1910/MapServer",
    visible: false
  });
   
   const fips_49_51 = new TileLayer({
-   url: "https://portal1-geo.sabu.mtu.edu/server/rest/services/Hosted/Sanborn_1949_1951/MapServer",
+   url: "https://portal1-geo.sabu.mtu.edu/server/rest/services/Hosted/Hamtramck_Sanborns_1949_1951/MapServer",
    visible: true
  });
 
