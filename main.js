@@ -11,7 +11,7 @@
   ], function(esriConfig, Map, MapView, FeatureLayer, TileLayer, Slider, Query, Extent, projection) {  
 
    let highlight = null; 
-   const siteTableURL = "https://portal1-geo.sabu.mtu.edu/server/rest/services/Hosted/Archaeology_Artifacts_v4/FeatureServer/0/";
+   const siteTableURL = "https://portal1-geo.sabu.mtu.edu/server/rest/services/Hosted/Archaeology_Artifacts_v5/FeatureServer/0/";
    const bldgTableURL = "https://portal1-geo.sabu.mtu.edu/server/rest/services/Hosted/HHM_Objects_Catalog_v2/FeatureServer/0/";
    $.fn.modal.Constructor.prototype._enforceFocus = function() {}; // modal does not interfere with search text box input
 
@@ -758,7 +758,7 @@
   
   // Add the excavation sites layer to the map   
   const sitesLayer = new FeatureLayer({
-    url: "https://portal1-geo.sabu.mtu.edu/server/rest/services/Hosted/OHC_Excavation_Units_NEW/FeatureServer/1",
+    url: "https://portal1-geo.sabu.mtu.edu/server/rest/services/Hosted/Hamtramck_Excavation_Units/FeatureServer/0",
     outFields: ["*"], // Return all fields so it can be queried client-side
     renderer: sitesRenderer,
     popupEnabled: true 
@@ -836,6 +836,7 @@
  view.when(function () {
   // Watch for when features are selected
   view.popup.watch("selectedFeature", function (graphic) {
+    console.log(graphic);
     if (graphic) {
       if (highlight) {
         highlight.remove();
@@ -977,7 +978,8 @@
               });            
             }
           });       
-      } else if (graphic.layer.title == "OHC Excavation Units NEW - OHC Excavation Footprints v3" ) {
+      } else if (graphic.layer.title == "Hamtramck Excavation Units" ) {
+        console.log('excavation click');
        $('.nav-tabs a[href="#sitedetails"]').tab('show'); 
        const siteId = graphic.attributes.master_unit; 
        const displayName = graphic.attributes.display_name;
