@@ -11,7 +11,7 @@
   ], function(esriConfig, Map, MapView, FeatureLayer, TileLayer, Slider, Query, Extent, projection) {  
 
    let highlight = null; 
-   const siteTableURL = "https://portal1-geo.sabu.mtu.edu/server/rest/services/Hosted/Archaeology_Artifacts_v4/FeatureServer/0/";
+   const siteTableURL = "https://portal1-geo.sabu.mtu.edu/server/rest/services/Hosted/Archaeology_Artifacts_v5/FeatureServer/0/";
    const bldgTableURL = "https://portal1-geo.sabu.mtu.edu/server/rest/services/Hosted/HHM_Objects_Catalog_v2/FeatureServer/0/";
    $.fn.modal.Constructor.prototype._enforceFocus = function() {}; // modal does not interfere with search text box input
 
@@ -190,8 +190,7 @@
 
     $('#siteModal').modal('hide');
     $('#buildingModal').modal('hide');      
-    $('.nav-tabs a[href="#artdetails"]').tab('show');             
-    //view.popup.close();
+    $('.nav-tabs a[href="#artdetails"]').tab('show');    
     if (table == "sites") {
       const siteId = row._row.data.attributes.master_unit;  
       const siteName = row._row.data.attributes.site;
@@ -291,13 +290,14 @@
           }
 
           // check if the clicked record has an existing image
-          if (photo !== '' || photo !== null) {
+          if (photo !== '' && photo !== null) {
+            $("#artPic").show();
+            $("galley").show();            
             const artPhotos = photo.split(",");          
             document.getElementById("artPic").src="https://portal1-geo.sabu.mtu.edu/images/hamtramck/photos/artifacts/" + photoFolder + "/" + artPhotos[0];
             const galley = document.getElementById('galley');
             
-            artPhotos.forEach((photo, index) => {
-              console.log(photo);
+            artPhotos.forEach((photo, index) => {              
               const urlTrim = photo.replace(/ /g, "");
               const item = document.createElement("img");
               item.className = "data-original";
@@ -320,22 +320,10 @@
               location: response.features[0].geometry.centroid, // Set the location of the popup to the clicked location 
               actions: []      
             });                   
-          } else {
-            view.popup.open({
-              // Set the popup's title to the coordinates of the clicked location
-              title: "<h6><b>" + truncTitle,   
-              content: "<b>Title: </b>" + itemTitle +
-              "<br><br><b>Date: </b>" + items[2] + "<br><br><b>Author: </b>" + items[1] + "<br><br><b>Publisher: </b>" + 
-              items[4] + "<br><br><b>Scale: </b>" + items[0] + "<br><br><b>Call Number: </b>" + items[5] +
-              "<br><br><b>Location: </b>" + locName + locId + "<br><a href=" + "'" + itemLink + 
-              "' target='_blank' rel='noopener noreferrer' class='catlink'>View item in ASU Library catalog</a>" +              
-              "<a href=" + "'" + indexUrl + "' target='_blank' rel='noopener noreferrer' class='indexlink'>View item in spatial index</a>" +
-              "<a href=" + "'" + supUrl + "' target='_blank' rel='noopener noreferrer' class='suplink'>Learn more about this item</a>" +
-              "<a href='https://lib.asu.edu/geo/services' target='_blank' rel='noopener noreferrer' class='maroon'>Request access</a>",
-              //"<br><br><h6></b><a href='#' id='prev' class='previous round'>&#8249; Previous</a><a href='#' id='next' class='next round'>Next &#8250;</a>",
-              location: response.features[0].geometry.centroid, // Set the location of the popup to the clicked location 
-              actions: []      
-            });                 
+          } else { 
+            $("#artPic").hide();
+            $("galley").hide();
+
           }     
         }); 
     } else if (table == "buildings") {
@@ -623,63 +611,50 @@
     bldgTable.clearData();     
     // get the value of the search box
     const searchVal = $( "#search" ).val();
-    // get the value of the search type dropdown
-    var typeVal = $( "#searchtype" ).val();
-    if (typeVal == 'Artifacts') {
+    // query the artifacts table for any results     
       $.ajax({
         dataType: 'json',
         url: siteTableURL + 'query?where=Upper(site)+LIKE+%27%25' + searchVal.toUpperCase() + '%25%27+OR+Upper(location)+LIKE+%27%25' + searchVal.toUpperCase() + '%25%27+OR+Upper(artifact)+LIKE+%27%25' + searchVal.toUpperCase() +'%25%27+OR+Upper(material)+LIKE+%27%25' + searchVal.toUpperCase() + '%25%27+OR+Upper(function)+LIKE+%27%25' + searchVal.toUpperCase() + '%25%27+OR+Upper(notes)+LIKE+%27%25' + searchVal.toUpperCase() + '%25%27+OR+Upper(master_unit)+LIKE+%27%25' + searchVal.toUpperCase() + '%25%27+OR+Upper(uniqueid)+LIKE+%27%25' + searchVal.toUpperCase() + '%25%27&objectIds=&time=&resultType=none&outFields=*&returnHiddenFields=false&returnIdsOnly=false&returnUniqueIdsOnly=false&returnCountOnly=false&returnDistinctValues=false&cacheHint=false&orderByFields=&groupByFieldsForStatistics=&outStatistics=&having=&resultOffset=&resultRecordCount=&sqlFormat=none&f=pjson',
         type: "GET",    
-        success: function(data) {
-          console.log(data);
-          if (data.features.length == 0) {          
-            alert('The search returned no results. Please try different terms.');
-          } else {      
-            highLightSites(data.features, "artifact");   
-            siteTable.clearData();
-            bldgTable.clearData();  
-            siteTable.setData(data.features); 
-            $("#sites-table").show();
-            $("#buildings-table").hide();
-            const numResults = data.features.length;             
-            if (searchVal.length > 25) {
-              const shortSearchVal = (searchVal.substring(0, 25) + "...");              
-              $('#results').html(numResults + " artifacts found for " + '"' + shortSearchVal + '"'); 
-            } else {
-              $('#results').html(numResults + " artifacts found for " + '"' + searchVal + '"'); 
-            }
-            openNav();        
+        success: function(data) {              
+          highLightSites(data.features, "artifact");   
+          siteTable.clearData();
+          bldgTable.clearData();  
+          siteTable.setData(data.features);            
+          const numResults = data.features.length;             
+          if (searchVal.length > 25) {
+            const shortSearchVal = (searchVal.substring(0, 25) + "...");              
+            $('#results').html("Your search returned " + numResults + " Results."); 
+            $('#artres').html(numResults + ")");
           } 
-        }
+            $('#results').html("Your search returned " + numResults + " Results."); 
+            $('#artres').html(numResults + ")");            
+            openNav();        
+        }         
       });
-    } else if (typeVal == "HHM Objects") {
+
+      // Query the objects table for any results
       $.ajax({
         dataType: 'json',
         url: bldgTableURL + 'query?where=Upper(item_name)+LIKE+%27%25' + searchVal.toUpperCase() + '%25%27+OR+Upper(brief_description)+LIKE+%27%25' + searchVal.toUpperCase() + '%25%27+OR+Upper(working_notes)+LIKE+%27%25' + searchVal.toUpperCase() +'%25%27+OR+year_+LIKE+%27%25' + searchVal + '%25%27+OR+Upper(current_location)+LIKE+%27%25' + searchVal.toUpperCase() + '%25%27+OR+date_+LIKE+%27%25' + searchVal + '%25%27&objectIds=&time=&resultType=none&outFields=*&returnHiddenFields=false&returnIdsOnly=false&returnUniqueIdsOnly=false&returnCountOnly=false&returnDistinctValues=false&cacheHint=false&orderByFields=&groupByFieldsForStatistics=&outStatistics=&having=&resultOffset=&resultRecordCount=&sqlFormat=none&f=pjson',
         type: "GET",    
         success: function(data) {
-          $("#siteTitle").html("Search Results:");
-          if (data.features.length == 0) {          
-            alert('The search returned no results. Please try different terms.');
-          } else {      
-            highLightSites(data.features, "object");
-            siteTable.clearData();
-            bldgTable.clearData();     
-            bldgTable.setData(data.features);  
-            $("#sites-table").hide();
-            $("#buildings-table").show();
-            const numResults = data.features.length; 
-            if (searchVal.length > 25) {
-              const shortSearchVal = (searchVal.substring(0, 25) + "...");
-              $('#results').html(numResults + " objects found for " + '"' + shortSearchVal + '"'); 
-            } else {
-              $('#results').html(numResults + " objects found for " + '"' + searchVal + '"'); 
-            }
-            openNav();        
+          $("#siteTitle").html("Search Results:");                     
+          highLightSites(data.features, "object");
+          siteTable.clearData();
+          bldgTable.clearData();     
+          bldgTable.setData(data.features);             
+          const numResults = data.features.length; 
+          if (searchVal.length > 25) {
+            const shortSearchVal = (searchVal.substring(0, 25) + "...");
+            $('#results').html(numResults + " objects found for " + '"' + shortSearchVal + '"'); 
+            $('#objres').html(numResults);
           } 
-        }
-      });
-    }
+            $('#results').html(numResults + " objects found for " + '"' + searchVal + '"'); 
+            $('#objres').html(numResults);            
+            openNav();        
+        }         
+      });    
   });
 
    // if users hits enter perform the search   
@@ -758,7 +733,7 @@
   
   // Add the excavation sites layer to the map   
   const sitesLayer = new FeatureLayer({
-    url: "https://portal1-geo.sabu.mtu.edu/server/rest/services/Hosted/OHC_Excavation_Units_NEW/FeatureServer/1",
+    url: "https://portal1-geo.sabu.mtu.edu/server/rest/services/Hosted/Hamtramck_Excavation_Units/FeatureServer/0",
     outFields: ["*"], // Return all fields so it can be queried client-side
     renderer: sitesRenderer,
     popupEnabled: true 
@@ -836,6 +811,7 @@
  view.when(function () {
   // Watch for when features are selected
   view.popup.watch("selectedFeature", function (graphic) {
+    console.log(graphic);
     if (graphic) {
       if (highlight) {
         highlight.remove();
@@ -930,20 +906,18 @@
             siteTable.clearData();
             //bldgTable.clearData();
             const numResults = data.features.length;                
-              $('#results').html(numResults + " artifacts");
+              $('#artres').html(numResults);
               $('#buildingartifacts').html("<b>Artifacts associated with this building:</b> " + numResults);
               $( "#viewBldgCat" ).click(function() {
-                $('#results').html(numResults + " artifacts");
-                siteTable.setData(features);
-                $("#buildings-table").hide();
-                $("#sites-table").show();                
+              //$('#artres').html(numResults + " artifacts");
+                siteTable.setData(features);                              
                 openNav();       
               });            
             }
           });
           } else {
              $( "#viewBldgCat" ).click(function() {
-              $('#results').html("0 artifacts");
+              $('#artres').html("0)");
               siteTable.clearData();
              });
             //siteTable.clearData();
@@ -967,17 +941,16 @@
             const numResults = data.features.length;
               //const bldgName = graphic.attributes.desctemp;
               $('#siteTitle').html(address);
-              $('#results').html(numResults + " objects");
+              $('#objres').html(numResults);
               $('#numartifacts').html("<b>Artifacts cataloged:</b> " + numResults);
               $( "#viewHHMCat" ).click(function() {
-                $('#results').html(numResults + " objects");
-                $("#sites-table").hide();
-                $("#buildings-table").show();
+                $('#objres').html(numResults);                
                 openNav();       
               });            
             }
           });       
-      } else if (graphic.layer.title == "OHC Excavation Units NEW - OHC Excavation Footprints v3" ) {
+      } else if (graphic.layer.title == "Hamtramck Excavation Units" ) {
+        console.log('excavation click');
        $('.nav-tabs a[href="#sitedetails"]').tab('show'); 
        const siteId = graphic.attributes.master_unit; 
        const displayName = graphic.attributes.display_name;
@@ -1061,13 +1034,11 @@
             const numResults = data.features.length;
             const siteTitle = graphic.attributes.master_unit;
             $('#siteTitle').html("Site " + siteTitle);
-            $('#results').html(numResults + " artifacts");
+            $('#artres').html(numResults + ")");
             $('#numartifacts').html("<b>Artifacts cataloged:</b> " + numResults);
             bldgTable.clearData();
             siteTable.clearData();
-            $( "#viewCat" ).click(function() {
-              $("#sites-table").show();
-              $("#buildings-table").hide();
+            $( "#viewCat" ).click(function() {              
               siteTable.setData(features);
               openNav(); 
             });            

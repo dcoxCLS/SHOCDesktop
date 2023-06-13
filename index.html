@@ -40,11 +40,7 @@
       <div class="container justify-content-center" style="position: absolute; left: 350px;">
         <div class="row" style="width: 50%">
           <div class="col-md-12">
-            <div class="input-group mb-6"> <input type="text" class="form-control input-text" placeholder="Search items..." aria-label="Title Search" id="search" aria-describedby="basic-addon2" autocomplete="off">
-              <select class="form-control" id="searchtype">
-                <option>Artifacts</option>
-                <option>HHM Objects</option>                                     
-              </select>
+            <div class="input-group mb-6"> <input type="text" class="form-control input-text" placeholder="Search items..." aria-label="Title Search" id="search" aria-describedby="basic-addon2" autocomplete="off">              
               <div class="input-group-append"> <button class="btn btn-outline-warning btn-lg" type="button" id="submit" title="Search"><i class="fa fa-search"></i></button> </div>
             </div>
           </div>
@@ -66,10 +62,23 @@
   <div id="mySidebar" class="sidebar">
     <div id="title">
       <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
-      <center><div id="siteTitle" style="display: inline-block;"></div><br><div id="results" style="display: inline-block;"></div></h5>
+      <center><div id="siteTitle" style="display: inline-block;"></div>
         <br><!-- <br><div id="maxResults" style="display: inline-block;">*Searches limited to 1000 results</div> --></center></div>
-        <div id="sites-table"></div>
-        <div id="buildings-table"></div>
+        <ul class="nav nav-tabs" id="myTab" role="tablist">
+  <li class="nav-item">
+    <a class="nav-link active" id="artifacts-tab" data-toggle="tab" href="#artifacts" role="tab" aria-controls="artifacts" aria-selected="true">Artifacts (<span id="artres">0<span>)</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" id="objects-tab" data-toggle="tab" href="#objects" role="tab" aria-controls="objects" aria-selected="false">Objects (<span id="objres">0</span>)</a>
+  </li> 
+</ul>
+<div class="tab-content" id="myTabContent">
+  <div class="tab-pane fade show active" id="artifacts" role="tabpanel" aria-labelledby="artifacts-tab"><div id="sites-table"></div></div>
+  <div class="tab-pane fade" id="objects" role="tabpanel" aria-labelledby="objects-tab"><div id="buildings-table"></div></div>
+  <div class="tab-pane fade" id="contact" role="tabpanel" aria-labelledby="contact-tab">...</div>
+</div>
+       <!--  <div id="sites-table"></div>
+        <div id="buildings-table"></div> -->
       </div>
       <div id="viewDiv">
         <div id="sliderDiv"></div>
@@ -77,7 +86,7 @@
           <div id="output"></div>
           <h2>1888</h2>
           <input id="timeslider" type="text" /><h2>Present</h2>
-        </div>    	 -->
+        </div>       -->
         <select id="location" class="form-control">
           <option selected value="1885">Robinson Atlas 1885</option> 
           <option selected value="1893">Sauer Atlas 1893</option>
