@@ -10,12 +10,14 @@
   "esri/geometry/projection"
   ], function(esriConfig, Map, MapView, FeatureLayer, TileLayer, Slider, Query, Extent, projection) {  
 
-   let highlight = null; 
+   let highlight = null;   
+   let isOpen = false;  // determines if the sidebar is open or closed.
+   // URLs for the hosted tables in this app
    const siteTableURL = "https://portal1-geo.sabu.mtu.edu/server/rest/services/Hosted/Archaeology_Artifacts_v5/FeatureServer/0/";
    const bldgTableURL = "https://portal1-geo.sabu.mtu.edu/server/rest/services/Hosted/HHM_Objects_Catalog_v2/FeatureServer/0/";
    $.fn.modal.Constructor.prototype._enforceFocus = function() {}; // modal does not interfere with search text box input
 
-  // Creates a new table to hold our map attributes  
+  // Creates a new table to hold our artifact attributes  
   const siteTable = new Tabulator("#sites-table", {    
       // placeholder:"No Data Available",         
       //height: "88%", 
@@ -51,7 +53,7 @@
      },    
    }); 
 
-  // Creates a new table to hold our map attributes  
+  // Creates a new table to hold our building object attributes  
   const bldgTable = new Tabulator("#buildings-table", {             
       //height: "88%", 
       virtualDomBuffer: 1600,
@@ -87,16 +89,18 @@
    });               
   
   function openNav() {
-      //table.redraw(true);
-      document.getElementById("mySidebar").style.width = "20%";
-      document.getElementById("viewDiv").style.marginLeft = "20%";
-      document.getElementById("viewDiv").style.width = "80%";
-   // document.getElementsByClassName("container")[0].style.width = "80%";
-    //document.getElementsByClassName("container")[0].style.left = "28%";
-  }
-  
+    //table.redraw(true);
+    isOpen = true;
+    document.getElementById("mySidebar").style.width = "20%";
+    document.getElementById("viewDiv").style.marginLeft = "20%";
+    document.getElementById("viewDiv").style.width = "80%";
+ // document.getElementsByClassName("container")[0].style.width = "80%";
+  //document.getElementsByClassName("container")[0].style.left = "28%";
+}
+
   /* Set the width of the sidebar to 0 and the left margin of the page content to 0 */
   function closeNav() {
+    isOpen = false;
     document.getElementById("mySidebar").style.width = "0";
     document.getElementById("viewDiv").style.marginLeft = "0";
     document.getElementById("viewDiv").style.width = "100%";
@@ -235,7 +239,7 @@
            view.whenLayerView(sitesLayer).then(function(layerView) {
             const queryExtent = new Query({
               objectIds: [objectID]
-            });    
+           });    
 
             const extent = response.features[0].geometry.extent;        
 
@@ -587,7 +591,7 @@
                 highlight = layerView.highlight(objIds);
               })
 
-             setFeatureLayerFilter("year = 'Modern'" );
+           //  setFeatureLayerFilter("year = 'Modern'" );
                 // open a popup at the drawer location of the selected map
                 view.popup.open({
                   // Set the popup's title to the coordinates of the clicked location                          
@@ -620,7 +624,16 @@
           highLightSites(data.features, "artifact");   
           siteTable.clearData();
           bldgTable.clearData();  
-          siteTable.setData(data.features);            
+          siteTable.setData(data.features);
+          siteTable.redraw(true);
+          $('.nav-tabs a').on('shown.bs.tab', function(event){            
+            siteTable.setData(data.features);
+            siteTable.redraw(true); 
+            // highlight polygons based on which tab is selected
+            if (event.target.id == "artifacts-tab") {
+              highLightSites(data.features, "artifact");
+            }
+          });             
           const numResults = data.features.length;             
           if (searchVal.length > 25) {
             const shortSearchVal = (searchVal.substring(0, 25) + "...");              
@@ -643,8 +656,20 @@
           highLightSites(data.features, "object");
           siteTable.clearData();
           bldgTable.clearData();     
-          bldgTable.setData(data.features);             
-          const numResults = data.features.length; 
+          bldgTable.setData(data.features); 
+          bldgTable.redraw(true);
+          // listen for the tabs to be switched then set data and redraw the table.
+          $('.nav-tabs a').on('shown.bs.tab', function(event){            
+            bldgTable.setData(data.features);
+            bldgTable.redraw(true); 
+            console.log(event);
+            if (event.target.id == "objects-tab") {
+              highLightSites(data.features, "object");
+            }
+          });           
+            
+          const numResults = data.features.length;
+          console.log(data.features); 
           if (searchVal.length > 25) {
             const shortSearchVal = (searchVal.substring(0, 25) + "...");
             $('#results').html(numResults + " objects found for " + '"' + shortSearchVal + '"'); 
@@ -719,6 +744,11 @@
   const fips_1910 = new TileLayer({
    url: "https://portal1-geo.sabu.mtu.edu/server/rest/services/Hosted/Hamtramck_Sanborns_1910/MapServer",
    visible: false
+ });  
+
+  const municipal_1939 = new TileLayer({
+   url: "https://portal1-geo.sabu.mtu.edu/server/rest/services/Hosted/Hamtramck_Municipal_Map_1939/MapServer",
+   visible: false
  });
   
   const fips_49_51 = new TileLayer({
@@ -741,7 +771,7 @@
 
   // Add the Sanborn buildings layer to the map   
   const buildingsLayer = new FeatureLayer({
-    url: "https://portal1-geo.sabu.mtu.edu/server/rest/services/Hosted/Hamtramck_Buildings_NEW/FeatureServer/0",
+    url: "https://portal1-geo.sabu.mtu.edu/server/rest/services/Hosted/Hamtramck_Buildings_June_2023/FeatureServer/0",
     outFields: ["*"], // Return all fields so it can be queried client-side
     renderer: buildingsRenderer,
     popupEnabled: true 
@@ -749,7 +779,7 @@
 
   const map = new Map({
     basemap: "satellite",
-    layers: [atlas_1885, atlas_1893, fips_1897, fips_1915, fips_1910, fips_49_51, aerial_1951, sitesLayer, buildingsLayer]
+    layers: [atlas_1885, atlas_1893, fips_1897, fips_1915, fips_1910, municipal_1939, fips_49_51, aerial_1951, sitesLayer, buildingsLayer]
   });
 
   const view = new MapView({
@@ -768,6 +798,7 @@
   fips_1897.opacity = 100;
   fips_1910.opacity = 100;
   fips_1915.opacity = 100;
+  municipal_1939.opacity = 100;
   fips_49_51.opacity = 100; 
   aerial_1951.opacity = 100;
   //map.add(fips_1897);
@@ -787,7 +818,6 @@
   });
 
   // setup the filter for the sanborn layers
-
   function setFeatureLayerFilter(expression) {
     buildingsLayer.definitionExpression = expression;  
   }
@@ -810,17 +840,37 @@
 
  view.when(function () {
   // Watch for when features are selected
-  view.popup.watch("selectedFeature", function (graphic) {
+  view.popup.watch("selectedFeature", function (graphic) {   
+    
+    // if the sidebar is open hide the view items buttons
+    if (isOpen === true) {
+      $('#artFooter').hide();
+    } else if (isOpen === false) {
+      $('#artFooter').show();
+    }
+
+    if (isOpen === true) {
+      $('#bldgFooter').hide();
+    } else if (isOpen === false) {
+      $('#bldgFooter').show();
+    }   
+
     console.log(graphic);
     if (graphic) {
       if (highlight) {
         highlight.remove();
       } 
-      if (graphic.layer.title == "Hamtramck Buildings NEW - Hamtramck Bldgs Merge Nov4 2022") {
+      if (graphic.layer.title == "Hamtramck Buildings June 2023 - Hamtramck Bldgs Merge June14 2023") {
+        $('.nav-tabs a').on('shown.bs.tab', function(event){            
+            //bldgTable.setData(data.features);
+            bldgTable.clearData();            
+            bldgTable.redraw(true); 
+          }); 
         console.log(graphic);
+        // Get all the attributes from the buildings layer
         const bldgFunction = graphic.attributes.function;
         const occupant = graphic.attributes.occupant;
-        const notes = graphic.attributes.notes;
+        const notes = graphic.attributes.description;
         const address = graphic.attributes.address;
         const basement = graphic.attributes.basement;
         const numStories = graphic.attributes.num_stories;
@@ -830,6 +880,7 @@
         const year = graphic.attributes.year;
         const type = graphic.attributes.bldg_type;            
 
+        // Place the attributes in HTML elements in the modal popup
         $('#buildingModal').modal('show');
         $('#objModal').modal('hide');
         $('#artModal').modal('hide');  
@@ -845,11 +896,11 @@
         $('#buildingnotes').html("<b>Notes: </b>" + notes);
         $('buildingbasement').html("<b>Basement: </b>" + basement);
 
-        if (bldgId == '121|Modern' || bldgId == '100|1915' || bldgId == '122|Modern' || bldgId == '123|Modern') {
+        /*if (bldgId == '121|Modern' || bldgId == '100|1915' || bldgId == '122|Modern' || bldgId == '123|Modern') {
           $('#viewHHMCat').show();
         } else {
           $('#viewHHMCat').hide();
-        }
+        }*/
 
         $('#siteModal').modal('hide');
         $('#artModal').modal('hide');
@@ -888,7 +939,7 @@
         sitesLayer.queryFeatures(artifactQuery)
         .then((results) => {
           if (results.features.length > 0) {
-            $('#viewBldgCat').show();
+           // $('#viewBldgCat').show();
             const features = results.features;
             features.forEach(function(result) {
               const unit = result.attributes.master_unit;
@@ -897,38 +948,47 @@
             const artQryInQuotes = qryResultIds.map(id => `'${id}'`);
             const artQryString = artQryInQuotes.join(" OR master_unit = ");
             console.log(artQryString);
+
+            // Queries artifacts for a building
             $.ajax({
-          dataType: 'json',
-          url: siteTableURL + 'query?where=master_unit=' + artQryString + '&objectIds=&time=&geometry=&geometryType=esriGeometryEnvelope&inSR=&spatialRel=esriSpatialRelIntersects&distance=&units=esriSRUnit_Foot&relationParam=&outFields=*&returnGeometry=true&maxAllowableOffset=&geometryPrecision=&outSR=&havingClause=&gdbVersion=&historicMoment=&returnDistinctValues=false&returnIdsOnly=false&returnCountOnly=false&returnExtentOnly=false&orderByFields=&groupByFieldsForStatistics=&outStatistics=&returnZ=false&returnM=false&multipatchOption=xyFootprint&resultOffset=&resultRecordCount=&returnTrueCurves=false&returnCentroid=false&timeReferenceUnknownClient=false&sqlFormat=none&resultType=&datumTransformation=&lodType=geohash&lod=&lodSR=&f=pjson',
-          type: "GET",    
-          success: function(data) {
-            const features = data.features;
-            siteTable.clearData();
-            //bldgTable.clearData();
-            const numResults = data.features.length;                
-              $('#artres').html(numResults);
-              $('#buildingartifacts').html("<b>Artifacts associated with this building:</b> " + numResults);
-              $( "#viewBldgCat" ).click(function() {
-              //$('#artres').html(numResults + " artifacts");
-                siteTable.setData(features);                              
-                openNav();       
-              });            
-            }
+              dataType: 'json',
+              url: siteTableURL + 'query?where=master_unit=' + artQryString + '&objectIds=&time=&geometry=&geometryType=esriGeometryEnvelope&inSR=&spatialRel=esriSpatialRelIntersects&distance=&units=esriSRUnit_Foot&relationParam=&outFields=*&returnGeometry=true&maxAllowableOffset=&geometryPrecision=&outSR=&havingClause=&gdbVersion=&historicMoment=&returnDistinctValues=false&returnIdsOnly=false&returnCountOnly=false&returnExtentOnly=false&orderByFields=&groupByFieldsForStatistics=&outStatistics=&returnZ=false&returnM=false&multipatchOption=xyFootprint&resultOffset=&resultRecordCount=&returnTrueCurves=false&returnCentroid=false&timeReferenceUnknownClient=false&sqlFormat=none&resultType=&datumTransformation=&lodType=geohash&lod=&lodSR=&f=pjson',
+              type: "GET",    
+              success: function(data) {
+                const features = data.features;
+                siteTable.clearData();
+                siteTable.setData(features);
+
+                //bldgTable.clearData();
+                const numResults = data.features.length;    
+                console.log("test for building artifacts" + numResults);            
+                $('#artres').html(numResults + ")");
+                $('#buildingartifacts').html("<b>Artifacts associated with this building:</b> " + numResults);
+                $( "#viewHHMCat" ).click(function() {
+                  console.log('clicked');
+                $('#artres').html(numResults + ")");
+                  siteTable.setData(features);  
+                  openNav();       
+                });            
+              }
           });
           } else {
-             $( "#viewBldgCat" ).click(function() {
-              $('#artres').html("0)");
+            siteTable.clearData();
+            $('#artres').html("0)");
+         $( "#viewHHMCat" ).click(function() {
+           // $('#objres').html("0)");
+            $('#artres').html("0)");
               siteTable.clearData();
              });
-            //siteTable.clearData();
-            //$('#viewBldgCat').hide();
+            siteTable.clearData();
+         // $('#viewBldgCat').hide();
             $('#buildingartifacts').html("<b>Artifacts associated with this building:</b> 0 ");
-          }
+        }
           console.log("Feature count: " + results.features.length)
         }).catch((error) => {
           console.log(error);
         });
-
+        // queries objects associated with building
         $.ajax({
           dataType: 'json',
           url: bldgTableURL + 'query?where= alt_place_id+%3D+%27' + bldgId + '%27&objectIds=&time=&geometry=&geometryType=esriGeometryEnvelope&inSR=&spatialRel=esriSpatialRelIntersects&distance=&units=esriSRUnit_Foot&relationParam=&outFields=*&returnGeometry=true&maxAllowableOffset=&geometryPrecision=&outSR=&havingClause=&gdbVersion=&historicMoment=&returnDistinctValues=false&returnIdsOnly=false&returnCountOnly=false&returnExtentOnly=false&orderByFields=&groupByFieldsForStatistics=&outStatistics=&returnZ=false&returnM=false&multipatchOption=xyFootprint&resultOffset=&resultRecordCount=&returnTrueCurves=false&returnCentroid=false&timeReferenceUnknownClient=false&sqlFormat=none&resultType=&datumTransformation=&lodType=geohash&lod=&lodSR=&f=pjson',
@@ -938,20 +998,31 @@
             //bldgTable.clearData();
             siteTable.clearData();
             bldgTable.setData(features);
+            $('.nav-tabs a').on('shown.bs.tab', function(event){            
+            bldgTable.setData(data.features);
+            bldgTable.redraw(true); 
+          }); 
             const numResults = data.features.length;
               //const bldgName = graphic.attributes.desctemp;
               $('#siteTitle').html(address);
               $('#objres').html(numResults);
               $('#numartifacts').html("<b>Artifacts cataloged:</b> " + numResults);
               $( "#viewHHMCat" ).click(function() {
+                // siteTable.clearData();
+                bldgTable.clearData();
                 $('#objres').html(numResults);                
                 openNav();       
               });            
             }
           });       
       } else if (graphic.layer.title == "Hamtramck Excavation Units" ) {
+        /*$('.nav-tabs a').on('shown.bs.tab', function(event){            
+            //bldgTable.setData(data.features);
+            siteTable.clearData();            
+            siteTable.redraw(true); 
+          }); */
         console.log('excavation click');
-       $('.nav-tabs a[href="#sitedetails"]').tab('show'); 
+       $('.nav-tabs a[href="#sitedetails"]').tab('show');        
        const siteId = graphic.attributes.master_unit; 
        const displayName = graphic.attributes.display_name;
        const site = graphic.attributes.site;
@@ -1024,24 +1095,35 @@
         siteViewer.update();
           //viewer.show();
       };          
-
+        // queries artifacts for a single excavation unit
         $.ajax({
           dataType: 'json',
           url: siteTableURL + 'query?where=master_unit+%3D+%27' + siteId + '%27&objectIds=&time=&geometry=&geometryType=esriGeometryEnvelope&inSR=&spatialRel=esriSpatialRelIntersects&distance=&units=esriSRUnit_Foot&relationParam=&outFields=*&returnGeometry=true&maxAllowableOffset=&geometryPrecision=&outSR=&havingClause=&gdbVersion=&historicMoment=&returnDistinctValues=false&returnIdsOnly=false&returnCountOnly=false&returnExtentOnly=false&orderByFields=&groupByFieldsForStatistics=&outStatistics=&returnZ=false&returnM=false&multipatchOption=xyFootprint&resultOffset=&resultRecordCount=&returnTrueCurves=false&returnCentroid=false&timeReferenceUnknownClient=false&sqlFormat=none&resultType=&datumTransformation=&lodType=geohash&lod=&lodSR=&f=pjson',
           type: "GET",    
-          success: function(data) {
+          success: function(data) {            
             const features = data.features;                  
             const numResults = data.features.length;
             const siteTitle = graphic.attributes.master_unit;
             $('#siteTitle').html("Site " + siteTitle);
             $('#artres').html(numResults + ")");
             $('#numartifacts').html("<b>Artifacts cataloged:</b> " + numResults);
+           
+            $('.nav-tabs a').on('shown.bs.tab', function(event){            
+            //bldgTable.setData(data.features);
             bldgTable.clearData();
+            bldgTable.redraw(true); 
+          }); 
+            bldgTable.redraw(true);
             siteTable.clearData();
-            $( "#viewCat" ).click(function() {              
+            siteTable.setData(features);
+            $('#objres').html("0");
+            $( "#viewCat" ).click(function() {
+              siteTable.clearData();
+              bldgTable.clearData();              
               siteTable.setData(features);
+              $('#artres').html(numResults + ")");              
               openNav(); 
-            });            
+            });                    
           }
         });      
       }
@@ -1056,6 +1138,7 @@
     fips_1897.opacity = event.value / 100;
     fips_1910.opacity = event.value / 100;
     fips_1915.opacity = event.value / 100;
+    municipal_1939.opacity = event.value / 100;
     fips_49_51.opacity = event.value / 100;
     aerial_1951.opacity = event.value / 100;   
   });
@@ -1071,6 +1154,7 @@
       fips_1897.visible = false;
       fips_1915.visible = false;
       fips_1910.visible = false;
+      municipal_1939.visible = false;
       fips_49_51.visible = false;
       aerial_1951.visible = false;  
     } else if (value == '1893') {
@@ -1080,6 +1164,7 @@
       fips_1897.visible = false;
       fips_1915.visible = false;
       fips_1910.visible = false;
+      municipal_1939.visible = false;
       fips_49_51.visible = false;  
       aerial_1951.visible = false;            
     } else if (value == '1897') {
@@ -1089,6 +1174,7 @@
       fips_1897.visible = true;
       fips_1915.visible = false;
       fips_1910.visible = false;
+      municipal_1939.visible = false;
       fips_49_51.visible = false;
       aerial_1951.visible = false;       
     } else if (value == '1910') {
@@ -1098,6 +1184,7 @@
       fips_1897.visible = false;
       fips_1915.visible = false;
       fips_1910.visible = true;
+      municipal_1939.visible = false;
       fips_49_51.visible = false; 
       aerial_1951.visible = false; 
     } else if (value == '1915') { 
@@ -1107,6 +1194,17 @@
       fips_1897.visible = false;
       fips_1915.visible = true;
       fips_1910.visible = false;
+      municipal_1939.visible = false;
+      fips_49_51.visible = false;  
+      aerial_1951.visible = false;
+    } else if (value == '1939') { 
+      setFeatureLayerFilter("year = '1939' OR year = 'Modern'" );           
+      atlas_1885.visible = false;
+      atlas_1893.visible = false;
+      fips_1897.visible = false;
+      fips_1915.visible = false;
+      fips_1910.visible = false;
+      municipal_1939.visible = true;
       fips_49_51.visible = false;  
       aerial_1951.visible = false;
     } else if (value == '1949_1951') { 
@@ -1116,6 +1214,7 @@
       fips_1897.visible = false;
       fips_1915.visible = false;
       fips_1910.visible = false;
+      municipal_1939.visible = false;
       fips_49_51.visible = true;
       aerial_1951.visible = false;  
     } else if (value == '1951') {  
@@ -1125,6 +1224,7 @@
       fips_1897.visible = false;
       fips_1915.visible = false;
       fips_1910.visible = false;
+      municipal_1939.visible = false;
       fips_49_51.visible = false;
       aerial_1951.visible = true;  
     } else if (value == 'Modern') {
@@ -1134,6 +1234,7 @@
       fips_1897.visible = false;
       fips_1915.visible = false;
       fips_1910.visible = false;
+      municipal_1939.visible = false;
       fips_49_51.visible = false;
       aerial_1951.visible = false;
     }
