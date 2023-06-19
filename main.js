@@ -611,6 +611,9 @@
 
    // Code for the search bar functions
    $( "#submit" ).click(function() {
+      if (highlight) {
+        highlight.remove();
+      } 
     searchExecuted = true;
     console.log(searchExecuted);
     view.popup.close();
@@ -633,11 +636,15 @@
               highLightSites(data.features, "artifact");
             }
           $('.nav-tabs a').on('shown.bs.tab', function(event){            
-            siteTable.setData(data.features);
-            siteTable.redraw(true);             
+                       
             // highlight polygons based on which tab is selected
             if (searchExecuted && event.target.id == "artifacts-tab") {
+               if (highlight) {
+        highlight.remove();
+      } 
               highLightSites(data.features, "artifact");
+               siteTable.setData(data.features);
+            siteTable.redraw(true); 
             }
           });             
           const numResults = data.features.length;             
@@ -670,11 +677,15 @@
           } 
           // listen for the tabs to be switched then set data and redraw the table.
           $('.nav-tabs a').on('shown.bs.tab', function(event){            
-            bldgTable.setData(data.features);
+            
+            if (searchExecuted && event.target.id == "objects-tab") {
+               if (highlight) {
+        highlight.remove();
+      } 
+              highLightSites(data.features, "object");
+              bldgTable.setData(data.features);
             bldgTable.redraw(true);           
             console.log(event);
-            if (searchExecuted && event.target.id == "objects-tab") {
-              highLightSites(data.features, "object");
             }
           });           
             
@@ -856,8 +867,8 @@
 
  view.when(function () {
   // Watch for when features are selected
-  view.popup.watch("selectedFeature", function (graphic) {   
-    searchExecuted = false;
+  view.popup.watch("selectedFeature", function (graphic) {     
+    
     // if the sidebar is open hide the view items buttons
     if (isOpen === true) {
       $('#artFooter').hide();
@@ -877,6 +888,9 @@
         highlight.remove();
       } 
       if (graphic.layer.title == "Hamtramck Buildings June 2023 - Hamtramck Bldgs Merge June14 2023") {
+        searchExecuted = false;
+        bldgTable.clearData();
+        siteTable.clearData();        
         $('.nav-tabs a').on('shown.bs.tab', function(event){            
             //bldgTable.setData(data.features);
             bldgTable.clearData();            
@@ -974,7 +988,7 @@
                 const features = data.features;
                 siteTable.clearData();
                 siteTable.setData(features);
-
+                siteTable.redraw(true);
                 //bldgTable.clearData();
                 const numResults = data.features.length;    
                 console.log("test for building artifacts" + numResults);            
@@ -1016,7 +1030,7 @@
             bldgTable.setData(features);
             $('.nav-tabs a').on('shown.bs.tab', function(event){            
             bldgTable.setData(data.features);
-            bldgTable.redraw(true); 
+            bldgTable.redraw(true);             
           }); 
             const numResults = data.features.length;
               //const bldgName = graphic.attributes.desctemp;
@@ -1032,6 +1046,11 @@
             }
           });       
       } else if (graphic.layer.title == "Hamtramck Excavation Units" ) {
+        searchExecuted = false;
+        bldgTable.clearData();
+        siteTable.clearData();  
+        bldgTable.redraw(true);
+        siteTable.redraw(true);
         /*$('.nav-tabs a').on('shown.bs.tab', function(event){            
             //bldgTable.setData(data.features);
             siteTable.clearData();            
