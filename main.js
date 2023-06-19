@@ -76,9 +76,7 @@
         ],        
       // Detect when someone clicks on a row in the table
       rowClick:function(e, row){ 
-        view.popup.close();   
-        // When the table row is clicked hide the table 
-        //$('#drawerModal').modal('hide');        
+        view.popup.close();                   
         // when a row in the table is clicked call the getRowData function
         getRowData(row, "buildings");   
       },
@@ -92,9 +90,9 @@
   function openNav() {
     //table.redraw(true);
     isOpen = true;
-    document.getElementById("mySidebar").style.width = "20%";
-    document.getElementById("viewDiv").style.marginLeft = "20%";
-    document.getElementById("viewDiv").style.width = "80%";
+    document.getElementById("mySidebar").style.width = "25%";
+    document.getElementById("viewDiv").style.marginLeft = "25%";
+    document.getElementById("viewDiv").style.width = "75%";
  // document.getElementsByClassName("container")[0].style.width = "80%";
   //document.getElementsByClassName("container")[0].style.left = "28%";
 }
@@ -611,6 +609,9 @@
 
    // Code for the search bar functions
    $( "#submit" ).click(function() {
+    $('#siteModal').modal('hide');
+    $('#buildingModal').modal('hide');  
+
       if (highlight) {
         highlight.remove();
       } 
@@ -673,6 +674,9 @@
           bldgTable.setData(data.features); 
           bldgTable.redraw(true);
           if (data.features.length > 0) {
+             if (highlight) {
+                  highlight.remove();
+                } 
             highLightSites(data.features, "object");
           } 
           // listen for the tabs to be switched then set data and redraw the table.
@@ -680,8 +684,8 @@
             
             if (searchExecuted && event.target.id == "objects-tab") {
                if (highlight) {
-        highlight.remove();
-      } 
+                  highlight.remove();
+                } 
               highLightSites(data.features, "object");
               bldgTable.setData(data.features);
             bldgTable.redraw(true);           
