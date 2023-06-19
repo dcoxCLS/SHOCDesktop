@@ -12,6 +12,7 @@
 
    let highlight = null;   
    let isOpen = false;  // determines if the sidebar is open or closed.
+   let searchExecuted = false; // determines if a search has ever been executed
    // URLs for the hosted tables in this app
    const siteTableURL = "https://portal1-geo.sabu.mtu.edu/server/rest/services/Hosted/Archaeology_Artifacts_v5/FeatureServer/0/";
    const bldgTableURL = "https://portal1-geo.sabu.mtu.edu/server/rest/services/Hosted/HHM_Objects_Catalog_v2/FeatureServer/0/";
@@ -610,6 +611,9 @@
 
    // Code for the search bar functions
    $( "#submit" ).click(function() {
+
+    searchExecuted = true;
+    console.log(searchExecuted);
     view.popup.close();
     siteTable.clearData();
     bldgTable.clearData();     
@@ -620,8 +624,8 @@
         dataType: 'json',
         url: siteTableURL + 'query?where=Upper(site)+LIKE+%27%25' + searchVal.toUpperCase() + '%25%27+OR+Upper(location)+LIKE+%27%25' + searchVal.toUpperCase() + '%25%27+OR+Upper(artifact)+LIKE+%27%25' + searchVal.toUpperCase() +'%25%27+OR+Upper(material)+LIKE+%27%25' + searchVal.toUpperCase() + '%25%27+OR+Upper(function)+LIKE+%27%25' + searchVal.toUpperCase() + '%25%27+OR+Upper(notes)+LIKE+%27%25' + searchVal.toUpperCase() + '%25%27+OR+Upper(master_unit)+LIKE+%27%25' + searchVal.toUpperCase() + '%25%27+OR+Upper(uniqueid)+LIKE+%27%25' + searchVal.toUpperCase() + '%25%27&objectIds=&time=&resultType=none&outFields=*&returnHiddenFields=false&returnIdsOnly=false&returnUniqueIdsOnly=false&returnCountOnly=false&returnDistinctValues=false&cacheHint=false&orderByFields=&groupByFieldsForStatistics=&outStatistics=&having=&resultOffset=&resultRecordCount=&sqlFormat=none&f=pjson',
         type: "GET",    
-        success: function(data) {              
-          highLightSites(data.features, "artifact");   
+        success: function(data) {          
+          //highLightSites(data.features, "artifact");   
           siteTable.clearData();
           bldgTable.clearData();  
           siteTable.setData(data.features);
@@ -630,7 +634,7 @@
             siteTable.setData(data.features);
             siteTable.redraw(true); 
             // highlight polygons based on which tab is selected
-            if (event.target.id == "artifacts-tab") {
+            if (searchExecuted && event.target.id == "artifacts-tab") {
               highLightSites(data.features, "artifact");
             }
           });             
@@ -653,7 +657,7 @@
         type: "GET",    
         success: function(data) {
           $("#siteTitle").html("Search Results:");                     
-          highLightSites(data.features, "object");
+         // highLightSites(data.features, "object");
           siteTable.clearData();
           bldgTable.clearData();     
           bldgTable.setData(data.features); 
@@ -663,7 +667,7 @@
             bldgTable.setData(data.features);
             bldgTable.redraw(true); 
             console.log(event);
-            if (event.target.id == "objects-tab") {
+            if (searchExecuted && event.target.id == "objects-tab") {
               highLightSites(data.features, "object");
             }
           });           
@@ -841,7 +845,7 @@
  view.when(function () {
   // Watch for when features are selected
   view.popup.watch("selectedFeature", function (graphic) {   
-    
+    searchExecuted = false;
     // if the sidebar is open hide the view items buttons
     if (isOpen === true) {
       $('#artFooter').hide();
@@ -994,6 +998,9 @@
           url: bldgTableURL + 'query?where= alt_place_id+%3D+%27' + bldgId + '%27&objectIds=&time=&geometry=&geometryType=esriGeometryEnvelope&inSR=&spatialRel=esriSpatialRelIntersects&distance=&units=esriSRUnit_Foot&relationParam=&outFields=*&returnGeometry=true&maxAllowableOffset=&geometryPrecision=&outSR=&havingClause=&gdbVersion=&historicMoment=&returnDistinctValues=false&returnIdsOnly=false&returnCountOnly=false&returnExtentOnly=false&orderByFields=&groupByFieldsForStatistics=&outStatistics=&returnZ=false&returnM=false&multipatchOption=xyFootprint&resultOffset=&resultRecordCount=&returnTrueCurves=false&returnCentroid=false&timeReferenceUnknownClient=false&sqlFormat=none&resultType=&datumTransformation=&lodType=geohash&lod=&lodSR=&f=pjson',
           type: "GET",    
           success: function(data) {
+            if (data.features.length > 0) {
+              $('.nav-tabs a[href="#objects"]').tab('show'); 
+            }
             const features = data.features;
             //bldgTable.clearData();
             siteTable.clearData();
