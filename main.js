@@ -636,16 +636,16 @@
           if (data.features.length > 0) {
               highLightSites(data.features, "artifact");
             }
-          $('.nav-tabs a').on('shown.bs.tab', function(event){            
+          $('#sidebar-tabs').on('shown.bs.tab', function(event){            
                        
             // highlight polygons based on which tab is selected
-            if (searchExecuted && event.target.id == "artifacts-tab") {
+            if (searchExecuted && event.target.id == "artifacts-tab") {             
                if (highlight) {
-        highlight.remove();
-      } 
+                highlight.remove();
+              }              
+              siteTable.setData(data.features);
+              siteTable.redraw(true); 
               highLightSites(data.features, "artifact");
-               siteTable.setData(data.features);
-            siteTable.redraw(true); 
             }
           });             
           const numResults = data.features.length;             
@@ -673,23 +673,19 @@
           bldgTable.clearData();     
           bldgTable.setData(data.features); 
           bldgTable.redraw(true);
-          if (data.features.length > 0) {
-             if (highlight) {
-                  highlight.remove();
-                } 
+          if (data.features.length > 0) {             
             highLightSites(data.features, "object");
           } 
           // listen for the tabs to be switched then set data and redraw the table.
-          $('.nav-tabs a').on('shown.bs.tab', function(event){            
-            
+          $('#sidebar-tabs').on('shown.bs.tab', function(event){            
             if (searchExecuted && event.target.id == "objects-tab") {
                if (highlight) {
                   highlight.remove();
-                } 
-              highLightSites(data.features, "object");
+                }               
               bldgTable.setData(data.features);
-            bldgTable.redraw(true);           
-            console.log(event);
+              bldgTable.redraw(true);
+              highLightSites(data.features, "object");           
+              console.log(event);
             }
           });           
             
@@ -895,7 +891,7 @@
         searchExecuted = false;
         bldgTable.clearData();
         siteTable.clearData();        
-        $('.nav-tabs a').on('shown.bs.tab', function(event){            
+        $('#sidebar-tabs').on('shown.bs.tab', function(event){            
             //bldgTable.setData(data.features);
             bldgTable.clearData();            
             bldgTable.redraw(true); 
@@ -1032,7 +1028,7 @@
             //bldgTable.clearData();
             siteTable.clearData();
             bldgTable.setData(features);
-            $('.nav-tabs a').on('shown.bs.tab', function(event){            
+            $('#sidebar-tabs').on('shown.bs.tab', function(event){            
             bldgTable.setData(data.features);
             bldgTable.redraw(true);             
           }); 
@@ -1147,7 +1143,7 @@
             $('#artres').html(numResults + ")");
             $('#numartifacts').html("<b>Artifacts cataloged:</b> " + numResults);
            
-            $('.nav-tabs a').on('shown.bs.tab', function(event){            
+            $('#sidebar-tabs').on('shown.bs.tab', function(event){            
             //bldgTable.setData(data.features);
             bldgTable.clearData();
             bldgTable.redraw(true); 
