@@ -611,7 +611,6 @@
 
    // Code for the search bar functions
    $( "#submit" ).click(function() {
-
     searchExecuted = true;
     console.log(searchExecuted);
     view.popup.close();
@@ -630,9 +629,12 @@
           bldgTable.clearData();  
           siteTable.setData(data.features);
           siteTable.redraw(true);
+          if (data.features.length > 0) {
+              highLightSites(data.features, "artifact");
+            }
           $('.nav-tabs a').on('shown.bs.tab', function(event){            
             siteTable.setData(data.features);
-            siteTable.redraw(true); 
+            siteTable.redraw(true);             
             // highlight polygons based on which tab is selected
             if (searchExecuted && event.target.id == "artifacts-tab") {
               highLightSites(data.features, "artifact");
@@ -646,7 +648,8 @@
           } 
             $('#results').html("Your search returned " + numResults + " Results."); 
             $('#artres').html(numResults + ")");            
-            openNav();        
+            openNav();
+            $('.nav-tabs a[href="#artifacts"]').tab('show');         
         }         
       });
 
@@ -662,10 +665,13 @@
           bldgTable.clearData();     
           bldgTable.setData(data.features); 
           bldgTable.redraw(true);
+          if (data.features.length > 0) {
+            highLightSites(data.features, "object");
+          } 
           // listen for the tabs to be switched then set data and redraw the table.
           $('.nav-tabs a').on('shown.bs.tab', function(event){            
             bldgTable.setData(data.features);
-            bldgTable.redraw(true); 
+            bldgTable.redraw(true);           
             console.log(event);
             if (searchExecuted && event.target.id == "objects-tab") {
               highLightSites(data.features, "object");
@@ -764,6 +770,11 @@
    url: "https://portal1-geo.sabu.mtu.edu/server/rest/services/Hosted/Aerial_1951/MapServer",
    visible: false
  });
+
+  const excavations_2022 = new TileLayer({
+   url: "https://portal1-geo.sabu.mtu.edu/server/rest/services/Hosted/Gass_Saloon_2022_Excavations/MapServer",
+   visible: false
+ });
   
   // Add the excavation sites layer to the map   
   const sitesLayer = new FeatureLayer({
@@ -783,7 +794,7 @@
 
   const map = new Map({
     basemap: "satellite",
-    layers: [atlas_1885, atlas_1893, fips_1897, fips_1915, fips_1910, municipal_1939, fips_49_51, aerial_1951, sitesLayer, buildingsLayer]
+    layers: [atlas_1885, atlas_1893, fips_1897, fips_1915, fips_1910, municipal_1939, fips_49_51, aerial_1951, sitesLayer, buildingsLayer, excavations_2022]
   });
 
   const view = new MapView({
@@ -805,6 +816,7 @@
   municipal_1939.opacity = 100;
   fips_49_51.opacity = 100; 
   aerial_1951.opacity = 100;
+  excavations_2022.opacity = 100;
   //map.add(fips_1897);
 
   // add esri widgets
@@ -966,8 +978,7 @@
                 //bldgTable.clearData();
                 const numResults = data.features.length;    
                 console.log("test for building artifacts" + numResults);            
-                $('#artres').html(numResults + ")");
-                $('#buildingartifacts').html("<b>Artifacts associated with this building:</b> " + numResults);
+                $('#artres').html(numResults + ")");                
                 $( "#viewHHMCat" ).click(function() {
                   console.log('clicked');
                 $('#artres').html(numResults + ")");
@@ -979,14 +990,12 @@
           } else {
             siteTable.clearData();
             $('#artres').html("0)");
-         $( "#viewHHMCat" ).click(function() {
+            $( "#viewHHMCat" ).click(function() {
            // $('#objres').html("0)");
             $('#artres').html("0)");
               siteTable.clearData();
              });
-            siteTable.clearData();
-         // $('#viewBldgCat').hide();
-            $('#buildingartifacts').html("<b>Artifacts associated with this building:</b> 0 ");
+            siteTable.clearData();         
         }
           console.log("Feature count: " + results.features.length)
         }).catch((error) => {
@@ -1147,7 +1156,8 @@
     fips_1915.opacity = event.value / 100;
     municipal_1939.opacity = event.value / 100;
     fips_49_51.opacity = event.value / 100;
-    aerial_1951.opacity = event.value / 100;   
+    aerial_1951.opacity = event.value / 100;  
+    excavations_2022.opacity = event.value / 100;   
   });
 
   // Code for the location dropdown menu
@@ -1163,7 +1173,8 @@
       fips_1910.visible = false;
       municipal_1939.visible = false;
       fips_49_51.visible = false;
-      aerial_1951.visible = false;  
+      aerial_1951.visible = false;
+      excavations_2022.visible = false;  
     } else if (value == '1893') {
       setFeatureLayerFilter("year = 'Modern'" ); 
       atlas_1885.visible = false;
@@ -1173,7 +1184,8 @@
       fips_1910.visible = false;
       municipal_1939.visible = false;
       fips_49_51.visible = false;  
-      aerial_1951.visible = false;            
+      aerial_1951.visible = false;   
+      excavations_2022.visible = false;         
     } else if (value == '1897') {
       setFeatureLayerFilter("year = '1897' OR year = 'Modern'" );
       atlas_1885.visible = false;
@@ -1183,7 +1195,8 @@
       fips_1910.visible = false;
       municipal_1939.visible = false;
       fips_49_51.visible = false;
-      aerial_1951.visible = false;       
+      aerial_1951.visible = false;     
+      excavations_2022.visible = false;  
     } else if (value == '1910') {
       setFeatureLayerFilter("year = '1910' OR year = 'Modern'" );
       atlas_1885.visible = false;
@@ -1194,6 +1207,7 @@
       municipal_1939.visible = false;
       fips_49_51.visible = false; 
       aerial_1951.visible = false; 
+      excavations_2022.visible = false;
     } else if (value == '1915') { 
       setFeatureLayerFilter("year = '1915' OR year = 'Modern'" );           
       atlas_1885.visible = false;
@@ -1204,6 +1218,7 @@
       municipal_1939.visible = false;
       fips_49_51.visible = false;  
       aerial_1951.visible = false;
+      excavations_2022.visible = false;
     } else if (value == '1939') { 
       setFeatureLayerFilter("year = '1939' OR year = 'Modern'" );           
       atlas_1885.visible = false;
@@ -1214,6 +1229,7 @@
       municipal_1939.visible = true;
       fips_49_51.visible = false;  
       aerial_1951.visible = false;
+      excavations_2022.visible = false;
     } else if (value == '1949_1951') { 
       setFeatureLayerFilter("year = '1949_1951' OR year = 'Modern'" );           
       atlas_1885.visible = false;
@@ -1223,7 +1239,8 @@
       fips_1910.visible = false;
       municipal_1939.visible = false;
       fips_49_51.visible = true;
-      aerial_1951.visible = false;  
+      aerial_1951.visible = false; 
+      excavations_2022.visible = false; 
     } else if (value == '1951') {  
       setFeatureLayerFilter("year = 'Modern'" );           
       atlas_1885.visible = false;
@@ -1234,6 +1251,18 @@
       municipal_1939.visible = false;
       fips_49_51.visible = false;
       aerial_1951.visible = true;  
+      excavations_2022.visible = false;
+    } else if (value == '2022') {  
+      setFeatureLayerFilter("year = 'Modern'" );           
+      atlas_1885.visible = false;
+      atlas_1893.visible = false;
+      fips_1897.visible = false;
+      fips_1915.visible = false;
+      fips_1910.visible = false;
+      municipal_1939.visible = false;
+      fips_49_51.visible = false;
+      aerial_1951.visible = false;
+      excavations_2022.visible = true;  
     } else if (value == 'Modern') {
       setFeatureLayerFilter("year = 'Modern'" ); 
       atlas_1885.visible = false;
@@ -1244,6 +1273,7 @@
       municipal_1939.visible = false;
       fips_49_51.visible = false;
       aerial_1951.visible = false;
+      excavations_2022.visible = false; 
     }
   });
 
