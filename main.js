@@ -15,7 +15,7 @@
    let searchExecuted = false; // determines if a search has ever been executed
    // URLs for the hosted tables in this app
    const siteTableURL = "https://portal1-geo.sabu.mtu.edu/server/rest/services/Hosted/Archaeology_Artifacts_v5/FeatureServer/0/";
-   const bldgTableURL = "https://portal1-geo.sabu.mtu.edu/server/rest/services/Hosted/HHM_Objects_Catalog_v2/FeatureServer/0/";
+   const bldgTableURL = "https://portal1-geo.sabu.mtu.edu/server/rest/services/Hosted/HHM_Objects_Catalog_v5_Mod_1/FeatureServer/0/";
    $.fn.modal.Constructor.prototype._enforceFocus = function() {}; // modal does not interfere with search text box input
 
   // Creates a new table to hold our artifact attributes  
