@@ -52,7 +52,7 @@ font-family: 'Lora', serif;
 /*Navbar links*/
 .navbar-light .navbar-nav .nav-link {
   color: #d9dde0;
-  font-size: 13px; 
+  font-size: 13px;   
 }
 
 .navbar-light .navbar-nav .nav-link:visited {
@@ -558,5 +558,14 @@ h7 {
     width: 90%;
     top: 15px;
     left: 45px;
+  }
+}
+
+@media (max-width: 1800px) {
+   /*Navbar links*/
+  .navbar-light .navbar-nav .nav-link {
+    color: #d9dde0;
+    font-size: 13px; 
+    display: none;
   }
 }
