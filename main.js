@@ -634,7 +634,7 @@
           siteTable.setData(data.features);
           siteTable.redraw(true);
           if (data.features.length > 0) {
-              highLightSites(data.features, "artifact");
+           //   highLightSites(data.features, "artifact");
             }
           $('#sidebar-tabs').on('shown.bs.tab', function(event){            
                        
@@ -645,7 +645,7 @@
               }              
               siteTable.setData(data.features);
               siteTable.redraw(true); 
-              highLightSites(data.features, "artifact");
+             // highLightSites(data.features, "artifact");
             }
           });             
           const numResults = data.features.length;             
@@ -674,7 +674,7 @@
           bldgTable.setData(data.features); 
           bldgTable.redraw(true);
           if (data.features.length > 0) {             
-            highLightSites(data.features, "object");
+           // highLightSites(data.features, "object");
           } 
           // listen for the tabs to be switched then set data and redraw the table.
           $('#sidebar-tabs').on('shown.bs.tab', function(event){            
@@ -684,7 +684,7 @@
                 }               
               bldgTable.setData(data.features);
               bldgTable.redraw(true);
-              highLightSites(data.features, "object");           
+             // highLightSites(data.features, "object");           
               console.log(event);
             }
           });           
@@ -1080,6 +1080,13 @@
        $('#siteloc').html('<b>Location: </b>' + location);
        $('#site').html('<b>Site: </b>' + site);
        $('#sitenote').html('<b>Notes: </b>' + notes);
+
+       // check for a site ID
+       if (siteId == "SS_SAL_1") {
+        $("#site-model-tab").show();
+       } else {
+        $("#site-model-tab").hide();
+       }        
 
        // check if there are many doucments
        if (reports !== '' && reports !== null) {
