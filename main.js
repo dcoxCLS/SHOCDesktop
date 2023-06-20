@@ -1031,17 +1031,17 @@
             $('#sidebar-tabs').on('shown.bs.tab', function(event){            
             bldgTable.setData(data.features);
             bldgTable.redraw(true);             
-          }); 
+            }); 
             const numResults = data.features.length;
               //const bldgName = graphic.attributes.desctemp;
               $('#siteTitle').html(address);
               $('#objres').html(numResults);
               $('#numartifacts').html("<b>Artifacts cataloged:</b> " + numResults);
-              $( "#viewHHMCat" ).click(function() {
-                // siteTable.clearData();
+              $( "#viewHHMCat" ).click(function() {                
                 bldgTable.clearData();
                 $('#objres').html(numResults);                
-                openNav();       
+                openNav();     
+                bldgTable.setData(features);  
               });            
             }
           });       
