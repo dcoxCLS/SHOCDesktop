@@ -264,10 +264,11 @@
            $('#artModal').modal('show');
            $('#objModal').modal('hide'); 
            $('#artNum').html("<b>Artifact Number: </b>" + artifactNum);
+           $('#material').html("<b>Material: </b>" + artifactMat);
            $('#artdesc').html("<b>Description: </b>" + longDesc);
            $('#artloc').html("<b>Location: </b>" + location);
            $('#artunit').html("<b>Unit: </b>" + unit);
-           $('#artcontext').html("<b>Context: </b>" + context);
+           $('#artcontext').html("<b>Context: </b>" + context);           
            $('#artreferences').html("<b>References: </b>" + ref1);
 
            const refDiv = document.getElementById("artreferences");
@@ -608,7 +609,7 @@
   });
 
    // Code for the search bar functions
-   $( "#submit" ).click(function() {
+   $( "#submit" ).click(function() {   
     $('#siteModal').modal('hide');
     $('#buildingModal').modal('hide');  
 
@@ -657,7 +658,7 @@
             $('#results').html("Your search returned " + numResults + " Results."); 
             $('#artres').html(numResults + ")");            
             openNav();
-            $('.nav-tabs a[href="#artifacts"]').tab('show');         
+            //$('.nav-tabs a[href="#artifacts"]').tab('show');         
         }         
       });
 
