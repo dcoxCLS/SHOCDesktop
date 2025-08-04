@@ -28,9 +28,9 @@
 <body>     
   <!-- Main navbar -->
   <nav class="navbar navbar-expand-md navbar-light bg-light">
-    <a class="navbar-brand" href="https://lyre.cofc.edu/portal/apps/sites/#/shoc" target="_blank" rel="noopener">
-      <img src="assets/dmilogo.png" width="80" height="80" class="d-inline-block align-top" alt="">
-      &nbsp;SHOC Home
+    <a class="navbar-brand" href="https://mtugrf.github.io/hamtramckapp" target="_blank" rel="noopener">
+      <img src="logos.svg" width="80" height="80" class="d-inline-block align-top" alt="">
+      &nbsp;SHOC
     </a>
     <div class="collapse navbar-collapse" id="navbarNav" style="">
       <ul class="navbar-nav mr-auto">           
@@ -48,20 +48,15 @@
       </div>    
       <ul class="navbar-nav">
         <li class="nav-item">
-          <a class="nav-link" href="https://lyre.cofc.edu/portal/apps/sites/#/shoc" target="_blank" rel="noopener">Hamtramck Historical Museum</a>
+          <a class="nav-link" href="http://hamtramckhistory.com/index.php"#660000 target="_blank" rel="noopener">Hamtramck Historical Museum</a>
         </li>
           <li class="nav-item">
           <a class="nav-link" href="https://www.ukrainianmuseumdetroit.org/" target="_blank" rel="noopener">UAAM</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="https://wayne.edu/" target="_blank" rel="noopener">Wayne</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="https://www.mtu.edu/greatlakes/shared-facilities/geospatial/" target="_blank" rel="noopener">MTU GRF</a>
-        </li>            
+        </li>        
       </ul>    
     </div>
   </nav>
+  <!--Pops up with View Items for This Location-->
   <div id="mySidebar" class="sidebar">
     <div id="title">
       <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
@@ -69,38 +64,32 @@
         <br><!-- <br><div id="maxResults" style="display: inline-block;">*Searches limited to 1000 results</div> --></center></div>
         <ul class="nav nav-tabs" id="sidebar-tabs" role="tablist">
   <li class="nav-item">
-    <a class="nav-link active" id="artifacts-tab" data-toggle="tab" href="#artifacts" role="tab" aria-controls="artifacts" aria-selected="true">Artifacts (<span id="artres">0<span>)</a>
+    <a class="nav-link active" id="individuals-tab" data-toggle="tab" href="#individuals" role="tab" aria-controls="individuals" aria-selected="true">Individuals(<span id="artres">0<span>)</a>
   </li>
   <li class="nav-item">
-    <a class="nav-link" id="objects-tab" data-toggle="tab" href="#objects" role="tab" aria-controls="objects" aria-selected="false">Objects (<span id="objres">0</span>)</a>
+    <a class="nav-link" id="stories-tab" data-toggle="tab" href="#stories" role="tab" aria-controls="stories" aria-selected="false">Stories(<span id="objres">0</span>)</a>
   </li> 
 </ul>
 <div class="tab-content" id="myTabContent">
-  <div class="tab-pane fade show active" id="artifacts" role="tabpanel" aria-labelledby="artifacts-tab"><div id="sites-table"></div></div>
-  <div class="tab-pane fade" id="objects" role="tabpanel" aria-labelledby="objects-tab"><div id="buildings-table"></div></div>
+  <div class="tab-pane fade show active" id="individuals" role="tabpanel" aria-labelledby="individuals-tab"><div id="sites-table"></div></div>
+  <div class="tab-pane fade" id="stories" role="tabpanel" aria-labelledby="stories-tab"><div id="buildings-table"></div></div>
   <div class="tab-pane fade" id="contact" role="tabpanel" aria-labelledby="contact-tab">...</div>
 </div>
        <!--  <div id="sites-table"></div>
         <div id="buildings-table"></div> -->
       </div>
       <div id="viewDiv">
+        <!--Opacity Slider-->
         <div id="sliderDiv"></div>
         <!-- <div class="slidecontainer">
           <div id="output"></div>
           <h2>1888</h2>
           <input id="timeslider" type="text" /><h2>Present</h2>
         </div>       -->
+          <!--Basemap dropdown-->
         <select id="location" class="form-control">
-          <option selected value="1885">Robinson Atlas 1885</option> 
-          <option selected value="1893">Sauer Atlas 1893</option>
-          <option value="1897">Sanborn Map 1897</option>
-          <option value="1910">Sanborn Map 1910</option>
-          <option value="1915">Sanborn Map 1915</option>
-          <option value="1939">Municipal Map 1939</option>
-          <option selected value="1949_1951">Sanborn Map 1949-1951</option>
-          <option value="1951">Aerial Imagery 1951</option>
-          <option value="2022">Gass Saloon Excavations 2022 </option>
-          <option value="Modern">Modern Day Aerial</option>
+          <option value="1855">Bridges & Allen 1885</option> 
+          <option selected value="1888">Sanborn Map 1888</option>
         </select>
         <div>
           <!-- Default Image for ViewerJS -->
@@ -115,6 +104,7 @@
                   <span aria-hidden="true">&times;</span>
                 </button>
               </div>
+                <!--Opens when individual is clicked-->
               <div class="modal-body">
                 <ul class="nav nav-tabs" id="siteTabs" role="tablist">
                   <li class="nav-item">
@@ -124,13 +114,7 @@
                     <a class="nav-link" id="site-documents-tab" data-toggle="tab" href="#sitedocuments" role="tab" aria-controls=sitedocuments aria-selected="false">Documents</a>
                   </li>
                   <li class="nav-item">
-                    <a class="nav-link" id="site-drawings-tab" data-toggle="tab" href="#sitedrawings" role="tab" aria-controls="sitedrawings" aria-selected="false">Drawings</a>
-                  </li>
-                  <li class="nav-item">
                     <a class="nav-link" id="site-photos-tab" data-toggle="tab" href="#sitephotos" role="tab" aria-controls="sitephotos" aria-selected="false">Photos</a>
-                  </li>
-                  <li class="nav-item">
-                    <a class="nav-link" id="site-model-tab" data-toggle="tab" href="#sitemodel" role="tab" aria-controls="sitemodel" aria-selected="false">3D Models</a>
                   </li>
 
                 </ul>
@@ -141,7 +125,7 @@
                     <div id="siteloc"></div>
                     <div id="site"></div>
                     <div id="sitenote"></div>
-                    <div id="numartifacts"></div>
+                    <div id="numindividuals"></div>
                   </div>
                   <div class="tab-pane fade" id="sitedocuments" role="tabpanel" aria-labelledby="site-documents-tab">
                     <ul class="list-group" id="doclist">  
@@ -151,8 +135,6 @@
                     <div id="sitegalley">           
                     </div>
                   </div>
-                  <div class="tab-pane fade" id="sitedrawings" role="tabpanel" aria-labelledby="site-drawings-tab"><img src="img_girl.jpg" id="drawPic" alt="site pictures" class="responsive"></div>
-                  <div class="tab-pane fade" id="sitemodel" role="tabpanel" aria-labelledby="site-model-tab"> <iframe src="https://sketchfab.com/models/4d4a1783577e454eaf11eea98b10dce1/embed" id="sitemodelframe" title="models"></iframe></div>
                 </div>        
               </div>
               <div class="modal-footer" id="artFooter">
@@ -161,6 +143,7 @@
             </div>
           </div>
         </div>
+          <!--Popup with building info-->
         <div class="modal" id="buildingModal" tabindex="-1" role="dialog" data-backdrop="false">
           <div class="modal-dialog modal-dialog-scrollable" role="document">
             <div class="modal-content">
@@ -187,7 +170,7 @@
                       <div id="buildingocc"></div>
                       <div id="buildingnotes"></div>
                       <div id="buildingbasement"></div>
-                      <div id="buildingartifacts"></div>
+                      <div id="buildingindividuals"></div>
                     </div>     
                   </div>
                   <div class="modal-footer" id="bldgFooter">
@@ -206,6 +189,7 @@
                     <span aria-hidden="true">&times;</span>
                   </button>
                 </div>
+                  <!--Pops up with individual details (???)-->
                 <div class="modal-body">
                   <ul class="nav nav-tabs" id="artTab" role="tablist">
                     <li class="nav-item">
@@ -216,10 +200,7 @@
                     </li>
                     <li class="nav-item">
                       <a class="nav-link" id="art-photos-tab" data-toggle="tab" href="#artphotos" role="tab" aria-controls="artphotos" aria-selected="false">Photos</a>
-                    </li>
-                    <li class="nav-item">
-                      <a class="nav-link" id="art-models-tab" data-toggle="tab" href="#artmodels" role="tab" aria-controls="artmodels" aria-selected="false">3D Model</a>
-                    </li>  
+                    </li> 
                   </ul>
                   <div class="tab-content" id="artTabContent">
                     <div class="tab-pane fade show active" id="artdetails" role="tabpanel" aria-labelledby="art-details-tab">
@@ -242,14 +223,13 @@
                       <div id="galley">           
                       </div>
                     </div>
-                    <div class="tab-pane fade" id="artmodels" role="tabpanel" aria-labelledby="art-models-tab">
-                      <iframe src="https://sketchfab.com/models/5aaca7b5af854bc9a905f16ba1f9685a/embed" id="modelframe" title="description"></iframe></div>
                       <div class="tab-pane fade" id="artdocuments" role="tabpanel" aria-labelledby="art-documents-tab">...</div>
                     </div>        
                   </div>      
                 </div>
               </div>
             </div>  
+              <!--Pops up for stories-->
             <div class="modal" id="objModal" tabindex="-1" role="dialog" data-backdrop="false">
               <div class="modal-dialog modal-dialog-scrollable" role="document">
                 <div class="modal-content">
