@@ -14,8 +14,8 @@
    let isOpen = false;  // determines if the sidebar is open or closed.
    let searchExecuted = false; // determines if a search has ever been executed
    // URLs for the hosted tables in this app
-   const siteTableURL = "https://portal1-geo.sabu.mtu.edu/server/rest/services/Hosted/Current_Version_Hamtramck_Master_Catalog(7_1)/FeatureServer/0/";
-   const bldgTableURL = "https://portal1-geo.sabu.mtu.edu/server/rest/services/Hosted/HHM_Objects_Catalog_v7/FeatureServer/0/";
+   const siteTableURL = "https://lyre.cofc.edu/server/rest/services/Hosted/public_map_input/FeatureServer/0";
+   const bldgTableURL = "https://portal1-geo.sabu.mtu.edu/server/rest/services/Hosted/map_index/FeatureServer/0";
    $.fn.modal.Constructor.prototype._enforceFocus = function() {}; // modal does not interfere with search text box input
 
   // Creates a new table to hold our artifact attributes  
