@@ -1,2 +1,2 @@
-# Hamtramck Historical Spatial Archaeology Project
-Historical GIS Web application for Hamtramck Michigan. 
+# SHOC Deep Mapping Project
+Forked from the Historical GIS Web application for Hamtramck Michigan. 
